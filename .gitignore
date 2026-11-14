@@ -24,3 +24,6 @@ backend/data/
 
 # Frontend dev server cache
 frontend/.vite/
+
+# Built frontend (rebuilt inside Docker)
+frontend/dist/

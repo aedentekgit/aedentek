@@ -1,0 +1,10 @@
+**/node_modules
+**/test-reports
+**/test
+backend/data
+frontend/dist
+.git
+.gitignore
+.env
+*.log
+.DS_Store

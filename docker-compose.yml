@@ -1,0 +1,60 @@
+name: aedentek-crm
+
+# =====================================================================
+# Aedentek CRM (Tessly) — Live + Staging on one VPS
+#
+# Isolation (does NOT affect other projects / DBs):
+#   - Live:     aedentek_crm_live     DB | port 5063 | uploads/live
+#   - Staging:  aedentek_crm_staging  DB | port 5064 | uploads/staging
+#   - "dev" reuses the STAGING DB + STAGING upload folder (dev alias)
+# Mongo is the shared host mongo container (host.docker.internal:27017).
+# Each service only ever talks to its own DB name -> no cross-contamination.
+# =====================================================================
+
+x-common: &common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  deploy:
+    resources:
+      limits:
+        memory: 1.5G
+        cpus: "1.0"
+
+services:
+  # ---------------- LIVE (crm.aedentek.com) ----------------
+  live:
+    <<: *common
+    container_name: aedentek-crm-live
+    image: aedentekgithub/aedentek-crm:latest
+    ports:
+      - "5063:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - PUBLIC_DIR=/app/public
+      - UPLOAD_DIR=/app/uploads
+      # URL the frontend expects for API/asset calls in production
+      - VITE_API_BASE=
+      - MONGODB_URI=mongodb://admin:Aedentek%40123%23@host.docker.internal:27017/aedentek_crm_live?authSource=admin
+    volumes:
+      - ./uploads/live:/app/uploads
+
+  # ---------------- STAGING (staging.crm.aedentek.com; also used by dev) ----------------
+  staging:
+    <<: *common
+    container_name: aedentek-crm-staging
+    image: aedentekgithub/aedentek-crm:staging
+    ports:
+      - "5064:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=staging
+      - PUBLIC_DIR=/app/public
+      - UPLOAD_DIR=/app/uploads
+      - MONGODB_URI=mongodb://admin:Aedentek%40123%23@host.docker.internal:27017/aedentek_crm_staging?authSource=admin
+    volumes:
+      - ./uploads/staging:/app/uploads

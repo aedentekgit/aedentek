@@ -3,6 +3,9 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { connectDB } from './config/db.js';
 import settingsProfileRoutes from './routes/settingsProfileRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
@@ -129,6 +132,47 @@ app.get('/api/health', (req, res) => {
     },
   });
 });
+
+// ---------------------------------------------------------------
+// Static assets & uploads (per-environment)
+// In the Docker image the built SPA lives in ../public and uploads
+// are stored in UPLOAD_DIR (mounted volume, isolated per environment).
+// ---------------------------------------------------------------
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PUBLIC_DIR = process.env.PUBLIC_DIR || path.resolve(__dirname, '../public');
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.resolve(__dirname, '../uploads');
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+// Serve pre-built frontend (only present in production/Docker image)
+if (fs.existsSync(PUBLIC_DIR)) {
+  app.use(express.static(PUBLIC_DIR, { index: false }));
+  app.use('/uploads', express.static(UPLOAD_DIR));
+}
+
+// Minimal upload endpoint: store base64 file, return a /uploads/<name> URL
+app.post('/api/uploads', (req, res) => {
+  const { filename, data, contentType } = req.body || {};
+  if (!filename || !data) return res.status(400).json({ success: false, message: 'filename and base64 data are required' });
+  const safeName = String(filename).replace(/[^a-zA-Z0-9.\-_]/g, '_').slice(-80);
+  const ext = path.extname(safeName) || '.bin';
+  const name = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
+  try {
+    fs.writeFileSync(path.join(UPLOAD_DIR, name), Buffer.from(String(data), 'base64'));
+    res.status(200).json({ success: true, url: `/uploads/${name}`, contentType: contentType || 'application/octet-stream' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Upload failed: ' + err.message });
+  }
+});
+
+// SPA fallback: any unknown GET path returns the built index.html
+if (fs.existsSync(PUBLIC_DIR)) {
+  app.use((req, res, next) => {
+    if (req.method !== 'GET') return next();
+    if (req.path.startsWith('/api/') || req.path === '/api') return next();
+    if (req.path.startsWith('/uploads/')) return next();
+    return res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+  });
+}
 
 // Mount API routes
 app.use('/api', paginateResponses);
