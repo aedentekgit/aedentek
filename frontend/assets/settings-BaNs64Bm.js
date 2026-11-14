@@ -62,10 +62,10 @@ function ColorPalette({ value, onChange, name }) {
             className: 'palette__ico',
             children: [
               (0, w.jsxs)('svg', { viewBox: '0 0 24 24', width: 18, height: 18, fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': 'true', children: [(0, w.jsx)('path', { d: 'M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1 .8-1.7 1.8-1.7H16a5 5 0 0 0 5-5c0-3.9-4-7-9-7Z' }), (0, w.jsx)('circle', { cx: 7.5, cy: 11, r: 1 }), (0, w.jsx)('circle', { cx: 10.5, cy: 7, r: 1 }), (0, w.jsx)('circle', { cx: 15, cy: 7.5, r: 1 })] }),
-              (0, w.jsx)('input', { type: 'color', className: 'palette__wheel', 'aria-label': 'Open colour picker', value: cur || '#4d33b6', onChange: (ev) => pick(ev.target.value.toLowerCase()) })
+              (0, w.jsx)('input', { type: 'color', className: 'palette__wheel', 'aria-label': 'Open colour picker', value: cur || (name === 'Primary' ? '#7627c4' : '#4d33b6'), onChange: (ev) => pick(ev.target.value.toLowerCase()) })
             ]
           }),
-          (0, w.jsx)('input', { className: 'palette__input', value: value || '', placeholder: '#4D33B6', maxLength: 7, spellCheck: false, 'aria-label': 'Hex colour', onChange: (ev) => onChange(ev.target.value) })
+          (0, w.jsx)('input', { className: 'palette__input', value: value || '', placeholder: (name === 'Primary' ? '#7627C4' : '#4D33B6'), maxLength: 7, spellCheck: false, 'aria-label': 'Hex colour', onChange: (ev) => onChange(ev.target.value) })
         ]
       })
     ]
@@ -1864,20 +1864,56 @@ function O(){let n=l(u()),init={name:n.name,email:n.email,username:n.username||(
 function k(){let e=u(),[n,r]=(0,C.useState)(e.settings.company),[i,a]=(0,C.useState)(e.settings.currency),[o,c]=(0,C.useState)(e.settings.weekStart),[l,f]=(0,C.useState)(``),m=n!==e.settings.company||i!==e.settings.currency||o!==e.settings.weekStart;return(0,w.jsxs)(`div`,{className:`st-grid`,children:[(0,w.jsx)(h,{title:`Company`,sub:`Shown on invoices and in emails`,children:(0,w.jsxs)(`form`,{noValidate:!0,onSubmit:e=>{if(e.preventDefault(),!n.trim()){f(`Required`);return}s(e=>{e.settings.company=n.trim(),e.settings.currency=i,e.settings.weekStart=o}),t(`Company settings saved`,{icon:`building`})},children:[(0,w.jsxs)(`div`,{className:`form-grid`,children:[(0,w.jsx)(p,{label:`Company name`,err:l,className:`span-2`,children:(0,w.jsx)(`input`,{className:`input`,value:n,onChange:e=>{r(e.target.value),f(``)}})}),(0,w.jsx)(p,{label:`Currency`,children:(0,w.jsx)(`select`,{className:`select`,value:i,onChange:e=>a(e.target.value),children:[`USD`,`EUR`,`GBP`,`CAD`].map(e=>(0,w.jsx)(`option`,{children:e},e))})}),(0,w.jsxs)(`div`,{className:`field`,children:[(0,w.jsx)(`span`,{children:`Week starts on`}),(0,w.jsx)(d,{label:`Week starts on`,value:o,onChange:c,options:[{id:`Mon`,label:`Monday`},{id:`Sun`,label:`Sunday`}]})]})]}),(0,w.jsx)(`div`,{className:`st-actions`,children:(0,w.jsx)(`button`,{className:`btn btn--primary`,type:`submit`,disabled:!m,children:`Save changes`})})]})}),(0,w.jsx)(h,{title:`On file`,sub:`Read from your account`,children:(0,w.jsxs)(`dl`,{className:`dl`,children:[(0,w.jsx)(`dt`,{children:`Plan`}),(0,w.jsx)(`dd`,{children:`Studio · 10 seats`}),(0,w.jsx)(`dt`,{children:`Seats used`}),(0,w.jsxs)(`dd`,{children:[e.users.length,` of 10`]}),(0,w.jsx)(`dt`,{children:`Billing email`}),(0,w.jsx)(`dd`,{children:`accounts@caldermoss.co`}),(0,w.jsx)(`dt`,{children:`Address`}),(0,w.jsx)(`dd`,{children:`212 Kent Ave, Brooklyn`})]})})]})}var A=[`Admin`,`Manager`,`Sales`,`Read only`];function j(){let e=u(),[n,r]=(0,C.useState)(()=>Object.fromEntries(e.users.map(e=>[e.id,e.id===`u1`?`Admin`:e.quota===0?`Manager`:`Sales`])));return(0,w.jsx)(h,{flush:!0,title:`Users & roles`,sub:`${e.users.length} people · admins can change billing and reset data`,children:(0,w.jsx)(`div`,{className:`table-wrap`,children:(0,w.jsxs)(`table`,{className:`table table--stack`,children:[(0,w.jsx)(`thead`,{children:(0,w.jsxs)(`tr`,{children:[(0,w.jsx)(`th`,{children:`Person`}),(0,w.jsx)(`th`,{children:`Title`}),(0,w.jsx)(`th`,{children:`Region`}),(0,w.jsx)(`th`,{children:`Access`})]})}),(0,w.jsx)(`tbody`,{children:e.users.map(i=>(0,w.jsxs)(`tr`,{"data-row":``,children:[(0,w.jsx)(`td`,{children:(0,w.jsxs)(`span`,{className:`row`,children:[(0,w.jsx)(g,{name:i.name,tone:i.tone,size:32,status:i.status}),(0,w.jsxs)(`span`,{className:`li__main`,children:[(0,w.jsx)(`b`,{children:i.name}),(0,w.jsx)(`small`,{children:i.email})]})]})}),(0,w.jsx)(`td`,{"data-hide-phone":``,children:i.role.includes(`invited`)?(0,w.jsx)(f,{kind:`warn`,children:`Invited`}):i.role}),(0,w.jsx)(`td`,{"data-hide-phone":``,children:i.region}),(0,w.jsx)(`td`,{children:(0,w.jsx)(`select`,{className:`select st-role`,"aria-label":`Access for ${i.name}`,value:n[i.id]??`Sales`,disabled:i.id===e.settings.me,onChange:e=>{r(t=>({...t,[i.id]:e.target.value})),t(`${i.name.split(` `)[0]} is now ${e.target.value}`,{icon:`lock`})},children:A.map(e=>(0,w.jsx)(`option`,{children:e},e))})})]},i.id))})]})})})}var M=[{key:`deals`,title:`Deal changes`,text:`When a deal you own moves stage, is won or lost.`,icon:`deals`},{key:`tasks`,title:`Tasks due`,text:`A reminder at 8am for what is due today.`,icon:`calendar`},{key:`invoices`,title:`Invoices`,text:`When an invoice is paid or goes overdue.`,icon:`finance`},{key:`mentions`,title:`Mentions & replies`,text:`When a client replies or a teammate mentions you.`,icon:`inbox`},{key:`digest`,title:`Weekly digest`,text:`A Monday email with last week’s numbers.`,icon:`mail`}];function N(){let e=u();return(0,w.jsx)(h,{title:`Notifications`,sub:`Choose what reaches you`,children:(0,w.jsx)(`div`,{className:`list`,children:M.map(n=>(0,w.jsxs)(`div`,{className:`li st-note`,"data-row":``,children:[(0,w.jsx)(`span`,{className:`tico`,children:(0,w.jsx)(v,{name:n.icon})}),(0,w.jsxs)(`span`,{className:`li__main`,children:[(0,w.jsx)(`b`,{children:n.title}),(0,w.jsx)(`small`,{style:{whiteSpace:`normal`},children:n.text})]}),(0,w.jsx)(_,{on:e.settings.notify[n.key],label:n.title,onChange:e=>{s(t=>{t.settings.notify[n.key]=e}),t(`${n.title} ${e?`on`:`off`}`,{icon:`bell`})}})]},n.key))})})}function P(){try{let e=JSON.parse(localStorage.getItem(`tessly:theme`)||`"light"`);return e===`dark`||e===`system`?e:`light`}catch{return`light`}}
 // Theme & Typography: lives on the Appearance tab (Settings & Platform Configuration)
 function ThemeTypographyCard() {
-  let [thd, setThd] = (0, C.useState)({});
+  let [thd, setThd] = (0, C.useState)({
+    primaryColor: '#7627c4',
+    secondaryColor: '#4d33b6',
+    mode: '',
+    type: '',
+    headerFont: '',
+    paragraphFont: '',
+    showThemeToggle: false
+  });
   let [saving, setSaving] = (0, C.useState)(false);
   (0, C.useEffect)(() => {
     let alive = true;
-    (async () => { try { let r = await fetch('/api/settings'); let j = await r.json(); if (alive && j.data) setThd(j.data.theme || {}); } catch (e) {} })();
+    (async () => {
+      try {
+        let r = await fetch('/api/settings');
+        let j = await r.json();
+        if (alive && j.data && j.data.theme) {
+          const t = j.data.theme;
+          const next = {
+            primaryColor: t.primaryColor || '#7627c4',
+            secondaryColor: t.secondaryColor || '#4d33b6',
+            mode: t.mode || '',
+            type: t.type || '',
+            headerFont: t.headerFont || '',
+            paragraphFont: t.paragraphFont || '',
+            showThemeToggle: Boolean(t.showThemeToggle)
+          };
+          setThd(next);
+          if (window.__tlApplyTheme) window.__tlApplyTheme(next);
+        }
+      } catch (e) {}
+    })();
     return () => { alive = false; };
   }, []);
-  let updateField = (section, field, value) => setThd((prev) => ({ ...prev, [field]: value }));
+  let updateField = (section, field, value) => {
+    setThd((prev) => {
+      const next = { ...prev, [field]: value };
+      if (window.__tlApplyTheme) window.__tlApplyTheme(next);
+      return next;
+    });
+  };
   let save = async () => {
     try {
       setSaving(true);
       let res = await fetch('/api/settings/theme', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(thd) });
       let j = await res.json();
-      if (j.success) t('Theme & Typography saved', { icon: 'check' }); else t(j.message || 'Error saving theme', { icon: 'x' });
+      if (j.success) {
+        if (window.__tlApplyTheme) window.__tlApplyTheme(thd);
+        t('Theme & Typography saved', { icon: 'check' });
+      } else t(j.message || 'Error saving theme', { icon: 'x' });
     } catch (e) { t('Failed to save theme', { icon: 'x' }); } finally { setSaving(false); }
   };
   return (0, w.jsx)('div', {

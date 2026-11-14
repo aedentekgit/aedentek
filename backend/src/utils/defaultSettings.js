@@ -38,13 +38,13 @@ export const cleanNonStaticSettings = {
     lutNumber: ""
   },
   theme: {
-    primaryColor: "",
-    secondaryColor: "",
-    mode: "",
-    type: "",
+    primaryColor: "#7627c4",
+    secondaryColor: "#4d33b6",
+    mode: "Day",
+    type: "Lite",
     showThemeToggle: false,
-    headerFont: "",
-    paragraphFont: ""
+    headerFont: "Plus Jakarta Sans",
+    paragraphFont: "Inter"
   },
   smtp: {
     smtpHost: "",

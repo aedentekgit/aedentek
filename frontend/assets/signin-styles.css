@@ -164,11 +164,11 @@ main.signin.signin--v2 {
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #1e3fae 0%, #2c52cf 100%);
+  background: linear-gradient(135deg, var(--secondary, #4d33b6) 0%, var(--primary, #7627c4) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 16px rgba(44, 82, 207, 0.35);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--primary, #7627c4) 35%, transparent);
   margin-bottom: 2px;
 }
 
@@ -435,18 +435,18 @@ main.signin.signin--v2 {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #1e3fae 0%, #2c52cf 100%);
+  background: linear-gradient(135deg, var(--primary-ink, #5b1d9c) 0%, var(--primary, #7627c4) 100%);
   color: #ffffff;
   border: none;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 14px rgba(44, 82, 207, 0.3);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--primary, #7627c4) 30%, transparent);
 }
 
 .signin__submit-btn:hover {
-  background: linear-gradient(135deg, #18338f 0%, #2346b8 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary-ink, #5b1d9c) 85%, #000) 0%, var(--primary-ink, #5b1d9c) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(44, 82, 207, 0.4);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--primary, #7627c4) 45%, transparent);
 }
 
 .signin__btn-arrow {
@@ -708,7 +708,7 @@ header.top .search:focus-within,
   padding: 0 16px !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
-  background: var(--primary) !important;
+  background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
   color: var(--on-primary) !important;
   border: none !important;
   box-shadow: 0 4px 14px color-mix(in srgb, var(--primary) 30%, transparent) !important;
@@ -937,7 +937,7 @@ header.top .search:focus-within,
 }
 
 .admin-sec-btn.is-active {
-  background: var(--primary) !important;
+  background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
   color: #ffffff !important;
   border-color: var(--primary) !important;
   font-weight: 600 !important;
@@ -2678,9 +2678,9 @@ label {
 }
 
 .signin__message.is-info {
-  background: rgba(44, 82, 207, 0.1);
-  color: #2c52cf;
-  border: 1px solid rgba(44, 82, 207, 0.2);
+  background: color-mix(in srgb, var(--primary, #7627c4) 12%, transparent);
+  color: var(--primary, #7627c4);
+  border: 1px solid color-mix(in srgb, var(--primary, #7627c4) 25%, transparent);
 }
 
 /* Link to signup */
@@ -3611,8 +3611,8 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
    ========================================================================== */
 .lg-login {
   --lg-ink: var(--side, #141619);
-  --lg-accent: var(--primary, #2c52cf);
-  --lg-accent-soft: color-mix(in srgb, var(--primary, #2c52cf) 62%, #ffffff);
+  --lg-accent: var(--primary, #7627c4);
+  --lg-accent-soft: color-mix(in srgb, var(--primary, #7627c4) 62%, #ffffff);
   --lg-on-accent: var(--on-primary, #ffffff);
   position: fixed;
   inset: 0;
@@ -3621,7 +3621,7 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
   padding: 0 clamp(20px, 7vw, 120px);
   background: #0b0e14;
   overflow: hidden;
-  font-family: var(--font, "Urbanist", system-ui, sans-serif);
+  font-family: var(--font-paragraph, var(--font, "Plus Jakarta Sans", system-ui, sans-serif));
   color: #eef1f7;
 }
 .lg-login__bg {
@@ -3634,7 +3634,7 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
   inset: 0;
   background:
     linear-gradient(90deg, rgba(8, 10, 15, 0.86) 0%, rgba(8, 10, 15, 0.55) 38%, rgba(8, 10, 15, 0) 70%),
-    radial-gradient(circle at 18% 50%, color-mix(in srgb, var(--primary, #2c52cf) 16%, transparent), transparent 45%);
+    radial-gradient(circle at 18% 50%, color-mix(in srgb, var(--primary, #7627c4) 16%, transparent), transparent 45%);
 }
 .lg-card {
   position: relative;
@@ -3654,8 +3654,8 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
   background: var(--citron, #d8e45a); color: var(--on-citron, #262b05);
 }
 .lg-brand__mark svg { width: 20px; height: 20px; }
-.lg-brand__name { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
-.lg-title { margin: 0 0 6px; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; color: #fff; }
+.lg-brand__name { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; font-family: var(--font-heading); }
+.lg-title { margin: 0 0 6px; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; color: #fff; font-family: var(--font-heading); }
 .lg-desc { margin: 0 0 22px; font-size: 14px; color: rgba(231, 236, 246, 0.74); }
 .lg-form { display: flex; flex-direction: column; gap: 12px; }
 .lg-field {
@@ -3667,7 +3667,7 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
 }
 .lg-field:focus-within {
   border-color: var(--lg-accent-soft); background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #2c52cf) 30%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #7627c4) 30%, transparent);
 }
 .lg-field.is-bad { border-color: #f87171; box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15); }
 .lg-field__icon { display: grid; place-items: center; color: rgba(231, 236, 246, 0.6); }
@@ -3694,8 +3694,9 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
   display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; margin-top: 6px;
   border: 0; border-radius: 12px; cursor: pointer; font: inherit; font-size: 15px; font-weight: 700;
   color: var(--lg-on-accent); background: var(--lg-accent);
-  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--primary, #2c52cf) 80%, transparent);
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--primary, #7627c4) 80%, transparent);
   transition: transform .12s ease, filter .15s ease;
+  font-family: var(--font-heading);
 }
 .lg-submit:hover { filter: brightness(1.1); }
 .lg-submit:active { transform: translateY(1px); }
@@ -3724,7 +3725,7 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
   border: 1px solid transparent; background: transparent; color: inherit; cursor: pointer; text-align: left; font: inherit;
 }
 .lg-dev__item:hover { background: rgba(255, 255, 255, 0.07); }
-.lg-dev__item.is-selected { border-color: var(--lg-accent-soft); background: color-mix(in srgb, var(--primary, #2c52cf) 22%, transparent); }
+.lg-dev__item.is-selected { border-color: var(--lg-accent-soft); background: color-mix(in srgb, var(--primary, #7627c4) 22%, transparent); }
 .lg-dev__who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
 .lg-dev__who b { font-size: 13px; font-weight: 700; color: #fff; }
 .lg-dev__who small { font-size: 11.5px; color: rgba(231, 236, 246, 0.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -4174,7 +4175,7 @@ label.field.has-upload,.field.has-upload{position:relative}
 .has-upload .tl-upload{position:absolute;right:5px;bottom:4px;height:24px;margin:0;display:flex;align-items:center;gap:6px;z-index:2}
 .has-upload .tl-upload__prev{width:24px;height:24px;border-radius:6px;padding:1px;border:1px solid var(--line-2);background:var(--raised)}
 .has-upload .tl-upload__btn{height:24px;padding:0 10px;font-size:12px;border-radius:7px;border:1px solid var(--line-2);border-style:solid;background:var(--raised);color:var(--text);gap:5px}
-.has-upload .tl-upload__btn:hover{background:var(--primary);border-color:var(--primary);color:var(--on-primary,#fff)}
+.has-upload .tl-upload__btn:hover{background:linear-gradient(135deg,var(--primary),var(--secondary));border-color:var(--secondary);color:var(--on-primary,#fff)}
 .has-upload .tl-upload__btn svg{width:13px;height:13px}
 
 /* Save button sits at the bottom-right of the form itself */
@@ -4198,8 +4199,8 @@ html body .finance-settings-hub .gst-list-card{padding:0!important;overflow:hidd
 .tl-dialog__actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
 .tl-dialog__btn{height:36px;padding:0 18px;border-radius:10px;border:1px solid var(--line-2);background:var(--card-2);color:var(--text);font:600 13px var(--font);cursor:pointer;transition:background .15s,border-color .15s}
 .tl-dialog__btn:hover{border-color:var(--primary)}
-.tl-dialog__btn--primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary,#fff)}
-.tl-dialog__btn--primary:hover{background:var(--primary-ink,var(--primary));filter:brightness(1.05)}
+.tl-dialog__btn--primary{background:linear-gradient(135deg,var(--primary),var(--secondary));border-color:var(--secondary);color:var(--on-primary,#fff)}
+.tl-dialog__btn--primary:hover{background:linear-gradient(135deg,var(--primary),var(--secondary));filter:brightness(1.07)}
 .tl-dialog__btn--primary.is-danger{background:var(--bad,#b3342b);border-color:var(--bad,#b3342b)}
 @keyframes tlFade{from{opacity:0}to{opacity:1}}
 @keyframes tlPop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
@@ -5415,3 +5416,24 @@ html body main.lg-login .lg-label{margin:6px 4px 0}
 .acct-telemetry-item:nth-child(4) { --tone: #0ea5e9; }
 .acct-telemetry-item .acct-telemetry-icon { background: color-mix(in srgb, var(--tone) 13%, var(--card)) !important; color: var(--tone) !important; border-radius: 12px; }
 .acct-telemetry-lbl { text-transform: uppercase; letter-spacing: .08em; font-weight: 800; }
+
+/* =====================================================================
+   Dynamic primary CTA gradient (theme-driven: primary -> secondary)
+   Any button that uses the dynamic theme colour as its fill should render
+   as a primary->secondary gradient instead of a flat primary. Appended
+   last so it wins over the flat rules above.
+   ===================================================================== */
+html body .btn--primary,
+html body .btn.btn--primary,
+html body .top .btn--primary.top__new,
+html body .btn--primary:hover,
+html body .tl-dialog__btn--primary:not(.is-danger),
+html body .admin-sec-btn.is-active {
+  background-image: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+  background-color: transparent !important;
+}
+html body .btn--primary:hover,
+html body .tl-dialog__btn--primary:not(.is-danger):hover,
+html body .top .btn--primary.top__new:hover {
+  filter: brightness(1.06);
+}

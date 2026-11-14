@@ -986,3 +986,129 @@
   }).observe(document.documentElement, { childList: true, subtree: true });
   scan(document.body);
 })();
+
+/* ====================================================================
+   GLOBAL THEME COLOR & TYPOGRAPHY ENGINE (EXCEPT SIDEBAR)
+   - Synchronizes #7627c4 (primary) and #4d33b6 (secondary) theme colors
+   - Applies heading and paragraph font families across all sections
+   - Strictly isolates the sidebar (.side) to retain its dark slate & citron design
+   ==================================================================== */
+(function () {
+  'use strict';
+
+  var DEFAULT_PRIMARY = '#7627c4';
+  var DEFAULT_SECONDARY = '#4d33b6';
+  var DEFAULT_HEADER_FONT = 'Plus Jakarta Sans';
+  var DEFAULT_PARAGRAPH_FONT = 'Inter';
+
+  function normHex(v, fallback) {
+    var m = /^#?([0-9a-fA-F]{6})$/.exec(String(v || '').trim());
+    return m ? '#' + m[1].toLowerCase() : fallback;
+  }
+
+  function adjustBrightness(hex, percent) {
+    var num = parseInt(hex.replace('#', ''), 16);
+    var amt = Math.round(2.55 * percent);
+    var R = (num >> 16) + amt;
+    var G = (num >> 8 & 0x00FF) + amt;
+    var B = (num & 0x0000FF) + amt;
+    return '#' + (0x1000000 + (R < 255 ? (R < 0 ? 0 : R) : 255) * 0x10000 +
+      (G < 255 ? (G < 0 ? 0 : G) : 255) * 0x100 +
+      (B < 255 ? (B < 0 ? 0 : B) : 255)
+    ).toString(16).slice(1);
+  }
+
+  function applyGlobalTheme(cfg) {
+    cfg = cfg || {};
+    var isDark = document.documentElement.dataset.theme === 'dark';
+    var pCol = normHex(cfg.primaryColor, DEFAULT_PRIMARY);
+    var sCol = normHex(cfg.secondaryColor, DEFAULT_SECONDARY);
+    var hFont = (cfg.headerFont && cfg.headerFont.trim()) || DEFAULT_HEADER_FONT;
+    var pFont = (cfg.paragraphFont && cfg.paragraphFont.trim()) || DEFAULT_PARAGRAPH_FONT;
+
+    var style = document.documentElement.style;
+
+    if (isDark) {
+      // In dark mode: ensure high-contrast accessible pastel/bright violet
+      style.setProperty('--primary', '#b88bf8');
+      style.setProperty('--primary-ink', '#e9d5ff');
+      style.setProperty('--on-primary', '#150928');
+      style.setProperty('--secondary', '#9076fa');
+      style.setProperty('--secondary-ink', '#dcd2fe');
+    } else {
+      style.setProperty('--primary', pCol);
+      style.setProperty('--primary-ink', adjustBrightness(pCol, -25));
+      style.setProperty('--on-primary', '#ffffff');
+      style.setProperty('--secondary', sCol);
+      style.setProperty('--secondary-ink', adjustBrightness(sCol, -25));
+    }
+
+    style.setProperty('--font-heading', "'" + hFont + "', 'Plus Jakarta Sans', 'Outfit', 'Urbanist', -apple-system, sans-serif");
+    style.setProperty('--font-paragraph', "'" + pFont + "', 'Inter', 'Plus Jakarta Sans', 'Urbanist', -apple-system, sans-serif");
+    style.setProperty('--font', 'var(--font-paragraph)');
+
+    // Ensure sidebar styles stay untouched
+    style.setProperty('--side', '#121417');
+    style.setProperty('--side-text', '#f1f3ee');
+    style.setProperty('--side-accent', '#cfe3a6');
+
+    try {
+      localStorage.setItem('tessly:theme-config', JSON.stringify({
+        primaryColor: pCol,
+        secondaryColor: sCol,
+        headerFont: hFont,
+        paragraphFont: pFont,
+        mode: cfg.mode || '',
+        type: cfg.type || ''
+      }));
+    } catch (e) {}
+
+    window.dispatchEvent(new CustomEvent('tessly:theme-applied', {
+      detail: { primary: pCol, secondary: sCol, headerFont: hFont, paragraphFont: pFont, isDark: isDark }
+    }));
+  }
+
+  window.__tlApplyTheme = applyGlobalTheme;
+
+  // Initialize from cache or defaults immediately
+  try {
+    var cached = JSON.parse(localStorage.getItem('tessly:theme-config') || 'null');
+    if (cached) applyGlobalTheme(cached);
+    else applyGlobalTheme({ primaryColor: DEFAULT_PRIMARY, secondaryColor: DEFAULT_SECONDARY, headerFont: DEFAULT_HEADER_FONT, paragraphFont: DEFAULT_PARAGRAPH_FONT });
+  } catch (e) {
+    applyGlobalTheme({});
+  }
+
+  // Synchronize live with backend /api/settings
+  async function syncTheme() {
+    try {
+      var res = await fetch('/api/settings');
+      if (!res.ok) return;
+      var data = await res.json();
+      if (data && data.data && data.data.theme) {
+        applyGlobalTheme(data.data.theme);
+      }
+    } catch (err) {
+      // offline fallback
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncTheme);
+  } else {
+    syncTheme();
+  }
+
+  // Observe theme mode toggle (light/dark)
+  var observer = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      if (mutations[i].attributeName === 'data-theme') {
+        try {
+          var c = JSON.parse(localStorage.getItem('tessly:theme-config') || '{}');
+          applyGlobalTheme(c);
+        } catch (_) {}
+      }
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
