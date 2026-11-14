@@ -29,6 +29,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Per-environment static/paths (defined early so the root route can use them).
+// In Docker the built SPA is at ../public and uploads are bind-mounted at UPLOAD_DIR.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PUBLIC_DIR = process.env.PUBLIC_DIR || path.resolve(__dirname, '../public');
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.resolve(__dirname, '../uploads');
+const HAS_SPA = fs.existsSync(PUBLIC_DIR);
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
 // Enable CORS for frontend clients
 const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
 app.use(
@@ -54,9 +62,9 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// Health check and root API overview (Strictly JSON - no HTML views)
-app.get('/', (req, res) => {
-  res.status(200).json({
+// Root: serve the built SPA when present (production/Docker); otherwise the
+// JSON API overview. The full JSON overview stays available at GET /api.
+const apiOverview = (res) => res.status(200).json({
     name: 'Aedentek CRM Backend API',
     status: 'online',
     version: '1.0.0',
@@ -110,6 +118,10 @@ app.get('/', (req, res) => {
       accountsReports: 'GET /api/accounts/reports/trial-balance',
     },
   });
+
+app.get('/', (req, res) => {
+  if (HAS_SPA) return res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+  apiOverview(res);
 });
 
 app.get('/api/health', (req, res) => {
@@ -134,17 +146,9 @@ app.get('/api/health', (req, res) => {
 });
 
 // ---------------------------------------------------------------
-// Static assets & uploads (per-environment)
-// In the Docker image the built SPA lives in ../public and uploads
-// are stored in UPLOAD_DIR (mounted volume, isolated per environment).
+// Static assets & uploads (per-environment, isolated via UPLOAD_DIR mount)
 // ---------------------------------------------------------------
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PUBLIC_DIR = process.env.PUBLIC_DIR || path.resolve(__dirname, '../public');
-const UPLOAD_DIR = process.env.UPLOAD_DIR || path.resolve(__dirname, '../uploads');
-fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-
-// Serve pre-built frontend (only present in production/Docker image)
-if (fs.existsSync(PUBLIC_DIR)) {
+if (HAS_SPA) {
   app.use(express.static(PUBLIC_DIR, { index: false }));
   app.use('/uploads', express.static(UPLOAD_DIR));
 }
@@ -165,9 +169,10 @@ app.post('/api/uploads', (req, res) => {
 });
 
 // SPA fallback: any unknown GET path returns the built index.html
-if (fs.existsSync(PUBLIC_DIR)) {
+if (HAS_SPA) {
   app.use((req, res, next) => {
     if (req.method !== 'GET') return next();
+    if (req.path === '/') return next(); // handled by the root route above
     if (req.path.startsWith('/api/') || req.path === '/api') return next();
     if (req.path.startsWith('/uploads/')) return next();
     return res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
