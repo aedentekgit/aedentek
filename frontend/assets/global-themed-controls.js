@@ -723,6 +723,50 @@
     const txt = (el.textContent || '').trim();
     return el.getAttribute('title') || el.getAttribute('aria-label') || txt || ({ delete: 'Delete', edit: 'Edit', download: 'Download', send: 'Send', view: 'View', star: 'Set as default' }[kind]);
   }
+  // ---------------------------------------------------------------------
+  // GLOBAL ACTION-ICON CHIPS: apply the same round, colour-coded chip
+  // (view/edit/delete/download/send/star) to icon action controls ANYWHERE
+  // outside table "Actions" columns — nav/section toolbars, card tools,
+  // popups/drawers, page headers. Only classes + title/aria are touched;
+  // React-owned children are not rewritten. Text-labeled CTAs, close/menu
+  // toggles, theme/nav chrome, switches and form submits are all skipped.
+  // ---------------------------------------------------------------------
+  const CHIP_SKIP = /(^|\s)(side__close|side__theme|side__collapse|top__bell|top__sidebar-toggle|me-btn|nav__chev|nav__item|ibtn--close|switch|tabbar__|side-goal|form-save-row)(\s|$)/;
+  function globalActKind(el) {
+    const s = ((el.getAttribute('title') || '') + ' ' + (el.getAttribute('aria-label') || '') + ' ' + (el.className || '') + ' ' + (el.textContent || '')).toLowerCase()
+      .slice(0, 80);
+    if (/set as default|make default|set default/.test(s)) return 'star';
+    if (/delete|remove|trash|archive|revoke|cancel/.test(s)) return 'delete';
+    if (/edit|update|modify|pencil|rename/.test(s)) return 'edit';
+    if (/download|pdf|export|print/.test(s)) return 'download';
+    if (/send|share|mail|dispatch|resend|remind/.test(s)) return 'send';
+    if (/view|preview|details|eye|arrow-up-right|show|see|360|open/.test(s)) return 'view';
+    return null; // not a recognised action icon -> leave untouched
+  }
+  function enhanceActionButtons() {
+    document.querySelectorAll('button, a.ibtn, a.btn').forEach(el => {
+      if (el.dataset.tlAct) return;                                  // already a table chip
+      if (el.closest('.tl-dialog, .menu, .finder, .tl-stage')) return;
+      if (CHIP_SKIP.test(' ' + (el.className || '') + ' ')) return;
+      if (el.closest('.side__foot, .tabbar')) return;
+      if (el.getAttribute('role') === 'switch') return;
+      if (el.type === 'submit') return;                              // never re-skin form submits
+      if (el.classList.contains('btn--primary')) return;             // keep primary CTAs
+      const kind = globalActKind(el);
+      if (!kind) return;                                              // only view/edit/delete/download/send/star
+      const txt = (el.textContent || '').trim();
+      const hasIcon = !!el.querySelector('svg, .ico');
+      // Chip action controls that carry an icon (icon-only OR icon + label);
+      // skip text-only long labels (real CTAs like "Save profile").
+      if (!hasIcon && txt.length > 16) return;
+      const label = labelFor(el, kind);
+      el.dataset.tlAct = kind;
+      el.classList.add('tl-act', 'tl-act--' + kind);
+      if (!el.getAttribute('title')) el.setAttribute('title', label);
+      if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', label);
+      if (txt) el.classList.add('tl-act--text');
+    });
+  }
   function enhanceActionTables() {
     document.querySelectorAll('table').forEach(table => {
       const ths = table.querySelectorAll('thead th');
@@ -764,6 +808,9 @@
 
   new MutationObserver(() => enhanceActionTables()).observe(document.documentElement, { childList: true, subtree: true });
   enhanceActionTables();
+
+  new MutationObserver(() => enhanceActionButtons()).observe(document.documentElement, { childList: true, subtree: true });
+  enhanceActionButtons();
 
   // ---------------------------------------------------------------------
   // Global country -> currency symbol. Choosing a country in
