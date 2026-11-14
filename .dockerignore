@@ -1,8 +1,11 @@
 **/node_modules
-**/test-reports
-**/test
-backend/data
 frontend/dist
+**/test
+**/test-reports
+backend/data
+frontend/package-lock.json
+frontend/vite.config.js
+frontend/update_login.py
 .git
 .gitignore
 .env
