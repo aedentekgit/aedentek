@@ -936,7 +936,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: gd.siteName || '',
-                        placeholder: 'Tessly Surfaces CRM',
+                        placeholder: 'Enter site name',
                         onChange: ev => updateField('general', 'siteName', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Public name of the application / system' })
@@ -949,7 +949,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                         className: 'input',
                         type: 'email',
                         value: gd.siteEmail || '',
-                        placeholder: 'support@caldermoss.co',
+                        placeholder: 'Enter support email',
                         onChange: ev => updateField('general', 'siteEmail', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Official contact and helpdesk email' })
@@ -961,7 +961,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: gd.sitePhone || '',
-                        placeholder: '+1 (555) 234-5678',
+                        placeholder: 'Enter phone number',
                         onChange: ev => updateField('general', 'sitePhone', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Official contact telephone number' })
@@ -972,14 +972,15 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                     children: [
                       (0, w.jsx)('select', {
                         className: 'select',
-                        value: gd.country || 'IN',
+                        value: gd.country || '',
                         onChange: ev => {
                           const code = ev.target.value;
                           updateField('general', 'country', code);
                           updateField('general', 'currency', ({IN:'INR',US:'USD',GB:'GBP',AE:'AED',SA:'SAR',SG:'SGD',AU:'AUD',CA:'CAD',NZ:'NZD',DE:'EUR',FR:'EUR',IT:'EUR',ES:'EUR',NL:'EUR',JP:'JPY',CN:'CNY',CH:'CHF',ZA:'ZAR',LK:'LKR',NP:'NPR',BD:'BDT',MY:'MYR',ID:'IDR',TH:'THB'})[code] || 'INR');
                           if (window.tlSetCountry) window.tlSetCountry(code);
                         },
-                        children: [(0, w.jsx)('option', { value: 'IN', children: 'India (INR · ₹)' }),
+                        children: [(0, w.jsx)('option', { value: '', children: 'Select country…' }),
+(0, w.jsx)('option', { value: 'IN', children: 'India (INR · ₹)' }),
 (0, w.jsx)('option', { value: 'US', children: 'United States (USD · $)' }),
 (0, w.jsx)('option', { value: 'GB', children: 'United Kingdom (GBP · £)' }),
 (0, w.jsx)('option', { value: 'AE', children: 'United Arab Emirates (AED · AED)' }),
@@ -1011,9 +1012,10 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                     children: [
                       (0, w.jsx)('select', {
                         className: 'select',
-                        value: gd.timeFormat || '12h',
+                        value: gd.timeFormat || '',
                         onChange: ev => updateField('general', 'timeFormat', ev.target.value),
-                        children: [(0, w.jsx)('option', { value: '12h', children: '12-hour (2:30 PM)' }),
+                        children: [(0, w.jsx)('option', { value: '', children: 'Select time format…' }),
+(0, w.jsx)('option', { value: '12h', children: '12-hour (2:30 PM)' }),
 (0, w.jsx)('option', { value: '24h', children: '24-hour (14:30)' })]
                       })
                     ]
@@ -1023,9 +1025,10 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                     children: [
                       (0, w.jsx)('select', {
                         className: 'select',
-                        value: gd.dateFormat || 'DD/MM/YYYY',
+                        value: gd.dateFormat || '',
                         onChange: ev => updateField('general', 'dateFormat', ev.target.value),
-                        children: [(0, w.jsx)('option', { value: 'DD/MM/YYYY', children: 'DD/MM/YYYY' }),
+                        children: [(0, w.jsx)('option', { value: '', children: 'Select date format…' }),
+(0, w.jsx)('option', { value: 'DD/MM/YYYY', children: 'DD/MM/YYYY' }),
 (0, w.jsx)('option', { value: 'MM/DD/YYYY', children: 'MM/DD/YYYY' }),
 (0, w.jsx)('option', { value: 'YYYY-MM-DD', children: 'YYYY-MM-DD' })]
                       })
@@ -1036,9 +1039,10 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                     children: [
                       (0, w.jsx)('select', {
                         className: 'select',
-                        value: gd.timezone || 'Asia/Kolkata',
+                        value: gd.timezone || '',
                         onChange: ev => updateField('general', 'timezone', ev.target.value),
-                        children: [(0, w.jsx)('option', { value: 'Asia/Kolkata', children: 'India (IST, UTC+5:30)' }),
+                        children: [(0, w.jsx)('option', { value: '', children: 'Select timezone…' }),
+(0, w.jsx)('option', { value: 'Asia/Kolkata', children: 'India (IST, UTC+5:30)' }),
 (0, w.jsx)('option', { value: 'UTC', children: 'UTC' }),
 (0, w.jsx)('option', { value: 'America/New_York', children: 'US Eastern' }),
 (0, w.jsx)('option', { value: 'Europe/London', children: 'UK (GMT/BST)' }),
@@ -1053,9 +1057,10 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                     children: [
                       (0, w.jsx)('select', {
                         className: 'select',
-                        value: gd.language || 'en',
+                        value: gd.language || '',
                         onChange: ev => updateField('general', 'language', ev.target.value),
-                        children: [(0, w.jsx)('option', { value: 'en', children: 'English' }),
+                        children: [(0, w.jsx)('option', { value: '', children: 'Select language…' }),
+(0, w.jsx)('option', { value: 'en', children: 'English' }),
 (0, w.jsx)('option', { value: 'hi', children: 'Hindi' }),
 (0, w.jsx)('option', { value: 'ta', children: 'Tamil' })]
                       })
@@ -1068,7 +1073,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: gd.logo || '',
-                        placeholder: '/assets/logo.png',
+                        placeholder: 'Enter logo URL or asset path',
                         onChange: ev => updateField('general', 'logo', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Brand header logo image asset' })
@@ -1080,7 +1085,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: gd.androidAppUrl || '',
-                        placeholder: 'https://play.google.com/store/apps/...',
+                        placeholder: 'Enter Google Play link',
                         onChange: ev => updateField('general', 'androidAppUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Google Play Store application listing URL' })
@@ -1092,7 +1097,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: gd.iosAppUrl || '',
-                        placeholder: 'https://apps.apple.com/app/...',
+                        placeholder: 'Enter iOS App Store link',
                         onChange: ev => updateField('general', 'iosAppUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Apple iOS App Store application listing URL' })
@@ -1104,7 +1109,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: gd.macAppUrl || '',
-                        placeholder: 'https://apps.apple.com/mac/...',
+                        placeholder: 'Enter Mac App Store link',
                         onChange: ev => updateField('general', 'macAppUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Apple Mac App Store application listing URL' })
@@ -1116,7 +1121,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: gd.windowsAppUrl || '',
-                        placeholder: 'https://apps.microsoft.com/...',
+                        placeholder: 'Enter Windows Store link',
                         onChange: ev => updateField('general', 'windowsAppUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Microsoft Windows Store application listing URL' })
@@ -1148,7 +1153,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: sd.instagramUrl || '',
-                        placeholder: 'https://instagram.com/caldermoss',
+                        placeholder: 'Enter Instagram profile URL',
                         onChange: ev => updateField('social', 'instagramUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Corporate Instagram profile URL' })
@@ -1160,7 +1165,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: sd.facebookUrl || '',
-                        placeholder: 'https://facebook.com/caldermoss',
+                        placeholder: 'Enter Facebook page URL',
                         onChange: ev => updateField('social', 'facebookUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Corporate Facebook page URL' })
@@ -1172,7 +1177,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: sd.linkedinUrl || '',
-                        placeholder: 'https://linkedin.com/company/caldermoss',
+                        placeholder: 'Enter LinkedIn company URL',
                         onChange: ev => updateField('social', 'linkedinUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Corporate LinkedIn company URL' })
@@ -1184,7 +1189,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: sd.twitterUrl || '',
-                        placeholder: 'https://x.com/caldermoss',
+                        placeholder: 'Enter X (Twitter) profile URL',
                         onChange: ev => updateField('social', 'twitterUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Corporate X / Twitter profile URL' })
@@ -1208,7 +1213,7 @@ function AdminSettingsHub({ activeSection, onSelectSection }) {
                       (0, w.jsx)('input', {
                         className: 'input',
                         value: sd.youtubeUrl || '',
-                        placeholder: 'https://youtube.com/@caldermoss',
+                        placeholder: 'Enter YouTube channel URL',
                         onChange: ev => updateField('social', 'youtubeUrl', ev.target.value)
                       }),
                       (0, w.jsx)('small', { className: 'admin-field-desc', children: 'Corporate YouTube channel URL' })
