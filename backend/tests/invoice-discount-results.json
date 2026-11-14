@@ -1,0 +1,248 @@
+[
+  {
+    "id": "D-01",
+    "label": "no discount fields → type none, amount 0, total unchanged (4000 + 18% = 4720)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-02",
+    "label": "10% discount → amount 400, GST on 3600 = 648 (IGST), total 4248, balance 4248",
+    "ok": true,
+    "detail": "[400,648,4248]"
+  },
+  {
+    "id": "D-03",
+    "label": "subtotal stays the undiscounted line total (4000)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-04",
+    "label": "type and value stored",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-05",
+    "label": "flat 500 → taxable 3500, GST 630, total 4130",
+    "ok": true,
+    "detail": "[500,630,4130]"
+  },
+  {
+    "id": "D-06",
+    "label": "CGST + SGST split uses the discounted GST (324 + 324)",
+    "ok": true,
+    "detail": "[324,324]"
+  },
+  {
+    "id": "D-07",
+    "label": "Without GST + 10% → no tax, total 3600",
+    "ok": true,
+    "detail": "[0,3600]"
+  },
+  {
+    "id": "D-08",
+    "label": "100% discount → total 0, GST 0",
+    "ok": true,
+    "detail": "[0,0]"
+  },
+  {
+    "id": "D-09",
+    "label": "fractional percent 12.5% → amount 500, total 4130",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-10",
+    "label": "type none ignores a stray value (value reset to 0, total 4720)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-11",
+    "label": "client-sent discountAmount is ignored without a type (recalculated to 0)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-01",
+    "label": "create with percent above 100 → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-02",
+    "label": "create with negative value → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-03",
+    "label": "create with unknown type → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-04",
+    "label": "create with flat larger than subtotal → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-05",
+    "label": "create with non-numeric value → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-06",
+    "label": "create with percent type with no value → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-07",
+    "label": "rejected creates left no records",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-01",
+    "label": "add 25% on an existing invoice → amount 1000, GST 540, total 3540",
+    "ok": true,
+    "detail": "[200,1000,3540]"
+  },
+  {
+    "id": "U-02",
+    "label": "switch to flat 200 → GST 684, total 4484",
+    "ok": true,
+    "detail": "[200,684,4484]"
+  },
+  {
+    "id": "U-03",
+    "label": "change only the value (flat 300) → total 4366",
+    "ok": true,
+    "detail": "4366"
+  },
+  {
+    "id": "U-04",
+    "label": "edit line items → flat discount kept, totals recomputed (700 + 18% = 826)",
+    "ok": true,
+    "detail": "[1000,300,126,826]"
+  },
+  {
+    "id": "U-05",
+    "label": "percent follows the new subtotal (50% of 1000 = 500)",
+    "ok": true,
+    "detail": "[500,590]"
+  },
+  {
+    "id": "U-06",
+    "label": "percent recalculates when items grow back (50% of 4000 = 2000)",
+    "ok": true,
+    "detail": "[2000,2360]"
+  },
+  {
+    "id": "U-07",
+    "label": "remove the discount (none) → value 0, amount 0, total 4720",
+    "ok": true,
+    "detail": "[0,4720]"
+  },
+  {
+    "id": "U-08",
+    "label": "client-sent discountAmount / totalAmount are ignored",
+    "ok": true,
+    "detail": "[100,4602]"
+  },
+  {
+    "id": "U-09",
+    "label": "edit with percent above 100 → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-10",
+    "label": "edit with negative value → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-11",
+    "label": "edit with unknown type → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-12",
+    "label": "edit with flat larger than subtotal → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-13",
+    "label": "rejected edits changed nothing (flat 100, total 4602)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-14",
+    "label": "flat above the current subtotal on edit → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-15",
+    "label": "edit on an unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "P-01",
+    "label": "record 4000 against a 4248 invoice → balance 248, Partially Paid",
+    "ok": true,
+    "detail": "[248,\"Partially Paid\"]"
+  },
+  {
+    "id": "P-02",
+    "label": "a discount that drops the total below the amount paid → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "P-03",
+    "label": "smaller discount keeps payments and recalculates balance (4484 − 4000 = 484)",
+    "ok": true,
+    "detail": "[200,4484,484]"
+  },
+  {
+    "id": "P-04",
+    "label": "flat 680 → total 3918 is below the 4000 already paid → 400",
+    "ok": true,
+    "detail": "[400,null,null]"
+  },
+  {
+    "id": "L-01",
+    "label": "GET by id returns discount type, value and amount",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "L-02",
+    "label": "list endpoint carries the discount fields",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "X-01",
+    "label": "delete an invoice that has a discount → 200",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "X-02",
+    "label": "deleted invoice is gone",
+    "ok": true,
+    "detail": ""
+  }
+]

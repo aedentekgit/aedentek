@@ -1,0 +1,42 @@
+{
+  "name": "aedentek-crm-frontend",
+  "version": "1.0.0",
+  "description": "Aedentek CRM Frontend Screens",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test/test-suite.mjs && node test/test-login.mjs && node test/test-header.mjs && node test/test-header-sidebar-menu.mjs && node test/test-finance-pages.mjs && node test/test-page-header-container.mjs && node test/test-settings-pages.mjs && node test/test-client-360.mjs && node test/test-button-theming.mjs && node test/test-client-section-bar.mjs && node test/test-hr-module.mjs && node test/test-accounts-module.mjs && node test/test-templates-page.mjs && node test/test-auto-refresh-fix.mjs",
+    "test:crm": "node test/test-suite.mjs",
+    "test:login": "node test/test-login.mjs",
+    "test:header": "node test/test-header.mjs",
+    "test:sidebar-menu": "node test/test-header-sidebar-menu.mjs",
+    "test:finance": "node test/test-finance-pages.mjs",
+    "test:container": "node test/test-page-header-container.mjs",
+    "test:settings": "node test/test-settings-pages.mjs",
+    "test:client": "node test/test-client-360.mjs",
+    "test:button-theme": "node test/test-button-theming.mjs",
+    "test:section-bar": "node test/test-client-section-bar.mjs",
+    "test:hr": "node test/test-hr-module.mjs",
+    "test:accounts": "node test/test-accounts-module.mjs",
+    "test:client-modules": "node test/test-client-modules-ui.mjs",
+    "test:enhancements": "node test/test-enhancements-ui.mjs",
+    "test:batch3": "node test/test-batch3-ui.mjs",
+    "test:wizard": "node test/test-wizard-ui.mjs",
+    "test:propagations": "node test/test-propagations-ui.mjs",
+    "test:dropdown-placeholder": "node test/test-dropdown-placeholder-global.mjs"
+  },
+  "keywords": [
+    "crm",
+    "sales-desk",
+    "frontend",
+    "screens"
+  ],
+  "author": "Aedentek",
+  "license": "MIT",
+  "devDependencies": {
+    "puppeteer": "^25.16.0",
+    "vite": "^6.2.0"
+  }
+}

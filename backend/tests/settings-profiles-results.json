@@ -1,0 +1,290 @@
+[
+  {
+    "id": "S-01",
+    "label": "create profile → 201",
+    "ok": true,
+    "detail": "HTTP 201"
+  },
+  {
+    "id": "S-02",
+    "label": "default is mirrored into settings.invoiceSender",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "S-03",
+    "label": "second profile is NOT the default and settings are unchanged",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "S-04",
+    "label": "list keeps creation order (A before B), exactly one default",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "S-05",
+    "label": "set B as default → 200",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "S-06",
+    "label": "exactly one default (B); A cleared; B did NOT move to the top (order unchanged)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "S-07",
+    "label": "settings now mirror B",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "S-08",
+    "label": "edit the default profile → mirrored to settings",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "S-09",
+    "label": "edit a non-default profile does not touch settings",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-01",
+    "label": "missing company name → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-02",
+    "label": "missing billing email → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-03",
+    "label": "invalid email → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-04",
+    "label": "missing address → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-05",
+    "label": "invalid status value → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-06",
+    "label": "unknown type → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-06b",
+    "label": "invalid company GSTIN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-06c",
+    "label": "invalid company PAN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-07",
+    "label": "bank without account number → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-08",
+    "label": "bank with invalid account type → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-09",
+    "label": "update with blank company name → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-10",
+    "label": "update unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-11",
+    "label": "set default unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-12",
+    "label": "delete unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-13",
+    "label": "list with invalid type → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-14",
+    "label": "invalid creates added nothing",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "N-01",
+    "label": "new invoice snapshots the default sender (B)",
+    "ok": true,
+    "detail": "QA-PROF-1794206857101 B"
+  },
+  {
+    "id": "N-02",
+    "label": "after changing the default, the next invoice uses A",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "N-03",
+    "label": "earlier invoice keeps its original sender (snapshot)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "N-04",
+    "label": "an explicit company on the request wins over the default",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "K-01",
+    "label": "a bank profile can be the default and is mirrored",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "K-02",
+    "label": "set default switches the mirrored bank account",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "K-03",
+    "label": "new invoice carries the default bank account",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "K-04",
+    "label": "deleting the default bank promotes another and mirrors it",
+    "ok": true,
+    "detail": "\"50200088192831\""
+  },
+  {
+    "id": "K-05",
+    "label": "deleting another bank profile keeps one default mirrored",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-01",
+    "label": "delete the default sender → 200 and another profile is promoted",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-02",
+    "label": "settings mirror the promoted profile",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-03",
+    "label": "second delete → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-04",
+    "label": "deleting another sender keeps one default mirrored",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-01",
+    "label": "create slab → 201",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-02",
+    "label": "default HSN and rate are mirrored into GST settings",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-03",
+    "label": "second slab is not the default",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-04",
+    "label": "set slab 2 as default → 200",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-05",
+    "label": "only one default slab (slab 2)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-06",
+    "label": "GST settings mirror slab 2 (998002 / 12%)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-07",
+    "label": "an inactive slab cannot be made the default → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-08",
+    "label": "set default unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-09",
+    "label": "deleting the default slab promotes an active one",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "G-10",
+    "label": "GST settings follow the promoted slab",
+    "ok": true,
+    "detail": ""
+  }
+]

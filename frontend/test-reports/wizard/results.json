@@ -1,0 +1,194 @@
+{
+  "ranAt": "2026-11-09T15:48:41.322Z",
+  "total": 31,
+  "passed": 31,
+  "failed": 0,
+  "results": [
+    {
+      "id": "WZ-01",
+      "feature": "Wizard shell",
+      "name": "defaults to Wizard Mode with the step header, progress bar and three step chips",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-02",
+      "feature": "Wizard shell",
+      "name": "sections are cards with a coloured edge, uppercase heading and tinted sub-panels",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-03",
+      "feature": "Live preview",
+      "name": "live preview updates as you type (name, contact, GSTIN, tabs)",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-04",
+      "feature": "Wizard steps",
+      "name": "Next is blocked until the step is valid (required fields highlighted)",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-05",
+      "feature": "Wizard steps",
+      "name": "pressing Enter inside a field advances (validates) instead of submitting the form",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-06",
+      "feature": "Wizard steps",
+      "name": "step 2 header, 67 %, previous chip marked completed (✓), only section 2 visible",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-07",
+      "feature": "Wizard steps",
+      "name": "agreement dates + monthly billing preview work inside the wizard",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-08",
+      "feature": "Wizard steps",
+      "name": "invalid agreement dates block Next on step 2",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-09",
+      "feature": "Wizard steps",
+      "name": "last step shows Submit (no Next) and the Documents table",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-10",
+      "feature": "Wizard steps",
+      "name": "step chips and Previous move backwards freely; forward chips are validated",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-11",
+      "feature": "Wizard steps",
+      "name": "completing the wizard creates the client (agreement, billing and documents saved)",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-12",
+      "feature": "Wizard steps",
+      "name": "Edit opens the wizard at step 1 prefilled with the live preview populated",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-13",
+      "feature": "Mode toggle",
+      "name": "All-In-One Form shows every section, hides the step header and keeps the live preview",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-14",
+      "feature": "Mode toggle",
+      "name": "the chosen mode is remembered after a reload; switching back restores the wizard",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-15",
+      "feature": "Employee wizard",
+      "name": "five-step wizard (Personal → Portal access) with preview \"New Employee\"",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-16",
+      "feature": "Employee wizard",
+      "name": "first name is required to leave step 1; typing updates the preview",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-17",
+      "feature": "Employee wizard",
+      "name": "branch + joining date required on step 2; preview shows Employment details",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-18",
+      "feature": "Employee wizard",
+      "name": "salary step: preview Salary tab totals earnings and net",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-19",
+      "feature": "Employee wizard",
+      "name": "portal login: a password mismatch is caught on the step; then Create employee saves",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-20",
+      "feature": "Employee wizard",
+      "name": "Edit opens the wizard prefilled; all-in-one mode keeps all five sections reachable",
+      "status": "PASS"
+    },
+    {
+      "id": "WZ-21",
+      "feature": "Responsive",
+      "name": "on a narrow screen the preview stacks under the form and chips stack",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-01",
+      "feature": "Add New Client spec",
+      "name": "hero bar: \"Add New Client\" + \"Client & Agreement Setup\" pill, Back, Auto-Fill Demo Data and the mode toggle",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-02",
+      "feature": "Add New Client spec",
+      "name": "sections are colour-coded (primary / emerald / rose left accent bars)",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-03",
+      "feature": "Add New Client spec",
+      "name": "section 1 shows an auto-generated read-only reference badge (REF-####)",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-04",
+      "feature": "Add New Client spec",
+      "name": "Auto-Fill Demo Data populates every step and the live preview",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-05",
+      "feature": "Add New Client spec",
+      "name": "step badges: agreement duration, and KYC \"Pending verification\" → \"✓ Verified\" once a document is attached",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-06",
+      "feature": "Add New Client spec",
+      "name": "no top error-summary box is shown; invalid fields are flagged inline only",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-07",
+      "feature": "Add New Client spec",
+      "name": "step redirect: submitting from the last step with an error on step 1 jumps back to step 1 (wizard mode)",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-08",
+      "feature": "Add New Client spec",
+      "name": "inline errors, fieldset-style groups with accessible names and labelled inputs",
+      "status": "PASS"
+    },
+    {
+      "id": "SP-09",
+      "feature": "Add New Client spec",
+      "name": "demo client saves end-to-end and lands on the new client page",
+      "status": "PASS"
+    },
+    {
+      "id": "GEN-01",
+      "feature": "Console health",
+      "name": "no JavaScript errors were raised during the run",
+      "status": "PASS"
+    }
+  ]
+}

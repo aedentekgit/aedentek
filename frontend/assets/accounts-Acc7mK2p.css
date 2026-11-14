@@ -1,0 +1,1174 @@
+/* ==========================================================================
+   ACCOUNTS & FINANCE — page styles
+   Only page-specific classes live here. Everything shared (.btn, .card,
+   .phead, .tabs, .table, .kpis, .form-grid, .field) comes from the global
+   stylesheets and is deliberately not restyled.
+
+   Every colour is a theme token so the module re-themes with the app.
+   ========================================================================== */
+
+/* --- Page stack ---------------------------------------------------------- */
+
+/* No gap here: the page header and the section bar must sit flush so the
+   global `.phead + .tabs` / `.phead:has(+ .tabs)` rules merge them into a
+   single container. The vertical rhythm comes from .acct-stack below. */
+.page.accounts {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.acct-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+/* Two-column module layout: form on the left, ledger on the right. */
+.acct-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+.acct-grid--2 {
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+}
+
+@media (max-width: 1100px) {
+  .acct-grid,
+  .acct-grid--2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Toolbars and filters ------------------------------------------------ */
+
+.acct-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.acct-filter {
+  width: auto;
+  min-width: 150px;
+}
+
+/* --- Executive Bento KPI Tiles (Matching /today) -------------------------- */
+
+.acct-bento-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap, 16px);
+}
+
+.acct-bento-kpis .kpi {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 154px;
+}
+
+@media (max-width: 1200px) {
+  .acct-bento-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .acct-bento-kpis {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+/* --- Secondary Telemetry Ribbon ------------------------------------------ */
+
+.acct-telemetry-ribbon {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1000px) {
+  .acct-telemetry-ribbon {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .acct-telemetry-ribbon {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.acct-telemetry-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--r-ctl, 12px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.acct-telemetry-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-1.5px);
+  box-shadow: var(--shadow-pop);
+}
+
+.acct-telemetry-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.acct-telemetry-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.acct-telemetry-lbl {
+  font-size: var(--fs-xs, 12px);
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.acct-telemetry-val {
+  font-size: var(--fs-lg, 15px);
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acct-telemetry-tag {
+  font-size: var(--fs-2xs, 11px);
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--well);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* --- Bento Rows (Asymmetric & Symmetric) ---------------------------------- */
+
+.acct-bento-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: var(--gap, 16px);
+  align-items: stretch;
+}
+
+.acct-bento-row--half {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .acct-bento-row,
+  .acct-bento-row--half {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Chart Legends ------------------------------------------------------- */
+
+.acct-chart-legends {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.acct-chart-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs, 12px);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.acct-chart-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* --- Pending Docket List ------------------------------------------------- */
+
+.acct-docket-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.acct-docket-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.15s ease;
+}
+
+.acct-docket-row:last-child {
+  border-bottom: 0;
+}
+
+.acct-docket-row:hover {
+  background: color-mix(in srgb, var(--well) 70%, transparent);
+}
+
+.acct-docket-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: var(--well);
+  color: var(--muted);
+}
+
+.acct-docket-icon[data-tone="amber"] {
+  background: color-mix(in srgb, var(--amber) 16%, transparent);
+  color: var(--amber);
+}
+
+.acct-docket-icon[data-tone="cobalt"] {
+  background: color-mix(in srgb, var(--cobalt) 16%, transparent);
+  color: var(--cobalt);
+}
+
+.acct-docket-icon[data-tone="teal"] {
+  background: color-mix(in srgb, var(--teal) 16%, transparent);
+  color: var(--teal);
+}
+
+.acct-docket-icon[data-tone="sky"] {
+  background: color-mix(in srgb, var(--sky) 16%, transparent);
+  color: var(--sky);
+}
+
+.acct-docket-icon[data-tone="citron"] {
+  background: color-mix(in srgb, var(--citron) 20%, transparent);
+  color: var(--on-citron, #262b05);
+}
+
+.acct-docket-icon[data-tone="slate"] {
+  background: color-mix(in srgb, var(--slate) 16%, transparent);
+  color: var(--slate);
+}
+
+.acct-docket-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.acct-docket-title {
+  font-size: var(--fs-md, 13.5px);
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acct-docket-sub {
+  font-size: var(--fs-xs, 12px);
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acct-docket-pill {
+  font-size: var(--fs-2xs, 11px);
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-docket-pill.is-pending {
+  background: color-mix(in srgb, var(--amber) 16%, transparent);
+  color: var(--amber);
+  border: 1px solid color-mix(in srgb, var(--amber) 30%, transparent);
+}
+
+.acct-docket-pill.is-clear {
+  background: color-mix(in srgb, var(--good) 12%, transparent);
+  color: var(--good);
+}
+
+.acct-docket-chev {
+  color: var(--faint);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+/* --- Expense Mix Visualizer ---------------------------------------------- */
+
+.acct-mix-card {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+
+.acct-donut-box {
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+
+.acct-donut {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.acct-donut__hole {
+  position: absolute;
+  inset: 22px;
+  background: var(--card);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px;
+}
+
+.acct-donut__hole b {
+  font-size: var(--fs-md, 13.5px);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.15;
+}
+
+.acct-donut__hole small {
+  font-size: var(--fs-2xs, 11px);
+  color: var(--muted);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.acct-mix-bars {
+  flex: 1 1 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.acct-mix-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.acct-mix-row__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.acct-mix-row__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm, 12.5px);
+  font-weight: 600;
+  color: var(--text);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acct-mix-row__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.acct-mix-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.acct-mix-row__meta b {
+  font-size: var(--fs-sm, 12.5px);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.acct-mix-row__meta small {
+  font-size: var(--fs-xs, 12px);
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 32px;
+  text-align: right;
+}
+
+.acct-mix-row__track {
+  width: 100%;
+  height: 6px;
+  background: var(--well);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.acct-mix-row__bar {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Cash Book Trajectory Board ------------------------------------------ */
+
+.acct-flow-box {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.acct-flow-tracks {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+
+@media (max-width: 640px) {
+  .acct-flow-tracks {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+.acct-flow-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.acct-flow-tag {
+  font-size: var(--fs-xs, 12px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.acct-flow-tag.is-pos {
+  color: var(--good);
+}
+
+.acct-flow-tag.is-neg {
+  color: var(--bad);
+}
+
+.acct-flow-stage {
+  position: relative;
+  width: 100%;
+  height: 94px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.acct-flow-center-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--line);
+}
+
+.acct-flow-pill {
+  width: 18px;
+  min-height: 8px;
+  border-radius: 6px;
+  position: absolute;
+  transition: height 0.6s ease;
+}
+
+.acct-flow-pill.is-pos {
+  background: linear-gradient(180deg, var(--good) 0%, color-mix(in srgb, var(--good) 70%, transparent) 100%);
+  border-radius: 6px 6px 2px 2px;
+}
+
+.acct-flow-pill.is-neg {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bad) 70%, transparent) 0%, var(--bad) 100%);
+  border-radius: 2px 2px 6px 6px;
+}
+
+.acct-flow-label {
+  font-size: var(--fs-xs, 12px);
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.acct-flow-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.acct-flow-summary-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.acct-flow-summary-cell small {
+  font-size: var(--fs-xs, 12px);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.acct-flow-summary-cell b {
+  font-size: var(--fs-base, 14px);
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* --- Banners ------------------------------------------------------------- */
+
+.acct-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--r-card, 20px);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.acct-banner--warn {
+  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+  background: color-mix(in srgb, var(--warn) 10%, var(--card));
+  color: color-mix(in srgb, var(--warn) 70%, var(--text));
+}
+
+.acct-banner--bad {
+  border-color: color-mix(in srgb, var(--bad) 40%, transparent);
+  background: color-mix(in srgb, var(--bad) 10%, var(--card));
+  color: color-mix(in srgb, var(--bad) 70%, var(--text));
+}
+
+/* --- Line-item grids ----------------------------------------------------- */
+
+.acct-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 4px 0;
+}
+
+.acct-lines__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 2px 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.acct-lines__head b {
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.acct-lines__head button,
+.acct-lines__head .btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.acct-lines .table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+
+.acct-lines .table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.acct-lines .table th {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  padding: 10px 12px;
+  background: var(--card-2);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.acct-lines .table td {
+  padding: 8px 10px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+}
+
+.acct-lines .table th:first-child,
+.acct-lines .table td:first-child {
+  width: 44%;
+}
+
+.acct-lines .table th:nth-child(2),
+.acct-lines .table td:nth-child(2) {
+  width: 13%;
+}
+
+.acct-lines .table th:nth-child(3),
+.acct-lines .table td:nth-child(3) {
+  width: 16%;
+}
+
+.acct-lines .table th:nth-child(4),
+.acct-lines .table td:nth-child(4) {
+  width: 15%;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.acct-lines .table th:last-child,
+.acct-lines .table td:last-child {
+  width: 12%;
+  text-align: right;
+}
+
+.acct-lines .table td .input {
+  width: 100%;
+  min-width: 0;
+}
+
+.acct-lines .acct-line {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) 88px 118px 118px 40px;
+  gap: 10px;
+  align-items: center;
+}
+
+/* --- Form groups --------------------------------------------------------- */
+
+.acct-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.acct-group:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.acct-group__title {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+/* --- Totals preview ------------------------------------------------------ */
+
+.acct-preview {
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl, 12px);
+  background: var(--card-2);
+  overflow: hidden;
+}
+
+.acct-preview__title {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.acct-preview__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.acct-preview__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 14px;
+  font-size: var(--fs-md);
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+
+.acct-preview__row:last-child {
+  border-bottom: 0;
+}
+
+.acct-preview__row strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-preview__row--total {
+  background: var(--card);
+  color: var(--text);
+  font-weight: 800;
+}
+
+/* --- Segmented sub-tabs (banking, reports) ------------------------------- */
+
+.acct-seg {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-ctl, 12px);
+  background: var(--well);
+  border: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.acct-seg button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: calc(var(--r-ctl, 12px) - 4px);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.acct-seg button:hover {
+  color: var(--text);
+}
+
+.acct-seg button.is-on {
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+/* --- Verification badge -------------------------------------------------- */
+
+.acct-verify {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  border: 1px solid color-mix(in srgb, var(--good) 40%, transparent);
+  background: color-mix(in srgb, var(--good) 12%, var(--card));
+  color: color-mix(in srgb, var(--good) 72%, var(--text));
+}
+
+.acct-verify--bad {
+  border-color: color-mix(in srgb, var(--bad) 40%, transparent);
+  background: color-mix(in srgb, var(--bad) 12%, var(--card));
+  color: color-mix(in srgb, var(--bad) 72%, var(--text));
+}
+
+/* --- Financial statement rows -------------------------------------------- */
+
+.acct-report {
+  display: flex;
+  flex-direction: column;
+}
+
+.acct-report__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-md);
+  color: var(--muted);
+}
+
+.acct-report__row:last-child {
+  border-bottom: 0;
+}
+
+.acct-report__row strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Action rows --------------------------------------------------------- */
+
+.acct-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.acct-actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.acct-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+/* --- Table cell helpers -------------------------------------------------- */
+
+.acct-entry-no {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.acct-date,
+.acct-due {
+  white-space: nowrap;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-due--overdue {
+  color: var(--bad);
+  font-weight: 700;
+}
+
+.acct-in {
+  color: var(--good);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-balance {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* --- Printable invoice / payslip ----------------------------------------- */
+
+.acct-print-area {
+  background: var(--card);
+  color: var(--text);
+  padding: 24px;
+  border-radius: var(--r-ctl, 12px);
+  border: 1px solid var(--line);
+}
+
+.acct-print__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--line-2);
+}
+
+.acct-print__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--fs-md);
+  color: var(--muted);
+  text-align: right;
+}
+
+.acct-print__totals {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.acct-print__notes {
+  margin-top: 18px;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Only the printable document is emitted when printing. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .acct-print-area,
+  .acct-print-area * {
+    visibility: visible;
+  }
+
+  .acct-print-area {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
+.acct-printing {
+  display: none;
+}
+
+@media print {
+  .acct-printing {
+    display: block;
+  }
+}
+
+/* --- 3-tile KPI rows (master-data pages: Expense / Asset Categories) --- */
+/* Compact, equal-width metric tiles instead of oversized banners. */
+.kpis--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.kpis--3 .kpi {
+  padding: 14px 16px;
+}
+.kpis--3 .kpi__value {
+  font-size: var(--fs-3xl, 22px);
+}
+
+/* ====================================================================
+   ACCOUNTS ATTACHMENTS & UPLOAD COMPONENT (Images & PDFs)
+   ==================================================================== */
+.acct-attach-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.acct-attach-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.acct-attach-label {
+  font-size: var(--fs-xs, 12px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.acct-attach-count {
+  font-size: var(--fs-xs, 12px);
+  font-weight: 600;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.acct-dropzone {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px dashed var(--line-2, rgba(20, 28, 45, 0.2));
+  background: var(--card-2, #f2f4f7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acct-dropzone:hover,
+.acct-dropzone.is-dragover {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 6%, var(--card-2));
+  transform: translateY(-1px);
+}
+
+.acct-dropzone-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.acct-dropzone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.acct-dropzone-text b {
+  font-size: var(--fs-sm, 13px);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.acct-dropzone-text span {
+  font-size: var(--fs-xs, 12px);
+  color: var(--muted);
+}
+
+.acct-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.acct-file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--raised, #ffffff);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: border-color 0.15s ease;
+}
+
+.acct-file-item:hover {
+  border-color: var(--line-2);
+}
+
+.acct-file-badge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 3px 6px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.acct-file-badge.badge--pdf {
+  background: #ff4d4f18;
+  color: #ff4d4f;
+  border: 1px solid #ff4d4f30;
+}
+
+.acct-file-badge.badge--img {
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.acct-file-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.acct-file-name {
+  font-size: var(--fs-sm, 13px);
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acct-file-meta {
+  font-size: var(--fs-2xs, 11px);
+  color: var(--faint);
+}
+
+.acct-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.acct-btn-remove:hover {
+  color: #ff4d4f !important;
+}
+
+.acct-view-attachments {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+

@@ -1,0 +1,212 @@
+{
+  "ranAt": "2026-11-09T15:54:38.401Z",
+  "total": 34,
+  "passed": 34,
+  "failed": 0,
+  "results": [
+    {
+      "id": "SB-01",
+      "feature": "Sidebar",
+      "name": "only ONE section is open at a time (accordion)",
+      "status": "PASS"
+    },
+    {
+      "id": "SB-02",
+      "feature": "Sidebar",
+      "name": "opening a lower section scrolls the sidebar so its whole sub-list is visible",
+      "status": "PASS"
+    },
+    {
+      "id": "SB-03",
+      "feature": "Sidebar",
+      "name": "clicking the open section again collapses it",
+      "status": "PASS"
+    },
+    {
+      "id": "SB-04",
+      "feature": "Sidebar",
+      "name": "sidebar scroll position survives a page refresh (no jump to top)",
+      "status": "PASS"
+    },
+    {
+      "id": "SB-05",
+      "feature": "Sidebar",
+      "name": "with no saved scroll the active item is brought into view",
+      "status": "PASS"
+    },
+    {
+      "id": "MS-01",
+      "feature": "Masters group",
+      "name": "sidebar has a \"Masters\" title holding the category pages",
+      "status": "PASS"
+    },
+    {
+      "id": "MS-02",
+      "feature": "Masters group",
+      "name": "every master link opens its page and highlights itself under Masters",
+      "status": "PASS"
+    },
+    {
+      "id": "MS-03",
+      "feature": "Masters group",
+      "name": "category pages are no longer listed under Clients / Accounts / HR",
+      "status": "PASS"
+    },
+    {
+      "id": "RC-01",
+      "feature": "Register client page",
+      "name": "form rows hold 3 values per line (3-column grid, Corporate Details)",
+      "status": "PASS"
+    },
+    {
+      "id": "RC-02",
+      "feature": "Register client page",
+      "name": "sections are themed cards; \"Agreement\" upload is replaced by a Documents container",
+      "status": "PASS"
+    },
+    {
+      "id": "RC-03",
+      "feature": "Register client page",
+      "name": "Add Document adds Name / Upload / Action rows; upload fills the name; Action removes the row",
+      "status": "PASS"
+    },
+    {
+      "id": "RC-04",
+      "feature": "Register client page",
+      "name": "validation: a document needs both a name and a file",
+      "status": "PASS"
+    },
+    {
+      "id": "RC-05",
+      "feature": "Register client page",
+      "name": "submit saves the client with its documents (visible under Contracts)",
+      "status": "PASS"
+    },
+    {
+      "id": "RC-06",
+      "feature": "Register client page",
+      "name": "Edit opens the existing documents; removing one and saving deletes it",
+      "status": "PASS"
+    },
+    {
+      "id": "PF-01",
+      "feature": "Profile",
+      "name": "has Username, Phone number, Password, Confirm password and a view-only Role",
+      "status": "PASS"
+    },
+    {
+      "id": "PF-02",
+      "feature": "Profile",
+      "name": "form uses the 3-column themed grid",
+      "status": "PASS"
+    },
+    {
+      "id": "PF-03",
+      "feature": "Profile",
+      "name": "validation: bad phone, short password and mismatch are rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "PF-04",
+      "feature": "Profile",
+      "name": "saving updates username & phone, clears the password fields and stamps \"Changed\" date",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-01",
+      "feature": "Employee page",
+      "name": "\"Add employee\" opens a full page (no drawer)",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-02",
+      "feature": "Employee page",
+      "name": "five themed section cards in 3-column grids",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-03",
+      "feature": "Employee page",
+      "name": "validation: first name, branch and joining date are required",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-04",
+      "feature": "Employee page",
+      "name": "portal login: password and confirm password must match",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-05",
+      "feature": "Employee page",
+      "name": "CREATE saves and returns to the roster",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-06",
+      "feature": "Employee page",
+      "name": "EDIT opens the same page prefilled; saving updates",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-07",
+      "feature": "Employee page",
+      "name": "Cancel returns to the roster without saving",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-01",
+      "feature": "Template colour",
+      "name": "a colour picker (presets + custom + reset) sits above the live preview",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-02",
+      "feature": "Template colour",
+      "name": "choosing a colour recolours the live A4 preview and the gallery thumbnail",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-03",
+      "feature": "Template colour",
+      "name": "custom colour input works and the choice persists after a reload",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-04",
+      "feature": "Template colour",
+      "name": "colours are per template (Crimson Creative keeps its own colour) and Reset restores the original",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-05",
+      "feature": "Default template marker",
+      "name": "no template is marked before a default is chosen",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-06",
+      "feature": "Default template marker",
+      "name": "Set as Default marks that template in the left list",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-07",
+      "feature": "Default template marker",
+      "name": "default is kept per document type and survives a reload; changing it moves the marker",
+      "status": "PASS"
+    },
+    {
+      "id": "TP-08",
+      "feature": "Template colour",
+      "name": "the chosen colour is used by real documents (invoice preview of the default template)",
+      "status": "PASS"
+    },
+    {
+      "id": "GEN-01",
+      "feature": "Console health",
+      "name": "no JavaScript errors were raised during the run",
+      "status": "PASS"
+    }
+  ]
+}

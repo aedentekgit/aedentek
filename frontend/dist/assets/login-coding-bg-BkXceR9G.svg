@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Dark green developer workspace with code on a monitor">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#030711"/>
+      <stop offset="0.45" stop-color="#081025"/>
+      <stop offset="1" stop-color="#0d193a"/>
+    </linearGradient>
+    <radialGradient id="screenGlow" cx="0.5" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#2d5ad4" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#163ca3" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#163ca3" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lampGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd98a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffd98a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a233a"/>
+      <stop offset="0.12" stop-color="#101729"/>
+      <stop offset="1" stop-color="#05080f"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070e21"/>
+      <stop offset="1" stop-color="#0a142f"/>
+    </linearGradient>
+    <linearGradient id="bezel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c202b"/>
+      <stop offset="1" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f377a"/>
+      <stop offset="1" stop-color="#0b183d"/>
+    </linearGradient>
+    <filter id="blur40" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="blur6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="blur14" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+    <pattern id="keys" width="26" height="22" patternUnits="userSpaceOnUse">
+      <rect x="2" y="2" width="21" height="17" rx="3" fill="#131826" stroke="#2a334a" stroke-width="1"/>
+    </pattern>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#2d5ad4" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Wall -->
+  <rect width="1920" height="1080" fill="url(#wall)"/>
+  <rect width="1920" height="760" fill="url(#grid)"/>
+
+  <!-- Soft light pools -->
+  <circle cx="1260" cy="380" r="520" fill="url(#screenGlow)" filter="url(#blur40)"/>
+  <circle cx="1780" cy="120" r="260" fill="#1440b8" opacity="0.12" filter="url(#blur40)"/>
+  <circle cx="300" cy="880" r="300" fill="#0c256b" opacity="0.18" filter="url(#blur40)"/>
+
+  <!-- Bokeh -->
+  <g fill="#6e8ee7" filter="url(#blur6)">
+    <circle cx="980" cy="110" r="22" opacity="0.18"/>
+    <circle cx="1090" cy="70" r="12" opacity="0.22"/>
+    <circle cx="1500" cy="90" r="30" opacity="0.14"/>
+    <circle cx="1640" cy="190" r="16" opacity="0.2"/>
+    <circle cx="1860" cy="260" r="26" opacity="0.14"/>
+    <circle cx="860" cy="260" r="14" opacity="0.18"/>
+    <circle cx="1830" cy="520" r="20" opacity="0.12"/>
+  </g>
+
+  <!-- Wall shelf with books/sticky notes -->
+  <g opacity="0.9">
+    <rect x="760" y="196" width="230" height="8" rx="2" fill="#1c253d"/>
+    <rect x="780" y="140" width="22" height="56" rx="2" fill="#0f245e"/>
+    <rect x="806" y="152" width="18" height="44" rx="2" fill="#1b398a"/>
+    <rect x="828" y="136" width="24" height="60" rx="2" fill="#0a1a46"/>
+    <rect x="856" y="160" width="16" height="36" rx="2" fill="#2b4eb0"/>
+    <rect x="900" y="146" width="62" height="50" rx="3" fill="#0b132a" stroke="#2d5ad4" stroke-opacity="0.5"/>
+    <text x="912" y="177" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="20" fill="#6e8ee7">{ }</text>
+  </g>
+
+  <!-- Pinned diagrams (flow charts / wireframes) -->
+  <g opacity="0.85">
+    <rect x="1560" y="130" width="150" height="190" rx="4" fill="#0b132a" stroke="#2d5ad4" stroke-opacity="0.35"/>
+    <rect x="1578" y="150" width="114" height="14" rx="3" fill="#1b398a" opacity="0.7"/>
+    <rect x="1578" y="176" width="52" height="40" rx="3" fill="none" stroke="#6e8ee7" stroke-opacity="0.6"/>
+    <rect x="1640" y="176" width="52" height="40" rx="3" fill="none" stroke="#6e8ee7" stroke-opacity="0.6"/>
+    <path d="M1604 216v22h60v-22" fill="none" stroke="#6e8ee7" stroke-opacity="0.6"/>
+    <rect x="1590" y="246" width="90" height="26" rx="13" fill="none" stroke="#6e8ee7" stroke-opacity="0.6"/>
+    <rect x="1578" y="284" width="114" height="6" rx="3" fill="#1b398a" opacity="0.6"/>
+    <rect x="1730" y="170" width="130" height="150" rx="4" fill="#0b132a" stroke="#2d5ad4" stroke-opacity="0.35"/>
+    <text x="1744" y="200" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="15" fill="#6e8ee7">git push</text>
+    <text x="1744" y="224" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="15" fill="#345ed3" opacity="0.8">✓ build ok</text>
+    <text x="1744" y="248" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="15" fill="#6e8ee7" opacity="0.7">v2.4.1</text>
+    <text x="1744" y="290" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="26" fill="#2d5ad4">&lt;/&gt;</text>
+  </g>
+
+  <!-- Main monitor -->
+  <g>
+    <rect x="1000" y="236" width="720" height="440" rx="18" fill="url(#bezel)" stroke="#2d354a" stroke-width="2"/>
+    <rect x="1018" y="254" width="684" height="392" rx="8" fill="url(#screen)"/>
+    <!-- title bar -->
+    <rect x="1018" y="254" width="684" height="30" rx="8" fill="#0b1531"/>
+    <circle cx="1040" cy="269" r="5.5" fill="#ff6b6b"/>
+    <circle cx="1060" cy="269" r="5.5" fill="#fbbf24"/>
+    <circle cx="1080" cy="269" r="5.5" fill="#345ed3"/>
+    <text x="1300" y="274" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12" fill="#7f8eb9">app.config.ts — workspace</text>
+    <!-- sidebar -->
+    <rect x="1018" y="284" width="150" height="362" fill="#08112a"/>
+    <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12" fill="#7f8eb9">
+      <text x="1032" y="308" fill="#345ed3">▾ src</text>
+      <text x="1046" y="330">api.ts</text>
+      <text x="1046" y="350" fill="#6e8ee7">auth.ts</text>
+      <text x="1046" y="370">routes.ts</text>
+      <text x="1046" y="390">db.ts</text>
+      <text x="1032" y="414" fill="#345ed3">▾ ui</text>
+      <text x="1046" y="436">Login.tsx</text>
+      <text x="1046" y="456">Table.tsx</text>
+      <text x="1032" y="480">package.json</text>
+    </g>
+    <rect x="1018" y="316" width="150" height="22" fill="#2d5ad4" opacity="0.12"/>
+    <!-- tabs -->
+    <rect x="1168" y="284" width="534" height="26" fill="#0a142f"/>
+    <rect x="1168" y="284" width="130" height="26" fill="#070e21"/>
+    <text x="1184" y="302" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12" fill="#a7bbf3">auth.ts</text>
+    <text x="1318" y="302" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12" fill="#5f6e99">routes.ts</text>
+    <!-- code -->
+    <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="14.5">
+      <g fill="#3f507d" text-anchor="end">
+        <text x="1200" y="338">1</text><text x="1200" y="362">2</text><text x="1200" y="386">3</text>
+        <text x="1200" y="410">4</text><text x="1200" y="434">5</text><text x="1200" y="458">6</text>
+        <text x="1200" y="482">7</text><text x="1200" y="506">8</text><text x="1200" y="530">9</text>
+        <text x="1200" y="554">10</text><text x="1200" y="578">11</text><text x="1200" y="602">12</text><text x="1200" y="626">13</text>
+      </g>
+      <text x="1216" y="338"><tspan fill="#6e8ee7">import</tspan><tspan fill="#d1dcfa"> { </tspan><tspan fill="#fbbf24">Router</tspan><tspan fill="#d1dcfa"> } </tspan><tspan fill="#6e8ee7">from</tspan><tspan fill="#a7bbf3"> 'express'</tspan><tspan fill="#d1dcfa">;</tspan></text>
+      <text x="1216" y="362"><tspan fill="#6e8ee7">import</tspan><tspan fill="#d1dcfa"> jwt </tspan><tspan fill="#6e8ee7">from</tspan><tspan fill="#a7bbf3"> 'jsonwebtoken'</tspan><tspan fill="#d1dcfa">;</tspan></text>
+      <text x="1216" y="410"><tspan fill="#6e8ee7">export async function</tspan><tspan fill="#fbbf24"> login</tspan><tspan fill="#d1dcfa">(req, res) {</tspan></text>
+      <text x="1236" y="434"><tspan fill="#6e8ee7">const</tspan><tspan fill="#d1dcfa"> { email, password } = req.</tspan><tspan fill="#7dd3fc">body</tspan><tspan fill="#d1dcfa">;</tspan></text>
+      <text x="1236" y="458"><tspan fill="#6e8ee7">const</tspan><tspan fill="#d1dcfa"> user = </tspan><tspan fill="#6e8ee7">await</tspan><tspan fill="#fbbf24"> findUser</tspan><tspan fill="#d1dcfa">(email);</tspan></text>
+      <text x="1236" y="482"><tspan fill="#6e8ee7">if</tspan><tspan fill="#d1dcfa"> (!user || !</tspan><tspan fill="#fbbf24">verify</tspan><tspan fill="#d1dcfa">(password)) {</tspan></text>
+      <text x="1256" y="506"><tspan fill="#6e8ee7">return</tspan><tspan fill="#d1dcfa"> res.</tspan><tspan fill="#fbbf24">status</tspan><tspan fill="#d1dcfa">(</tspan><tspan fill="#fca5a5">401</tspan><tspan fill="#d1dcfa">);</tspan></text>
+      <text x="1236" y="530"><tspan fill="#d1dcfa">}</tspan></text>
+      <text x="1236" y="554"><tspan fill="#6e8ee7">const</tspan><tspan fill="#d1dcfa"> token = jwt.</tspan><tspan fill="#fbbf24">sign</tspan><tspan fill="#d1dcfa">({ id: user.id });</tspan></text>
+      <text x="1236" y="578"><tspan fill="#6e8ee7">return</tspan><tspan fill="#d1dcfa"> res.</tspan><tspan fill="#fbbf24">json</tspan><tspan fill="#d1dcfa">({ token });</tspan></text>
+      <text x="1216" y="602"><tspan fill="#d1dcfa">}</tspan></text>
+      <text x="1216" y="626"><tspan fill="#3f507d">// secure login · tokens expire in 8h</tspan></text>
+    </g>
+    <rect x="1218" y="391" width="2" height="0" fill="#2d5ad4"/>
+    <!-- status bar -->
+    <rect x="1018" y="630" width="684" height="16" rx="0" fill="#0f286b"/>
+    <text x="1030" y="642" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="11" fill="#d1dcfa">⎇ main   ✓ 0 errors   TypeScript</text>
+    <!-- screen sheen -->
+    <path d="M1018 254h300l-200 392h-100z" fill="#ffffff" opacity="0.025"/>
+    <!-- stand -->
+    <path d="M1300 676h140l24 70h-188z" fill="#0f131f" stroke="#2d354a"/>
+    <rect x="1230" y="742" width="280" height="16" rx="8" fill="#131826" stroke="#2d354a"/>
+  </g>
+
+  <!-- Desk surface -->
+  <path d="M0 760 L1920 740 L1920 1080 L0 1080 Z" fill="url(#desk)"/>
+  <path d="M0 760 L1920 740" stroke="#2d5ad4" stroke-opacity="0.25" stroke-width="2"/>
+  <ellipse cx="1300" cy="790" rx="620" ry="22" fill="#2d5ad4" opacity="0.1" filter="url(#blur14)"/>
+
+  <!-- Keyboard -->
+  <g transform="translate(1040 808) skewX(-8)">
+    <rect width="440" height="104" rx="12" fill="#0d111b" stroke="#2d354a"/>
+    <rect x="10" y="10" width="420" height="84" fill="url(#keys)"/>
+    <rect x="120" y="68" width="200" height="20" rx="4" fill="#131826" stroke="#2a334a"/>
+    <g opacity="0.65" fill="#345ed3"><rect x="14" y="14" width="22" height="3" rx="1.5"/></g>
+  </g>
+  <!-- Mouse -->
+  <rect x="1540" y="828" width="48" height="74" rx="24" fill="#101523" stroke="#2d354a"/>
+  <path d="M1564 828v30" stroke="#2d354a"/>
+
+  <!-- Coffee mug + steam -->
+  <g>
+    <path d="M1640 808h62v62a16 16 0 0 1-16 16h-30a16 16 0 0 1-16-16z" fill="#e6eaf4" opacity="0.92"/>
+    <path d="M1702 822h12a14 14 0 0 1 0 28h-12" fill="none" stroke="#e6eaf4" stroke-width="7" opacity="0.92"/>
+    <ellipse cx="1671" cy="810" rx="31" ry="6" fill="#4a2f1a"/>
+    <path d="M1658 786c-10-14 10-22 0-38M1678 790c-10-14 10-22 0-38" fill="none" stroke="#a7bbf3" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round" filter="url(#blur6)"/>
+  </g>
+
+  <!-- Desk lamp -->
+  <circle cx="860" cy="560" r="230" fill="url(#lampGlow)" filter="url(#blur14)"/>
+  <g stroke="#2d354a" stroke-width="7" fill="none" stroke-linecap="round">
+    <path d="M880 800L930 640L860 520"/>
+  </g>
+  <ellipse cx="880" cy="806" rx="52" ry="12" fill="#0f131f" stroke="#2d354a"/>
+  <path d="M830 520l70-30 38 56-58 24z" fill="#141d34" stroke="#2d5ad4" stroke-opacity="0.5"/>
+  <path d="M846 560l60-26" stroke="#ffd98a" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Notebook + pen -->
+  <g transform="translate(560 830) rotate(-6)">
+    <rect width="190" height="120" rx="6" fill="#0c142a" stroke="#2d5ad4" stroke-opacity="0.4"/>
+    <g stroke="#2d5ad4" stroke-opacity="0.35">
+      <path d="M22 34h140M22 54h110M22 74h126M22 94h80"/>
+    </g>
+    <rect x="198" y="40" width="8" height="82" rx="4" fill="#345ed3" transform="rotate(14 198 40)"/>
+  </g>
+
+  <!-- Plant -->
+  <g>
+    <path d="M1800 900h110v90a22 22 0 0 1-22 22h-66a22 22 0 0 1-22-22z" fill="#101523" stroke="#2d354a"/>
+    <path d="M1855 900C1820 820 1790 760 1760 700C1800 730 1840 790 1855 900Z" fill="url(#leaf)"/>
+    <path d="M1855 900C1870 800 1900 740 1900 650C1870 700 1850 790 1855 900Z" fill="url(#leaf)" opacity="0.9"/>
+    <path d="M1855 900C1830 850 1770 830 1730 800C1780 800 1830 830 1855 900Z" fill="url(#leaf)" opacity="0.8"/>
+    <path d="M1855 900C1890 850 1930 840 1950 790C1920 800 1870 830 1855 900Z" fill="url(#leaf)" opacity="0.85"/>
+  </g>
+
+  <!-- Floating code glyphs -->
+  <g font-family="ui-monospace,Menlo,Consolas,monospace" fill="#345ed3" filter="url(#blur6)" opacity="0.35">
+    <text x="720" y="360" font-size="54">&lt;/&gt;</text>
+    <text x="1520" y="60" font-size="44">{ }</text>
+    <text x="860" y="700" font-size="40">;</text>
+  </g>
+  <g font-family="ui-monospace,Menlo,Consolas,monospace" fill="#6e8ee7" opacity="0.5">
+    <text x="730" y="352" font-size="40">&lt;/&gt;</text>
+    <text x="1528" y="52" font-size="34">{ }</text>
+    <text x="1840" y="440" font-size="28">#!</text>
+    <text x="940" y="64" font-size="24">01</text>
+  </g>
+
+  <!-- Left-side darkening so the sign-in card stays readable -->
+  <rect width="1920" height="1080" fill="#020610" opacity="0.18"/>
+</svg>

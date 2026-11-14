@@ -1,0 +1,260 @@
+[
+  {
+    "id": "C-01",
+    "label": "create → 201",
+    "ok": true,
+    "detail": "HTTP 201"
+  },
+  {
+    "id": "C-02",
+    "label": "invoice number auto-generated",
+    "ok": true,
+    "detail": "INV-2026-0119"
+  },
+  {
+    "id": "C-03",
+    "label": "client, title, items and totals stored",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "C-04",
+    "label": "create without clientName → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "C-05",
+    "label": "create without title is allowed (title optional)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "C-06",
+    "label": "create with empty body → 4xx",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "R-01",
+    "label": "list contains the invoice",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "R-02",
+    "label": "read by id",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "R-03",
+    "label": "read unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "R-04",
+    "label": "read malformed id → 4xx",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-01",
+    "label": "update client name",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-02",
+    "label": "update title",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-03",
+    "label": "update due date",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-04",
+    "label": "update buyer GSTIN and notes",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-05",
+    "label": "changing items recalculates subtotal (3500)",
+    "ok": true,
+    "detail": "3500"
+  },
+  {
+    "id": "U-06",
+    "label": "GST 18% recalculated (630) and total 4130",
+    "ok": true,
+    "detail": "630/4130"
+  },
+  {
+    "id": "U-07",
+    "label": "balance follows the new total (4130)",
+    "ok": true,
+    "detail": "4130"
+  },
+  {
+    "id": "U-08",
+    "label": "CGST + SGST split sums to GST",
+    "ok": true,
+    "detail": "315+315"
+  },
+  {
+    "id": "U-09",
+    "label": "client-sent totals are ignored (server recomputes)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-10",
+    "label": "switching to Export LUT sets GST to 0",
+    "ok": true,
+    "detail": "[0,2000]"
+  },
+  {
+    "id": "U-11",
+    "label": "IGST puts the tax in igstAmount",
+    "ok": true,
+    "detail": "360/0"
+  },
+  {
+    "id": "U-12",
+    "label": "invoice number / paid amount / id cannot be overwritten",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-13",
+    "label": "update with blank client name → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "U-15",
+    "label": "update with empty items → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "U-16",
+    "label": "update with item without description → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "U-17",
+    "label": "update with negative price → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "U-18",
+    "label": "update with negative quantity → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "U-19",
+    "label": "update with invalid due date → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "U-20",
+    "label": "update with invalid issue date → 400",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "id": "U-21",
+    "label": "rejected updates change nothing",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-22",
+    "label": "update unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "U-23",
+    "label": "update malformed id → 4xx",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "P-01",
+    "label": "partial payment recorded (balance 1360, Partially Paid)",
+    "ok": true,
+    "detail": "[200,1360,\"Partially Paid\"]"
+  },
+  {
+    "id": "P-02",
+    "label": "cannot lower the total below the amount already paid → 400",
+    "ok": true,
+    "detail": "HTTP 400 The total cannot be lower than the amount already paid"
+  },
+  {
+    "id": "P-03",
+    "label": "raising the total keeps payments: paid 1000, balance recalculated (2540), still Partially Paid",
+    "ok": true,
+    "detail": "[1000,2540,\"Partially Paid\"]"
+  },
+  {
+    "id": "P-04",
+    "label": "edit that makes total equal to the amount paid sets status Paid, balance 0",
+    "ok": true,
+    "detail": "[200,1000,0,\"Paid\"]"
+  },
+  {
+    "id": "D-01",
+    "label": "delete → 200",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-02",
+    "label": "record gone (404 on read, absent from list)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-03",
+    "label": "second delete → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-04",
+    "label": "delete unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-05",
+    "label": "delete malformed id → 4xx",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-06",
+    "label": "other invoices unaffected",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "D-07",
+    "label": "a partially paid invoice can be deleted",
+    "ok": true,
+    "detail": ""
+  }
+]

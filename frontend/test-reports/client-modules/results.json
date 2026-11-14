@@ -1,0 +1,272 @@
+{
+  "ranAt": "2026-11-09T15:51:10.781Z",
+  "total": 44,
+  "passed": 44,
+  "failed": 0,
+  "results": [
+    {
+      "id": "SVC-01",
+      "feature": "Service Type page",
+      "name": "sidebar shows a \"Service Types\" link (now under the Masters group)",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-02",
+      "feature": "Service Type page",
+      "name": "page renders heading, table and seeded types",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-03",
+      "feature": "Service Type page",
+      "name": "CREATE active service type through the modal",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-04",
+      "feature": "Service Type page",
+      "name": "CREATE inactive service type",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-05",
+      "feature": "Service Type page",
+      "name": "validation: empty name shows an error and does not save",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-06",
+      "feature": "Service Type page",
+      "name": "validation: duplicate name is rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-07",
+      "feature": "Service Type page",
+      "name": "status filter: Active hides inactive, Inactive hides active",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-08",
+      "feature": "Service Type page",
+      "name": "search filters rows",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-09",
+      "feature": "Service Type page",
+      "name": "UPDATE: edit description via modal",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-10",
+      "feature": "Service Type page",
+      "name": "UPDATE: clicking the status pill toggles Active ↔ Inactive",
+      "status": "PASS"
+    },
+    {
+      "id": "LOG-01",
+      "feature": "Login credentials",
+      "name": "tab renamed \"Login Credentials\" (no \"Vault\" label)",
+      "status": "PASS"
+    },
+    {
+      "id": "LOG-02",
+      "feature": "Login credentials",
+      "name": "table shows login columns",
+      "status": "PASS"
+    },
+    {
+      "id": "LOG-03",
+      "feature": "Login credentials",
+      "name": "Service Type dropdown lists ACTIVE types only",
+      "status": "PASS"
+    },
+    {
+      "id": "LOG-04",
+      "feature": "Login credentials",
+      "name": "save a new login with an active service type",
+      "status": "PASS"
+    },
+    {
+      "id": "LOG-05",
+      "feature": "Login credentials",
+      "name": "edit and delete a login",
+      "status": "PASS"
+    },
+    {
+      "id": "SVC-11",
+      "feature": "Service Type page",
+      "name": "DELETE service types with confirmation (cancel keeps, confirm removes)",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-01",
+      "feature": "Register client page",
+      "name": "\"Register New Client\" navigates to a full page (no popup)",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-02",
+      "feature": "Register client page",
+      "name": "page has logo, agreement From/To and document upload controls",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-03",
+      "feature": "Register client page",
+      "name": "required-field validation blocks submit",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-04",
+      "feature": "Register client page",
+      "name": "agreement date calculation updates live (1 year / 365 days)",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-05",
+      "feature": "Register client page",
+      "name": "To date before From date shows an error",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-06",
+      "feature": "Register client page",
+      "name": "logo upload previews the image; document upload shows file name",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-07",
+      "feature": "Register client page",
+      "name": "submit creates the client and opens its 360 page",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-08",
+      "feature": "Register client page",
+      "name": "GENERAL section shows agreement dates + calculated duration/remaining + document",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-09",
+      "feature": "Register client page",
+      "name": "logo is saved and shown in the Client Directory",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-10",
+      "feature": "Register client page",
+      "name": "Edit Profile opens the same page prefilled; agreement dates can be changed",
+      "status": "PASS"
+    },
+    {
+      "id": "PRJ-01",
+      "feature": "Projects CRUD",
+      "name": "empty state + \"Add Project\" button present",
+      "status": "PASS"
+    },
+    {
+      "id": "PRJ-02",
+      "feature": "Projects CRUD",
+      "name": "validation: title required",
+      "status": "PASS"
+    },
+    {
+      "id": "PRJ-03",
+      "feature": "Projects CRUD",
+      "name": "validation: completed > total milestones",
+      "status": "PASS"
+    },
+    {
+      "id": "PRJ-04",
+      "feature": "Projects CRUD",
+      "name": "CREATE project; progress derived from milestones",
+      "status": "PASS"
+    },
+    {
+      "id": "PRJ-05",
+      "feature": "Projects CRUD",
+      "name": "UPDATE project: milestones to 4/4 marks it Completed (100%)",
+      "status": "PASS"
+    },
+    {
+      "id": "PRJ-06",
+      "feature": "Projects CRUD",
+      "name": "add a second project then DELETE it (confirm)",
+      "status": "PASS"
+    },
+    {
+      "id": "INV-01",
+      "feature": "Invoices by project",
+      "name": "table has Project column and each seeded invoice shows its project",
+      "status": "PASS"
+    },
+    {
+      "id": "INV-02",
+      "feature": "Invoices by project",
+      "name": "project filter shows only that project's invoices and its total",
+      "status": "PASS"
+    },
+    {
+      "id": "INV-03",
+      "feature": "Invoices by project",
+      "name": "reassign an invoice to another project and the filter/Projects-tab totals follow",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-01",
+      "feature": "Contracts CRUD",
+      "name": "\"Add Contract\" present; validation requires a name",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-02",
+      "feature": "Contracts CRUD",
+      "name": "validation: end date before start date",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-03",
+      "feature": "Contracts CRUD",
+      "name": "CREATE contract with category, dates, notes and file upload",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-04",
+      "feature": "Contracts CRUD",
+      "name": "validity badge shows days left",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-05",
+      "feature": "Contracts CRUD",
+      "name": "DOWNLOAD returns the uploaded file bytes (stored in DB)",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-06",
+      "feature": "Contracts CRUD",
+      "name": "UPDATE contract (rename, category) via edit modal, keeps file",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-07",
+      "feature": "Contracts CRUD",
+      "name": "add a second contract then DELETE it (cancel keeps, confirm removes)",
+      "status": "PASS"
+    },
+    {
+      "id": "CON-08",
+      "feature": "Contracts CRUD",
+      "name": "delete last contract shows empty state",
+      "status": "PASS"
+    },
+    {
+      "id": "GEN-01",
+      "feature": "Console health",
+      "name": "no JavaScript errors were raised during the run",
+      "status": "PASS"
+    }
+  ]
+}

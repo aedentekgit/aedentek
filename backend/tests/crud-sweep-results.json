@@ -1,0 +1,1496 @@
+[
+  {
+    "resource": "Clients",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Clients",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Client 'QA Co 1794206857686' registered successfully\",\"data\":{\"clientId\":\"client-1794206857768\",\"name\":\"QA Contact 1794206857686\",\"co"
+  },
+  {
+    "resource": "Clients",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Clients",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Clients",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Client 'QA updated 1794206857686' updated successfully\",\"data\":{\"financialSummary\":{\"totalBilled\":0,\"totalPaid\":0,\"totalOutstanding\":"
+  },
+  {
+    "resource": "Clients",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"company\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Clients",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Clients",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Client 'QA updated 1794206857686' deleted successfully\",\"data\":{\"clientId\":\"client-1794206857768\",\"company\":\"QA updated 1794206857686"
+  },
+  {
+    "resource": "Clients",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Clients",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Invoices",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Invoices",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Tax invoice created successfully\",\"data\":{\"invoiceNumber\":\"QA invoiceNumber 1794206857686\",\"propagationId\":null,\"propagationNumber\":\""
+  },
+  {
+    "resource": "Invoices",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Invoices",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Invoices",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Invoice updated successfully\",\"data\":{\"bankDetails\":{\"bankName\":\"HDFC Bank\",\"accountName\":\"Aedentek Cloud Solutions LLP\",\"accountNumb"
+  },
+  {
+    "resource": "Invoices",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"title\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Invoices",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Invoices",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Invoice deleted successfully\",\"id\":\"6af16c890aefa6605634aa6e\"}"
+  },
+  {
+    "resource": "Invoices",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Invoices",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Commercial propagation created successfully\",\"data\":{\"propagationNumber\":\"QA propagationNumber 1794206857686\",\"clientId\":\"\",\"clientNa"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Propagation updated successfully\",\"data\":{\"bankDetails\":{\"bankName\":\"HDFC Bank\",\"accountName\":\"AEDENTEK Cloud Solutions LLC\",\"account"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"title\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Propagation deleted successfully\",\"id\":\"6af16c890aefa6605634aa7b\"}"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Propagations (Quotations)",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "GST rates",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "GST rates",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"GST Tax Rate slab created successfully\",\"data\":{\"hsnCode\":\"997686\",\"gstRate\":18,\"taxType\":\"Standard\",\"serviceName\":\"QA Svc 1794206857"
+  },
+  {
+    "resource": "GST rates",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "GST rates",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "GST rates",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"GST Tax Rate slab updated successfully\",\"data\":{\"_id\":\"6af16c890aefa6605634aa89\",\"hsnCode\":\"997686\",\"gstRate\":18,\"taxType\":\"Standard\""
+  },
+  {
+    "resource": "GST rates",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"serviceName\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "GST rates",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "GST rates",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"GST Tax Rate slab deleted successfully\",\"data\":{\"id\":\"6af16c890aefa6605634aa89\"}}"
+  },
+  {
+    "resource": "GST rates",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "GST rates",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Sales invoice INV-000005 created successfully\",\"data\":{\"invoiceNumber\":\"INV-000005\",\"customer\":\"QA Cust 1794206857686\",\"invoiceDate\":"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Sales invoice INV-000005 updated successfully\",\"data\":{\"_id\":\"6af16c890aefa6605634aa99\",\"invoiceNumber\":\"INV-000005\",\"customer\":\"QA C"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"notes\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Sales invoice INV-000005 deleted successfully\",\"data\":{\"id\":\"6af16c890aefa6605634aa99\"}}"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Sales invoices",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Credit note CN-000001 created successfully\",\"data\":{\"creditNoteNumber\":\"CN-000001\",\"customer\":\"QA Cust 1794206857686\",\"referenceInvoi"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Credit note CN-000001 updated successfully\",\"data\":{\"_id\":\"6af16c890aefa6605634aaad\",\"creditNoteNumber\":\"CN-000001\",\"customer\":\"QA up"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"customer\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Credit note CN-000001 deleted successfully\",\"data\":{\"id\":\"6af16c890aefa6605634aaad\"}}"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Credit notes",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Expenses",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Expenses",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Expense \\\"QA Exp 1794206857686\\\" recorded successfully\",\"data\":{\"title\":\"QA Exp 1794206857686\",\"description\":\"\",\"category\":\"Other\",\"a"
+  },
+  {
+    "resource": "Expenses",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Expenses",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Expenses",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Expense \\\"QA Exp 1794206857686\\\" updated successfully\",\"data\":{\"_id\":\"6af16c890aefa6605634aac1\",\"title\":\"QA Exp 1794206857686\",\"descr"
+  },
+  {
+    "resource": "Expenses",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"notes\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Expenses",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Expenses",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Expense \\\"QA Exp 1794206857686\\\" deleted successfully\",\"data\":{\"id\":\"6af16c890aefa6605634aac1\"}}"
+  },
+  {
+    "resource": "Expenses",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Expenses",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Expense category QA code 1794206857686 created successfully\",\"data\":{\"code\":\"QA code 1794206857686\",\"name\":\"QA name 1794206857686\",\"d"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Expense category QA code 1794206857686 updated successfully\",\"data\":{\"_id\":\"6af16c890aefa6605634aae4\",\"code\":\"QA code 1794206857686\","
+  },
+  {
+    "resource": "Expense categories",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"name\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Expense category QA code 1794206857686 deleted successfully\",\"data\":{\"id\":\"6af16c890aefa6605634aae4\"}}"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Expense categories",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"EMI plan created successfully\",\"data\":{\"emiNumber\":\"EMI-000004\",\"productName\":\"QA EMI 1794206857686\",\"category\":\"Other\",\"principal\":6"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"EMI plan updated successfully\",\"data\":{\"_id\":\"6af16c890aefa6605634aaf4\",\"emiNumber\":\"EMI-000004\",\"productName\":\"QA EMI 1794206857686\""
+  },
+  {
+    "resource": "EMI plans",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"notes\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"EMI plan deleted successfully\",\"data\":{\"id\":\"6af16c890aefa6605634aaf4\"}}"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "EMI plans",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Stock inward SI-000002 recorded successfully\",\"data\":{\"inwardNumber\":\"SI-000002\",\"supplier\":\"QA Supplier 1794206857686\",\"supplierInvo"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Stock inward SI-000002 updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ab02\",\"inwardNumber\":\"SI-000002\",\"supplier\":\"QA Suppl"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"notes\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Stock inward SI-000002 deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ab02\"}}"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Stock inward",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Assets",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Assets",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Asset AST-000004 registered successfully\",\"data\":{\"assetId\":\"AST-000004\",\"assetName\":\"QA Asset 1794206857686\",\"category\":\"QA FX Cat 1"
+  },
+  {
+    "resource": "Assets",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Assets",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Assets",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Asset AST-000004 updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ab22\",\"assetId\":\"AST-000004\",\"assetName\":\"QA Asset 17942068"
+  },
+  {
+    "resource": "Assets",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"notes\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Assets",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Assets",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Asset AST-000004 deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ab22\"}}"
+  },
+  {
+    "resource": "Assets",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Assets",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Asset category QA code 1794206857686 created successfully\",\"data\":{\"code\":\"QA code 1794206857686\",\"name\":\"QA name 1794206857686\",\"des"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Asset category QA code 1794206857686 updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ab48\",\"code\":\"QA code 1794206857686\",\"n"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"name\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Asset category QA code 1794206857686 deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ab48\"}}"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Asset categories",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Journal voucher JV-000001 created successfully\",\"data\":{\"entryNumber\":\"JV-000001\",\"date\":\"QA date 1794206857686\",\"entryType\":\"Journal"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Journal voucher JV-000001 updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ab58\",\"entryNumber\":\"JV-000001\",\"date\":\"QA date 17"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"narration\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Journal voucher JV-000001 deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ab58\"}}"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Adjustment entries",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Bank account \\\"QA accountName 1794206857686\\\" created successfully\",\"data\":{\"accountNumber\":\"QA accountNumber 1794206857686\",\"account"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Bank account \\\"QA updated 1794206857686\\\" updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ab69\",\"accountNumber\":\"QA accountN"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"accountName\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Bank account \\\"QA updated 1794206857686\\\" deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ab69\"}}"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Bank accounts",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Bank transfers",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Bank transfers",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Transfer TRF-000010 completed successfully\",\"data\":{\"transferNumber\":\"TRF-000010\",\"fromAccount\":\"6af16c890aefa6605634aa5b\",\"fromAccou"
+  },
+  {
+    "resource": "Bank transfers",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Bank transfers",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Bank transfers",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Transfer TRF-000010 reversed successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ab7a\",\"transferNumber\":\"TRF-000010\",\"fromAccount\":\"6af1"
+  },
+  {
+    "resource": "Bank transfers",
+    "op": "delete reverses (kept as Reversed for audit)",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Bank transfers",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "HR branches",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "HR branches",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Branch created successfully\",\"data\":{\"name\":\"QA name 1794206857686\",\"code\":\"\",\"city\":\"\",\"address\":\"\",\"phone\":\"\",\"email\":\"\",\"manager\":"
+  },
+  {
+    "resource": "HR branches",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "HR branches",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "HR branches",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Branch updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ab91\",\"name\":\"QA updated 1794206857686\",\"code\":\"\",\"city\":\"\",\"address\""
+  },
+  {
+    "resource": "HR branches",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"name\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "HR branches",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "HR branches",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Branch deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ab91\"}}"
+  },
+  {
+    "resource": "HR branches",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "HR branches",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Staff",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Staff",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Staff member 'QA firstName 1794206857686' registered successfully\",\"data\":{\"staffCode\":\"QA-S-0002\",\"employeeCode\":\"GG008\",\"biometricI"
+  },
+  {
+    "resource": "Staff",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Staff",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Staff",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Staff member 'QA updated 1794206857686' updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634aba5\",\"staffCode\":\"QA-S-0002\",\"emplo"
+  },
+  {
+    "resource": "Staff",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"firstName\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Staff",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Staff",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Staff member 'QA updated 1794206857686' deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634aba5\"}}"
+  },
+  {
+    "resource": "Staff",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Staff",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Attendance logged for QA firstName 1794206857686\",\"data\":{\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"QA-S-0001\",\"staffName\":\"QA"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Attendance record updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634abbb\",\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"QA-"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"remarks\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Attendance record deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634abbb\"}}"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Staff attendance",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Leave request submitted for QA firstName 1794206857686\",\"data\":{\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"QA-S-0001\",\"staffNam"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "READ (record appears in list)",
+    "ok": true,
+    "detail": "not in list"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Leave request updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634abcb\",\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"QA-S-00"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"reason\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Leave request deleted and 0 attendance day(s) released\",\"data\":{\"id\":\"6af16c8a0aefa6605634abcb\"}}"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "gone after delete",
+    "ok": true,
+    "detail": "still listed"
+  },
+  {
+    "resource": "Leave requests",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Leave types",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Leave types",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Leave type created successfully\",\"data\":{\"name\":\"QA name 1794206857686\",\"code\":\"\",\"monthlyQuota\":0,\"annualQuota\":0,\"paid\":true,\"branc"
+  },
+  {
+    "resource": "Leave types",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Leave types",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Leave types",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Leave type updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634abdc\",\"name\":\"QA updated 1794206857686\",\"code\":\"\",\"monthlyQuota\":"
+  },
+  {
+    "resource": "Leave types",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"name\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Leave types",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Leave types",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Leave type deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634abdc\"}}"
+  },
+  {
+    "resource": "Leave types",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Leave types",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Shifts",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Shifts",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Shift created successfully\",\"data\":{\"name\":\"QA name 1794206857686\",\"startTime\":\"09:00\",\"endTime\":\"18:00\",\"lateAfter\":\"09:15\",\"lateDed"
+  },
+  {
+    "resource": "Shifts",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Shifts",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Shifts",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Shift updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634abe9\",\"name\":\"QA updated 1794206857686\",\"startTime\":\"09:00\",\"endTime\":"
+  },
+  {
+    "resource": "Shifts",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"name\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Shifts",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Shifts",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Shift deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634abe9\"}}"
+  },
+  {
+    "resource": "Shifts",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Shifts",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Salary structure created successfully\",\"data\":{\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"\",\"staffName\":\"QA Staff 1794206857686"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Salary structure updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634abf6\",\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"\",\"s"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"staffName\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Salary structure deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634abf6\"}}"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Salary structures",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Salary advance created successfully\",\"data\":{\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"\",\"staffName\":\"\",\"branch\":\"\",\"amount\":1"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Salary advance updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ac03\",\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"\",\"sta"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"reason\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Salary advance deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ac03\"}}"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Salary advances",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "READ list",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201 {\"success\":true,\"message\":\"Payroll adjustment created successfully\",\"data\":{\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"\",\"staffName\":\"\",\"branch\":\"\",\"perio"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "CREATE validation (empty body → 4xx)",
+    "ok": true,
+    "detail": "HTTP 400"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "READ by id",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Payroll adjustment updated successfully\",\"data\":{\"_id\":\"6af16c8a0aefa6605634ac11\",\"staffRef\":\"6af16c890aefa6605634aa52\",\"staffId\":\"\","
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "UPDATE persisted",
+    "ok": true,
+    "detail": "field \"label\" = QA updated 1794206857686"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200 {\"success\":true,\"message\":\"Payroll adjustment deleted successfully\",\"data\":{\"id\":\"6af16c8a0aefa6605634ac11\"}}"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "READ after delete → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Payroll adjustments",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": "HTTP 404"
+  },
+  {
+    "resource": "Client websites",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201"
+  },
+  {
+    "resource": "Client websites",
+    "op": "CREATE validation (no domain → 400)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "resource": "Client websites",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Client websites",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "resource": "Client websites",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Client websites",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "resource": "Client credentials",
+    "op": "CREATE",
+    "ok": true,
+    "detail": "HTTP 201"
+  },
+  {
+    "resource": "Client credentials",
+    "op": "CREATE validation (missing fields → 400)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "resource": "Client credentials",
+    "op": "UPDATE",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Client credentials",
+    "op": "UPDATE unknown id → 404",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "resource": "Client credentials",
+    "op": "DELETE",
+    "ok": true,
+    "detail": "HTTP 200"
+  },
+  {
+    "resource": "Client credentials",
+    "op": "DELETE unknown id → 404",
+    "ok": true,
+    "detail": ""
+  }
+]

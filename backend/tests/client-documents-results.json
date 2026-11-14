@@ -1,0 +1,44 @@
+{
+  "ranAt": "2026-11-09T14:41:27.074Z",
+  "total": 6,
+  "passed": 6,
+  "failed": 0,
+  "results": [
+    {
+      "id": "DOC-01",
+      "feature": "Client documents",
+      "name": "register with several document rows (name + file) stores them as contracts",
+      "status": "PASS"
+    },
+    {
+      "id": "DOC-02",
+      "feature": "Client documents",
+      "name": "validation: missing name, missing file for a new row, malformed file → 400",
+      "status": "PASS"
+    },
+    {
+      "id": "DOC-03",
+      "feature": "Client documents",
+      "name": "edit: renaming a row keeps its file; omitting a row deletes it; new row is added",
+      "status": "PASS"
+    },
+    {
+      "id": "DOC-04",
+      "feature": "Client documents",
+      "name": "edit: replacing the file of an existing row; contract metadata (category/dates) is preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "DOC-05",
+      "feature": "Client documents",
+      "name": "edit without a documents field leaves them untouched; empty list clears them",
+      "status": "PASS"
+    },
+    {
+      "id": "DOC-06",
+      "feature": "Client documents",
+      "name": "large payloads (3 × ~3 MB files) are accepted by the API body limit",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+{
+  "ranAt": "2026-11-09T14:41:26.435Z",
+  "total": 39,
+  "passed": 39,
+  "failed": 0,
+  "results": [
+    {
+      "id": "PG-01",
+      "feature": "Pagination",
+      "name": "paginateArray slices 10 per page with correct metadata",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-02",
+      "feature": "Pagination",
+      "name": "out-of-range / invalid page numbers are clamped; limit is capped at 100",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-03",
+      "feature": "Pagination",
+      "name": "API returns only 10 rows for ?page=1 with a pagination block",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-04",
+      "feature": "Pagination",
+      "name": "page 2 returns the next 10 and page 3 the remaining 5 (no overlap)",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-05",
+      "feature": "Pagination",
+      "name": "filters are applied BEFORE paging (status=Active → 20 rows → 2 pages)",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-06",
+      "feature": "Pagination",
+      "name": "custom ?limit= is honoured",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-07",
+      "feature": "Pagination",
+      "name": "requests WITHOUT ?page= still return the full list (no pagination block)",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-08",
+      "feature": "Pagination",
+      "name": "KPI block describes the whole set, not the page",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-09",
+      "feature": "Pagination",
+      "name": "server-side ordering ?sort=&dir= is applied before slicing",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-10",
+      "feature": "Pagination",
+      "name": "works on other modules (clients, service types, invoices, HR, accounts)",
+      "status": "PASS"
+    },
+    {
+      "id": "PG-11",
+      "feature": "Pagination",
+      "name": "error responses are never altered by the middleware",
+      "status": "PASS"
+    },
+    {
+      "id": "STG-01",
+      "feature": "Project stage master",
+      "name": "create / read stages with sequence and status",
+      "status": "PASS"
+    },
+    {
+      "id": "STG-02",
+      "feature": "Project stage master",
+      "name": "validation: name required, duplicate (case-insensitive) 409, bad status 400, bad sequence 400",
+      "status": "PASS"
+    },
+    {
+      "id": "STG-03",
+      "feature": "Project stage master",
+      "name": "?status=Active lists ONLY active stages (used by the project timeline picker)",
+      "status": "PASS"
+    },
+    {
+      "id": "STG-04",
+      "feature": "Project stage master",
+      "name": "update + toggle status; duplicate rename rejected; 404 for unknown id",
+      "status": "PASS"
+    },
+    {
+      "id": "TL-01",
+      "feature": "Project timeline",
+      "name": "project created with a chosen set of stages (each project differs)",
+      "status": "PASS"
+    },
+    {
+      "id": "TL-02",
+      "feature": "Project timeline",
+      "name": "inactive or unknown stages cannot be added (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "TL-03",
+      "feature": "Project timeline",
+      "name": "completing stages drives progress (50% → 100% auto-Completed)",
+      "status": "PASS"
+    },
+    {
+      "id": "TL-04",
+      "feature": "Project timeline",
+      "name": "stage dates validated; invalid status rejected; unknown entry 404",
+      "status": "PASS"
+    },
+    {
+      "id": "TL-05",
+      "feature": "Project timeline",
+      "name": "add a stage to a project (duplicate 409, inactive 400) and remove a stage",
+      "status": "PASS"
+    },
+    {
+      "id": "TL-06",
+      "feature": "Project timeline",
+      "name": "editing a project keeps existing stage progress when its stage list is re-sent",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-01",
+      "feature": "Monthly billing",
+      "name": "month enumeration follows the agreement From → To dates",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-02",
+      "feature": "Monthly billing",
+      "name": "WITHOUT GST: 12 months × ₹10,000 = ₹1,20,000, no GST",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-03",
+      "feature": "Monthly billing",
+      "name": "WITH GST @18%: ₹10,000 → ₹1,800 GST → ₹11,800 / month (₹1,41,600 total)",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-04",
+      "feature": "Monthly billing",
+      "name": "validation: negative amount, bad GST option, GST rate > 100, missing agreement dates",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-05",
+      "feature": "Monthly billing",
+      "name": "billing list is paged on the server: page 1 = 10 months, page 2 = 2 months",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-06",
+      "feature": "Monthly billing",
+      "name": "mark a month PAID (date stamped) and back to PENDING; status filter works",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-07",
+      "feature": "Monthly billing",
+      "name": "changing the amount re-prices PENDING months but never touches PAID ones",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-08",
+      "feature": "Monthly billing",
+      "name": "edit a month amount (GST recalculated); extra manual month; delete month",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-09",
+      "feature": "Monthly billing",
+      "name": "changing the agreement dates regenerates the schedule (extend to 18 months)",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-10",
+      "feature": "Monthly billing",
+      "name": "registering a client WITH monthly billing generates the schedule at once",
+      "status": "PASS"
+    },
+    {
+      "id": "BL-11",
+      "feature": "Monthly billing",
+      "name": "clear billing removes unpaid months and keeps paid ones",
+      "status": "PASS"
+    },
+    {
+      "id": "LS-01",
+      "feature": "Paged client lists",
+      "name": "/lists/:name pages embedded tables on the server (invoices filter by project, documents hide file bytes)",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-01",
+      "feature": "EMI initial payment",
+      "name": "engine: financed = amount − initial; EMI is smaller; total cost = initial + payable + charges",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-02",
+      "feature": "EMI initial payment",
+      "name": "validation: negative or ≥ product amount is rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-03",
+      "feature": "EMI initial payment",
+      "name": "API: create with initial payment stores + returns derived values",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-04",
+      "feature": "EMI initial payment",
+      "name": "API: initial payment ≥ amount returns 400; calculate preview honours it",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-05",
+      "feature": "EMI initial payment",
+      "name": "API: update the initial payment recalculates; legacy plans (no initial payment) are unchanged",
+      "status": "PASS"
+    },
+    {
+      "id": "EM-06",
+      "feature": "EMI initial payment",
+      "name": "delete EMI plans",
+      "status": "PASS"
+    }
+  ]
+}

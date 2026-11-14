@@ -1,0 +1,40 @@
+{
+  "name": "aedentek-crm-backend",
+  "version": "1.0.0",
+  "description": "Aedentek CRM Backend API with Node.js and MongoDB",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node tests/api.test.mjs && node tests/finance.test.mjs && node tests/client.test.mjs && node tests/hr.test.mjs && node tests/accounts.test.mjs && node tests/branch.test.mjs && node tests/emi.test.mjs && node tests/inward-expense.test.mjs && node tests/dashboard-range.test.mjs && node tests/emi-fees.test.mjs",
+    "test:inward-expense": "node tests/inward-expense.test.mjs",
+    "test:dashboard-range": "node tests/dashboard-range.test.mjs",
+    "test:emi-fees": "node tests/emi-fees.test.mjs",
+    "test:emi": "node tests/emi.test.mjs",
+    "test:branch": "node tests/branch.test.mjs",
+    "test:hr": "node tests/hr.test.mjs",
+    "test:accounts": "node tests/accounts.test.mjs",
+    "test:client-modules": "node tests/client-modules.test.mjs",
+    "test:enhancements": "node tests/enhancements.test.mjs",
+    "test:client-documents": "node tests/client-documents.test.mjs"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "mongoose",
+    "admin-settings",
+    "crm",
+    "api"
+  ],
+  "author": "Aedentek",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.3",
+    "morgan": "^1.10.0"
+  }
+}

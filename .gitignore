@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# OS noise
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.*
+
+# Test artifacts (keep the reports, ignore screenshots dir cache)
+test-reports/*.tmp.*
+
+# Misc
+*.pyc
+__pycache__/
+
+# Local runtime data (MongoDB data dir, etc.)
+backend/data/
+
+# Frontend dev server cache
+frontend/.vite/

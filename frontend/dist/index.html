@@ -1,0 +1,92 @@
+<!doctype html>
+<!-- Tessly — the sales desk of a stone and tile studio — © 2026 Calder & Moss Surfaces -->
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Tessly — the sales desk of a stone and tile studio</title>
+  <meta name="description" content="Tessly is the client and deals desk of Calder &amp; Moss Surfaces, a stone, tile and terrazzo supplier: client files with every touchpoint, a deal board you drag, a forecast ladder, specification projects, invoices and commissions, outreach sequences, an inbox, a calendar, playbooks, the team's quotas, reports, settings and help — light and dark, fully animated." />
+  <meta name="theme-color" content="#edf0f3" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Tessly — the sales desk of a stone and tile studio" />
+  <meta property="og:description" content="Clients, deals, projects, invoices and outreach for a surfaces studio, in one animated CRM." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400..700&display=swap" rel="stylesheet" />
+  <script>
+    /* Before first paint: the saved theme and sidebar rail, so a reload never
+       flashes the wrong colours or the wide sidebar. Under ?record the page
+       waits for the rig and ignores saved choices. */
+    (function (d) {
+      d.classList.add('js');
+      var rec = /[?&]record\b/.test(location.search);
+      if (rec) d.classList.add('is-record');
+      try {
+        if (!rec) {
+          var t = JSON.parse(localStorage.getItem('tessly:theme') || '"light"');
+          d.dataset.theme = t === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : t;
+          if (localStorage.getItem('tessly:rail') === '1') d.classList.add('is-rail');
+        }
+      } catch (e) {}
+      /* rail-on: the saved choice at 1280 and up, always between 761 and 1279 */
+      var rail = function () { var w = innerWidth; d.classList.toggle('rail-on', w > 760 && (w < 1280 || d.classList.contains('is-rail'))); };
+      rail(); addEventListener('resize', rail); window.__rail = rail;
+      if (!rec) setTimeout(function () { d.classList.add('failsafe'); }, 4000);
+      
+      // Determine base path for asset loading
+      window.__TESSLY_BASE__ = location.pathname.includes('/tessly') ? '/tessly/' : '/';
+
+      // Remove (#) from URL completely if arriving via legacy hash URL
+      if (location.hash && location.hash.startsWith('#/')) {
+        try {
+          var cleanRoute = location.hash.replace(/^#/, '');
+          history.replaceState(null, '', cleanRoute);
+        } catch (e) {}
+      }
+    })(document.documentElement);
+  </script>
+  <script src="/assets/date-range.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/ui-D4_WaMI9-iD6s2Siu.js">
+  <link rel="icon" href="/assets/favicon-BvtZ-r0E.ico" sizes="48x48">
+  <link rel="icon" href="/assets/favicon-BtLzst_0.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon-D1Kk0PIP.png">
+  <style>
+    /* ====================================================================
+       GLOBAL THEMED NATIVE CONTROLS — forces every native form widget
+       (number spinner, <select> popup, date/calendar picker) to follow the
+       APP's light/dark theme instead of the OS appearance. Placed as the
+       last <style> in <head> so it overrides any framework CSS.
+       ==================================================================== */
+
+    /* 1) Remove number input up/down spin buttons — globally */
+    input[type="number"]{ -moz-appearance: textfield; appearance: textfield; }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button{ -webkit-appearance: none; margin: 0; }
+
+    /* 2) Lock native widget chrome to the active app scheme (single value,
+         so the OS dark/light preference can NOT override it). Default light;
+         dark only when the app is in dark mode. */
+    input, select, textarea{ color-scheme: light; }
+    :root[data-theme="dark"] input,
+    :root[data-theme="dark"] select,
+    :root[data-theme="dark"] textarea{ color-scheme: dark; }
+
+    /* 3) Native <select> listbox + options inherit the app surface */
+    select, select option{ background-color: var(--card, #ffffff); color: var(--text, #141a26); }
+    select option:checked{ background-color: var(--primary, #2c52cf); color: var(--on-primary, #fff); }
+    select option:disabled{ color: var(--faint, #7d8697); }
+
+    /* 4) Date / month / time calendar indicator + popups */
+    input[type="date"], input[type="month"], input[type="time"], input[type="datetime-local"]{ color-scheme: inherit; }
+    input::-webkit-calendar-picker-indicator{ cursor: pointer; opacity: .8; }
+    :root[data-theme="dark"] input::-webkit-calendar-picker-indicator{ filter: invert(1); }
+  </style>
+  <script type="module" crossorigin src="/assets/index-C60jd1vb.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-YCJrikyo.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="root"></div>
+  <noscript><p style="padding:24px">Tessly needs JavaScript to run.</p></noscript>
+</body>
+</html>

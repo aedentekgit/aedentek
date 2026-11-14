@@ -1,0 +1,170 @@
+[
+  {
+    "id": "B-01",
+    "label": "create with every form section → 201",
+    "ok": true,
+    "detail": "HTTP 201 Tax invoice created successfully"
+  },
+  {
+    "id": "B-02",
+    "label": "client block stored (mode, id, email, phone, GSTIN, PAN, address, project)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "B-03",
+    "label": "issue date and due date stored",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "B-04",
+    "label": "company block stored (name, tagline, contact, email, phone, GSTIN, PAN, address)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "B-05",
+    "label": "bank block stored (name, account, IFSC, UPI, branch)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "B-06",
+    "label": "signatory block stored",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "B-07",
+    "label": "invoice number generated automatically",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "B-08",
+    "label": "manual client + Without GST (0% tax) accepted",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-01",
+    "label": "create with invalid buyer GSTIN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-02",
+    "label": "create with invalid buyer PAN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-03",
+    "label": "create with invalid client email → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-04",
+    "label": "create with invalid company email → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-05",
+    "label": "create with invalid company GSTIN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-06",
+    "label": "create with invalid company PAN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-07",
+    "label": "create with due date before issue date → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "V-08",
+    "label": "nothing was created by rejected requests",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-01",
+    "label": "edit client block (switch to manual client)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-02",
+    "label": "edit company block",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-03",
+    "label": "edit bank block (partial: unchanged fields kept)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-04",
+    "label": "edit signatory block",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-05",
+    "label": "switch to Without GST → 0% tax, total = subtotal",
+    "ok": true,
+    "detail": "[0,4000]"
+  },
+  {
+    "id": "E-06",
+    "label": "switch back to B2B Intra-State → 18% restored, CGST + SGST split",
+    "ok": true,
+    "detail": "[720,360,360]"
+  },
+  {
+    "id": "E-07",
+    "label": "edit with invalid buyer GSTIN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-08",
+    "label": "edit with invalid email → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-09",
+    "label": "edit with due before issue → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-10",
+    "label": "edit with invalid company PAN → 400",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-11",
+    "label": "rejected edits changed nothing",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "id": "E-12",
+    "label": "invoice number cannot be changed",
+    "ok": true,
+    "detail": ""
+  }
+]

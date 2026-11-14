@@ -1,0 +1,260 @@
+{
+  "ranAt": "2026-11-09T14:41:26.760Z",
+  "total": 42,
+  "passed": 42,
+  "failed": 0,
+  "results": [
+    {
+      "id": "ST-01",
+      "feature": "Service Type CRUD",
+      "name": "create active service type",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-02",
+      "feature": "Service Type CRUD",
+      "name": "create inactive service type",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-03",
+      "feature": "Service Type CRUD",
+      "name": "name is required (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-04",
+      "feature": "Service Type CRUD",
+      "name": "duplicate name rejected case-insensitively (409)",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-05",
+      "feature": "Service Type CRUD",
+      "name": "invalid status rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-06",
+      "feature": "Service Type CRUD",
+      "name": "list returns both; ?status=Active returns only active",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-07",
+      "feature": "Service Type CRUD",
+      "name": "search filter ?q=",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-08",
+      "feature": "Service Type CRUD",
+      "name": "get by id + 404 for unknown",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-09",
+      "feature": "Service Type CRUD",
+      "name": "update fields and toggle status",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-10",
+      "feature": "Service Type CRUD",
+      "name": "update to a duplicate name rejected (409)",
+      "status": "PASS"
+    },
+    {
+      "id": "CL-01",
+      "feature": "Client registration",
+      "name": "create client with logo, agreement dates and document",
+      "status": "PASS"
+    },
+    {
+      "id": "CL-02",
+      "feature": "Client registration",
+      "name": "agreement end before start rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "CL-03",
+      "feature": "Client registration",
+      "name": "list endpoint omits heavy document/agreement file data",
+      "status": "PASS"
+    },
+    {
+      "id": "CL-04",
+      "feature": "Client registration",
+      "name": "detail endpoint returns agreement document data",
+      "status": "PASS"
+    },
+    {
+      "id": "CL-05",
+      "feature": "Client registration",
+      "name": "update agreement dates; invalid range rejected; document removable",
+      "status": "PASS"
+    },
+    {
+      "id": "LC-01",
+      "feature": "Login credentials",
+      "name": "add login with ACTIVE service type succeeds",
+      "status": "PASS"
+    },
+    {
+      "id": "LC-02",
+      "feature": "Login credentials",
+      "name": "add login with INACTIVE service type rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "LC-03",
+      "feature": "Login credentials",
+      "name": "switching a login to an inactive type rejected; editing other fields allowed",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-01",
+      "feature": "Projects CRUD",
+      "name": "create project (progress derived from milestones)",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-02",
+      "feature": "Projects CRUD",
+      "name": "title required (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-03",
+      "feature": "Projects CRUD",
+      "name": "completed milestones > total rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-04",
+      "feature": "Projects CRUD",
+      "name": "target before start rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-05",
+      "feature": "Projects CRUD",
+      "name": "negative contract value rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-06",
+      "feature": "Projects CRUD",
+      "name": "create second project",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-07",
+      "feature": "Projects CRUD",
+      "name": "update project recalculates progress; 100% auto-completes",
+      "status": "PASS"
+    },
+    {
+      "id": "PR-08",
+      "feature": "Projects CRUD",
+      "name": "update/delete unknown project returns 404",
+      "status": "PASS"
+    },
+    {
+      "id": "IV-01",
+      "feature": "Invoice ↔ Project",
+      "name": "seed invoices created for the test client",
+      "status": "PASS"
+    },
+    {
+      "id": "IV-02",
+      "feature": "Invoice ↔ Project",
+      "name": "link invoice to project id",
+      "status": "PASS"
+    },
+    {
+      "id": "IV-03",
+      "feature": "Invoice ↔ Project",
+      "name": "invoice values group by project id",
+      "status": "PASS"
+    },
+    {
+      "id": "IV-04",
+      "feature": "Invoice ↔ Project",
+      "name": "linking to a foreign project id rejected (400); unknown invoice 404",
+      "status": "PASS"
+    },
+    {
+      "id": "IV-05",
+      "feature": "Invoice ↔ Project",
+      "name": "unlink invoice (empty projectId)",
+      "status": "PASS"
+    },
+    {
+      "id": "IV-06",
+      "feature": "Invoice ↔ Project",
+      "name": "deleting a project unassigns its invoices",
+      "status": "PASS"
+    },
+    {
+      "id": "IV-07",
+      "feature": "Invoice ↔ Project",
+      "name": "seeded Omni Retail invoices carry project ids",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-01",
+      "feature": "Contracts CRUD",
+      "name": "create contract with file, category and validity dates",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-02",
+      "feature": "Contracts CRUD",
+      "name": "name required (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-03",
+      "feature": "Contracts CRUD",
+      "name": "invalid category rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-04",
+      "feature": "Contracts CRUD",
+      "name": "end before start rejected (400)",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-05",
+      "feature": "Contracts CRUD",
+      "name": "update metadata keeps the uploaded file",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-06",
+      "feature": "Contracts CRUD",
+      "name": "update can replace the file",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-07",
+      "feature": "Contracts CRUD",
+      "name": "update with end before start rejected (400); unknown id 404",
+      "status": "PASS"
+    },
+    {
+      "id": "CT-08",
+      "feature": "Contracts CRUD",
+      "name": "delete contract",
+      "status": "PASS"
+    },
+    {
+      "id": "ST-11",
+      "feature": "Service Type CRUD",
+      "name": "delete service types (and 404 afterwards)",
+      "status": "PASS"
+    }
+  ]
+}

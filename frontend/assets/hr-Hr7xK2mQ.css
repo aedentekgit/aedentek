@@ -1,0 +1,352 @@
+/* ------------------------------------------------------------------ *
+ * Tessly CRM — Human Resources & Payroll
+ * Page-specific styles only. Every colour comes from a theme token, so
+ * the module follows the active light/dark theme automatically.
+ * ------------------------------------------------------------------ */
+
+/* --- Page scaffolding ------------------------------------------------ */
+
+.hr-stack {
+  display: grid;
+  gap: var(--gap);
+  align-content: start;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Two column module layout: form on the left, ledger on the right. */
+.st-grid.hr-split {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .st-grid.hr-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Five stat cards (attendance) instead of the default four. */
+.kpis.hr-kpis-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .kpis.hr-kpis-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- Banners --------------------------------------------------------- */
+
+.hr-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-radius: var(--r-tile);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.hr-banner > .ico {
+  flex: none;
+}
+
+.hr-banner--warn {
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
+  background: color-mix(in srgb, var(--warn) 12%, var(--card));
+  color: var(--warn);
+}
+
+.hr-banner--bad {
+  border-color: color-mix(in srgb, var(--bad) 45%, transparent);
+  background: color-mix(in srgb, var(--bad) 10%, var(--card));
+  color: var(--bad);
+}
+
+.hr-banner__link {
+  margin-left: auto;
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+/* --- Toolbars and tables --------------------------------------------- */
+
+.hr-toolbar {
+  gap: 10px;
+}
+
+.hr-filter {
+  width: auto;
+  min-width: 150px;
+}
+
+.hr-row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.hr-actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.hr-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.hr-sort:hover {
+  color: var(--text);
+}
+
+.hr-sort.is-on {
+  color: var(--primary);
+}
+
+.hr-sort .ico {
+  width: 14px;
+  height: 14px;
+}
+
+.table tbody tr.is-selected td {
+  background: var(--card-2);
+}
+
+/* --- Form groups ----------------------------------------------------- */
+
+.hr-group {
+  margin-top: 14px;
+}
+
+.hr-group:first-child {
+  margin-top: 0;
+}
+
+.hr-group__title {
+  margin: 0 0 8px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* --- Previews and computed read-outs --------------------------------- */
+
+.hr-preview {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-tile);
+  background: var(--well);
+}
+
+.hr-preview__title {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hr-preview__body {
+  display: grid;
+  gap: 6px;
+}
+
+.hr-preview__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--fs-md);
+  color: var(--muted);
+}
+
+.hr-preview__row b {
+  color: var(--text);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+.hr-impact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hr-impact__chip {
+  display: grid;
+  gap: 2px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  background: var(--card-2);
+}
+
+.hr-impact__chip small {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hr-impact__chip b {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+.hr-impact__chip--good {
+  border-color: color-mix(in srgb, var(--good) 40%, transparent);
+}
+
+.hr-impact__chip--good b {
+  color: var(--good);
+}
+
+.hr-impact__chip--bad {
+  border-color: color-mix(in srgb, var(--bad) 40%, transparent);
+}
+
+.hr-impact__chip--bad b {
+  color: var(--bad);
+}
+
+/* --- Payroll execution bar ------------------------------------------- */
+
+.hr-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.hr-controls > .field {
+  flex: 1 1 190px;
+}
+
+.hr-controls > .btn {
+  flex: 0 0 auto;
+}
+
+/* --- Payslip --------------------------------------------------------- */
+
+.hr-payslip {
+  display: grid;
+  gap: 16px;
+}
+
+.hr-payslip__head {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hr-payslip__head > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hr-payslip__head b {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+.hr-payslip__head small {
+  color: var(--muted);
+}
+
+.hr-payslip__cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.hr-payslip__col {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.hr-payslip__col h5 {
+  margin: 0;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.hr-payslip__line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--fs-md);
+  color: var(--muted);
+}
+
+.hr-payslip__line b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.hr-payslip__line--total {
+  margin-top: 2px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+
+.hr-payslip__line--total b {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .hr-payslip__head,
+  .hr-payslip__cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Printing a single payslip --------------------------------------- */
+
+@media print {
+  body.hr-printing * {
+    visibility: hidden !important;
+  }
+
+  body.hr-printing .hr-print-area,
+  body.hr-printing .hr-print-area * {
+    visibility: visible !important;
+  }
+
+  body.hr-printing .hr-print-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 16px;
+    background: var(--card);
+  }
+}

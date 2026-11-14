@@ -1,0 +1,207 @@
+{
+  "timestamp": "2026-11-11T11:36:05.383Z",
+  "environment": {
+    "url": "http://localhost:8089/tessly/",
+    "browser": "Google Chrome",
+    "viewport": "1440x900"
+  },
+  "totalTests": 34,
+  "passed": 34,
+  "failed": 0,
+  "categories": {
+    "initialization": [
+      {
+        "name": "URL is clean and contains zero hash symbol (#)",
+        "passed": true,
+        "details": "Current URL: http://localhost:8089/tessly/today"
+      },
+      {
+        "name": "Page title matches Tessly / Calder & Moss surfaces desk",
+        "passed": true,
+        "details": "Title: \"Today · Tessly\""
+      },
+      {
+        "name": "Meta theme-color tag is initialized",
+        "passed": true,
+        "details": "theme-color: #edf0f3"
+      },
+      {
+        "name": "React root container mounted successfully with full app subtree",
+        "passed": true,
+        "details": "child count: 1"
+      },
+      {
+        "name": "Primary navigation sidebar rendered and visible",
+        "passed": true,
+        "details": ""
+      }
+    ],
+    "pagesAndRouting": [
+      {
+        "name": "Page: Today Dashboard (/today) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 2671, selector found: true, path: /today, noHash: true"
+      },
+      {
+        "name": "Page: Clients (People) (/clients/people) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 746, selector found: true, path: /clients/companies, noHash: true"
+      },
+      {
+        "name": "Page: Clients (Companies) (/clients/companies) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 746, selector found: true, path: /clients/companies, noHash: true"
+      },
+      {
+        "name": "Page: Deals Kanban Board (/deals/board) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 2101, selector found: true, path: /deals/board, noHash: true"
+      },
+      {
+        "name": "Page: Deals Forecast Ladder (/deals/forecast) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 2579, selector found: true, path: /deals/forecast, noHash: true"
+      },
+      {
+        "name": "Page: Specification Projects (/projects) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1240, selector found: true, path: /projects, noHash: true"
+      },
+      {
+        "name": "Page: Client Communications Inbox (/inbox) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1456, selector found: true, path: /inbox, noHash: true"
+      },
+      {
+        "name": "Page: Showroom & Site Calendar (/calendar) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1708, selector found: true, path: /calendar, noHash: true"
+      },
+      {
+        "name": "Page: Architect Outreach Sequences (/outreach/sequences) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1095, selector found: true, path: /outreach/sequences, noHash: true"
+      },
+      {
+        "name": "Page: Outreach Email Templates (/outreach/templates) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1177, selector found: true, path: /outreach/templates, noHash: true"
+      },
+      {
+        "name": "Page: Finance Invoices Schedule (/finance/invoices) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 924, selector found: true, path: /finance/invoices, noHash: true"
+      },
+      {
+        "name": "Page: Sales Commissions Tracker (/finance/commissions) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1021, selector found: true, path: /finance/commissions, noHash: true"
+      },
+      {
+        "name": "Page: Executive Sales & Quota Reports (/reports) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 2671, selector found: true, path: /reports, noHash: true"
+      },
+      {
+        "name": "Page: Sales Team & Quota Roster (/team) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1511, selector found: true, path: /team, noHash: true"
+      },
+      {
+        "name": "Page: Materials & Finish Playbooks (/library) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1902, selector found: true, path: /library, noHash: true"
+      },
+      {
+        "name": "Page: Studio & CRM Settings (/settings) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 2011, selector found: true, path: /settings, noHash: true"
+      },
+      {
+        "name": "Page: Studio Help & Support Desk (/support) rendered with high fidelity content and clean URL",
+        "passed": true,
+        "details": "textLen: 1446, selector found: true, path: /support, noHash: true"
+      }
+    ],
+    "themeAndStyling": [
+      {
+        "name": "Light theme tokens active with correct canvas color and meta tag",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "name": "Dark theme tokens active with #0d1016 deep contrast background",
+        "passed": true,
+        "details": ""
+      }
+    ],
+    "sidebarAndLayout": [
+      {
+        "name": "Sidebar rail toggling triggers state changes on root element",
+        "passed": true,
+        "details": ""
+      }
+    ],
+    "keyboardShortcuts": [
+      {
+        "name": "Pressing \"?\" activates shortcuts sheet or modal overlay",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "name": "Keyboard chord \"g\" -> \"c\" navigates to Clients view without hash (#)",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "name": "Keyboard chord \"g\" -> \"d\" navigates to Today dashboard without hash (#)",
+        "passed": true,
+        "details": ""
+      }
+    ],
+    "modalsAndDrawers": [
+      {
+        "name": "Kanban board renders draggable deal cards across pipeline stages",
+        "passed": true,
+        "details": "deal cards found: 178"
+      },
+      {
+        "name": "Opening deal detail displays modal / detail drawer",
+        "passed": true,
+        "details": ""
+      }
+    ],
+    "animationsAndTransitions": [
+      {
+        "name": "Smooth GSAP & CSS keyframe animation rules loaded and bound",
+        "passed": true,
+        "details": "keyframes: 22, transition rules: 138"
+      }
+    ],
+    "responsiveDesign": [
+      {
+        "name": "Tablet viewport (1024x768) renders without overflow",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "name": "Mobile viewport (390x844) renders responsive layout",
+        "passed": true,
+        "details": ""
+      }
+    ],
+    "errorAudit": [
+      {
+        "name": "Zero uncaught JavaScript exceptions or runtime crashes during test execution",
+        "passed": true,
+        "details": "Error log: []"
+      }
+    ]
+  },
+  "summary": {
+    "total": 34,
+    "passed": 34,
+    "failed": 0,
+    "successRate": "100.0%"
+  }
+}

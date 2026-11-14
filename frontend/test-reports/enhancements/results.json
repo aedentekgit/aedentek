@@ -1,0 +1,278 @@
+{
+  "ranAt": "2026-11-09T15:58:31.520Z",
+  "total": 45,
+  "passed": 45,
+  "failed": 0,
+  "results": [
+    {
+      "id": "THM-01",
+      "feature": "Projects page theme",
+      "name": "summary uses the shared themed KPI tiles (4 × .kpi with tones + icons)",
+      "status": "PASS"
+    },
+    {
+      "id": "THM-02",
+      "feature": "Projects page theme",
+      "name": "stage filter sits inside a themed card and still filters",
+      "status": "PASS"
+    },
+    {
+      "id": "THM-03",
+      "feature": "Projects page theme",
+      "name": "uses the global KPI card style: white card, coloured left edge per tone, tinted icon tile",
+      "status": "PASS"
+    },
+    {
+      "id": "DF-01",
+      "feature": "Date filter",
+      "name": "header date-filter button is removed from non-accounts pages",
+      "status": "PASS"
+    },
+    {
+      "id": "DF-02",
+      "feature": "Date filter",
+      "name": "it remains on the Accounts pages where it is used",
+      "status": "PASS"
+    },
+    {
+      "id": "DF-03",
+      "feature": "Date filter",
+      "name": "popup opens with classic sentence-case labels (no ALL-CAPS tracking)",
+      "status": "PASS"
+    },
+    {
+      "id": "DF-04",
+      "feature": "Date filter",
+      "name": "active tab is a flat underline (no filled pill)",
+      "status": "PASS"
+    },
+    {
+      "id": "DF-05",
+      "feature": "Date filter",
+      "name": "applying a range updates the header label; Clear restores \"All Dates\"; popup works functionally",
+      "status": "PASS"
+    },
+    {
+      "id": "EMI-01",
+      "feature": "EMI initial payment",
+      "name": "form has an \"Initial payment\" field and the table an \"Initial\" column",
+      "status": "PASS"
+    },
+    {
+      "id": "EMI-02",
+      "feature": "EMI initial payment",
+      "name": "preview deducts the initial payment (financed amount + smaller EMI)",
+      "status": "PASS"
+    },
+    {
+      "id": "EMI-03",
+      "feature": "EMI initial payment",
+      "name": "validation: initial payment must be less than the product amount",
+      "status": "PASS"
+    },
+    {
+      "id": "EMI-04",
+      "feature": "EMI initial payment",
+      "name": "CREATE saves it; list shows ₹ 20,000 in the Initial column and EMI on the financed amount",
+      "status": "PASS"
+    },
+    {
+      "id": "EMI-05",
+      "feature": "EMI initial payment",
+      "name": "EDIT opens prefilled with the initial payment and updating it recalculates",
+      "status": "PASS"
+    },
+    {
+      "id": "EMI-06",
+      "feature": "EMI initial payment",
+      "name": "DELETE removes the plan",
+      "status": "PASS"
+    },
+    {
+      "id": "SM-01",
+      "feature": "Project stage master",
+      "name": "sidebar link + page render with seeded stages",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-01",
+      "feature": "Pagination (UI → server)",
+      "name": "first page shows exactly 10 rows and \"Showing 1–10 of 25\"",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-02",
+      "feature": "Pagination (UI → server)",
+      "name": "Next fetches page 2 from the server; S No continues at 11",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-03",
+      "feature": "Pagination (UI → server)",
+      "name": "last page shows the remaining 5 rows and disables Next",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-04",
+      "feature": "Pagination (UI → server)",
+      "name": "Previous works and page 1 disables Previous",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-05",
+      "feature": "Pagination (UI → server)",
+      "name": "changing a filter returns to page 1 and re-pages the filtered set on the server",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-06",
+      "feature": "Pagination (UI → server)",
+      "name": "searching resets paging; fewer than 10 results hides page buttons but keeps the count",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-07",
+      "feature": "Pagination (UI → server)",
+      "name": "pager is themed (uses the primary colour token for the current page)",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-08",
+      "feature": "Pagination (UI → server)",
+      "name": "pager is present and server-paged on Accounts (expenses), HR (attendance, leave), Clients, Finance",
+      "status": "PASS"
+    },
+    {
+      "id": "PGN-09",
+      "feature": "Pagination (UI → server)",
+      "name": "Expenses: Next loads page 2 from the server (23+ seeded rows)",
+      "status": "PASS"
+    },
+    {
+      "id": "SM-02",
+      "feature": "Project stage master",
+      "name": "CREATE via modal; validation (empty, duplicate)",
+      "status": "PASS"
+    },
+    {
+      "id": "SM-03",
+      "feature": "Project stage master",
+      "name": "UPDATE via modal and toggle Active ↔ Inactive by clicking the badge",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-01",
+      "feature": "Project timeline",
+      "name": "project form lists ACTIVE stages only (inactive ones are not offered)",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-02",
+      "feature": "Project timeline",
+      "name": "CREATE a project with its own selected stages",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-03",
+      "feature": "Project timeline",
+      "name": "a second project can use a different set of stages",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-04",
+      "feature": "Project timeline",
+      "name": "timeline modal shows a stepper; completing stages updates progress and status",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-05",
+      "feature": "Project timeline",
+      "name": "stage dates can be set; adding and removing a stage from the timeline works",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-06",
+      "feature": "Project timeline",
+      "name": "editing the project preselects its stages; unticking one removes it",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-07",
+      "feature": "Project timeline",
+      "name": "DELETE the project",
+      "status": "PASS"
+    },
+    {
+      "id": "TLN-08",
+      "feature": "Project stage master",
+      "name": "DELETE stages from the master (confirm required)",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-01",
+      "feature": "Monthly billing",
+      "name": "register page has monthly amount + GST option; summary calculates months × amount",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-02",
+      "feature": "Monthly billing",
+      "name": "validation: monthly amount needs agreement dates",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-03",
+      "feature": "Monthly billing",
+      "name": "CREATE client with monthly billing — schedule generated",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-04",
+      "feature": "Monthly billing",
+      "name": "tab lists months paged 10 + 2 with GST math, KPIs and agreement total",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-05",
+      "feature": "Monthly billing",
+      "name": "Next loads months 11–12 from the server",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-06",
+      "feature": "Monthly billing",
+      "name": "mark a month PAID then PENDING; totals update",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-07",
+      "feature": "Monthly billing",
+      "name": "switching to WITHOUT GST re-prices every month (₹ 1,20,000)",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-08",
+      "feature": "Monthly billing",
+      "name": "edit a month amount via modal; add an extra month; delete it",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-09",
+      "feature": "Monthly billing",
+      "name": "Edit Profile → change agreement dates regenerates months; billing fields are prefilled",
+      "status": "PASS"
+    },
+    {
+      "id": "BIL-10",
+      "feature": "Monthly billing",
+      "name": "Clear Setup removes the unpaid schedule",
+      "status": "PASS"
+    },
+    {
+      "id": "GEN-01",
+      "feature": "Console health",
+      "name": "no JavaScript errors were raised during the run",
+      "status": "PASS"
+    }
+  ]
+}

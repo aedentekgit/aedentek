@@ -1,0 +1,62 @@
+{
+  "ranAt": "2026-11-09T16:04:39.573Z",
+  "total": 9,
+  "passed": 9,
+  "failed": 0,
+  "results": [
+    {
+      "id": "PRP-01",
+      "feature": "Propagations API",
+      "name": "PUT updates fields and recalculates subtotal / total from items",
+      "status": "PASS"
+    },
+    {
+      "id": "PRP-02",
+      "feature": "Propagations API",
+      "name": "PUT validation: empty client/title and invalid status → 400; unknown id → 404; number is immutable",
+      "status": "PASS"
+    },
+    {
+      "id": "PRP-03",
+      "feature": "Propagations UI",
+      "name": "each row has Preview, Edit and Delete buttons; total and issue date are shown correctly",
+      "status": "PASS"
+    },
+    {
+      "id": "PRP-04",
+      "feature": "Propagations UI",
+      "name": "Edit opens a prefilled drawer (client, scope, validity, items, status)",
+      "status": "PASS"
+    },
+    {
+      "id": "PRP-05",
+      "feature": "Propagations UI",
+      "name": "saving the edit updates the proposal (title, item added, status → Sent) and the table refreshes",
+      "status": "PASS"
+    },
+    {
+      "id": "PRP-06",
+      "feature": "Propagations UI",
+      "name": "edit validation: empty client name is rejected with a message",
+      "status": "PASS"
+    },
+    {
+      "id": "PRP-07",
+      "feature": "Propagations UI",
+      "name": "Delete asks for confirmation: Cancel keeps the proposal, Confirm removes it",
+      "status": "PASS"
+    },
+    {
+      "id": "AG-01",
+      "feature": "Agreement calculator",
+      "name": "five equal stat tiles in one row + a labelled progress card (no stray background band)",
+      "status": "PASS"
+    },
+    {
+      "id": "GEN-01",
+      "feature": "Console health",
+      "name": "no JavaScript errors were raised during the run",
+      "status": "PASS"
+    }
+  ]
+}
