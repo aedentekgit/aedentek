@@ -1,5 +1,5 @@
 # Aedentek CRM (Tessly) — Docker → GitHub → VPS Deploy + Test Case Report
-Target: `crm.aedentek.com` (live) + `staging.crm.aedentek.com` / `dev.crm.aedentek.com` (staging)
+Target: `crm.aedentek.in` (live) + `staging.crm.aedentek.in` / `dev.crm.aedentek.in` (staging)
 VPS: `201.18.218.148` · Deploy path: **GitHub → VPS → Docker** · Date: 2026-11-14
 
 ## 1. Deployment path
@@ -18,7 +18,7 @@ VPS: `201.18.218.148` · Deploy path: **GitHub → VPS → Docker** · Date: 202
 | Host port | **5063** | **5064** | *(5064)* |
 | **Mongo DB** | `aedentek_crm_live` | `aedentek_crm_staging` | **`aedentek_crm_staging`** |
 | **Upload folder** | `/var/www/aedentek-crm-docker/uploads/live` | `/var/www/aedentek-crm-docker/uploads/staging` | **`…/uploads/staging`** |
-| nginx host | `crm.aedentek.com` | `staging.crm.aedentek.com` | `dev.crm.aedentek.com` |
+| nginx host | `crm.aedentek.in` | `staging.crm.aedentek.in` | `dev.crm.aedentek.in` |
 
 ✔ Staging **and** dev/testing both use the **staging DB + staging upload folder**, exactly as requested.
 ✔ Live is fully separate (own DB + own uploads). No shared mutable state between live and staging.
@@ -27,7 +27,7 @@ VPS: `201.18.218.148` · Deploy path: **GitHub → VPS → Docker** · Date: 202
 ### 3.1 Per-environment DB binding  (PASS)
 - `GET :5063/api/health` → `database.name = aedentek_crm_live`
 - `GET :5064/api/health` → `database.name = aedentek_crm_staging`
-- Via nginx Host-header: `crm.aedentek.com`→live, `staging.`/`dev.`→staging DBs
+- Via nginx Host-header: `crm.aedentek.in`→live, `staging.`/`dev.`→staging DBs
 
 ### 3.2 Upload folder isolation  (PASS)
 - `POST /api/uploads` on live writes to `uploads/live/` only
@@ -52,14 +52,14 @@ VPS: `201.18.218.148` · Deploy path: **GitHub → VPS → Docker** · Date: 202
   (live: 3 clients / 4 invoices; staging: 3 clients / 4 invoices) without touching other DBs.
 
 ## 4. What's live now vs. what still needs DNS
-- **LIVE NOW (HTTP)**: `http://crm.aedentek.com` (live) and
-  `http://staging.crm.aedentek.com` / `http://dev.crm.aedentek.com` (staging) route correctly.
+- **LIVE NOW (HTTP)**: `http://crm.aedentek.in` (live) and
+  `http://staging.crm.aedentek.in` / `http://dev.crm.aedentek.in` (staging) route correctly.
 - **BLOCKED ON DNS**: Let's Encrypt TLS. Currently:
-  - `crm.aedentek.com`, `staging.`, `dev.` have **no A records**.
-  - Even `aedentek.com` points to a *different* IP (`88.222.243.229`), not `201.18.218.148`.
+  - `crm.aedentek.in`, `staging.`, `dev.` have **no A records**.
+  - Even `aedentek.in` points to a *different* IP (`88.222.243.229`), not `201.18.218.148`.
   - **Action needed** (in your DNS provider): add
-    `crm.aedentek.com → 201.18.218.148`, `staging.crm.aedentek.com → 201.18.218.148`,
-    `dev.crm.aedentek.com → 201.18.218.148`.
+    `crm.aedentek.in → 201.18.218.148`, `staging.crm.aedentek.in → 201.18.218.148`,
+    `dev.crm.aedentek.in → 201.18.218.148`.
   - Then run once on the VPS: `bash /var/www/aedentek-crm-docker/deploy/enable-https-nginx.sh`
     (writes the 443 vhost + obtains certs). HTTP vhost stays as the ACME webroot/redirect.
 
@@ -74,3 +74,13 @@ VPS: `201.18.218.148` · Deploy path: **GitHub → VPS → Docker** · Date: 202
 - **No effect on other projects or their DB values** ✅
 - App fully functional over HTTP ✅
 - **Only open item: point the 3 hostnames at the VPS IP, then run the TLS script.**
+
+## 7. Final status (post DNS + TLS)
+- ✅ **Live: `https://crm.aedentek.in`** — HTTPS 200, Let's Encrypt cert valid to 2027-02-12 (auto-renew)
+- ✅ HTTP `crm.aedentek.in` → 301 → HTTPS
+- ✅ Live routes to port 5063 → `aedentek_crm_live` DB → `uploads/live`
+- ⏳ **Staging: `http://staging.crm.aedentek.in`** (HTTP only, working via nginx) — awaiting A record
+- ⏳ **Dev: `http://dev.crm.aedentek.in`** (HTTP only, working via nginx) — awaiting A record
+- ⏳ After `staging.crm` + `dev.crm` A records point to 201.18.218.148, run:
+  `certbot certonly --webroot -w /var/www/letsencrypt -d staging.crm.aedentek.in -d dev.crm.aedentek.in`
+  then add the 443 block in `/etc/nginx/sites-available/aedentek-crm` for staging/dev
