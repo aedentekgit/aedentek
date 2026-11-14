@@ -1006,6 +1006,19 @@
     return m ? '#' + m[1].toLowerCase() : fallback;
   }
 
+  // Pick a readable text colour for content painted on a given background:
+  // white when the background is dark, near-black when it's light.
+  function contrastOn(hex, fallback) {
+    var m = /^#?([0-9a-fA-F]{6})$/.exec(String(hex || '').trim());
+    if (!m) return fallback;
+    var n = parseInt(m[1], 16);
+    var R = (n >> 16) / 255, G = ((n >> 8) & 0xFF) / 255, B = (n & 0xFF) / 255;
+    // relative luminance (sRGB)
+    function lin(c){ return c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
+    var L = 0.2126*lin(R) + 0.7152*lin(G) + 0.0722*lin(B);
+    return L > 0.45 ? '#141a26' : '#ffffff';
+  }
+
   function adjustBrightness(hex, percent) {
     var num = parseInt(hex.replace('#', ''), 16);
     var amt = Math.round(2.55 * percent);
@@ -1035,12 +1048,14 @@
       style.setProperty('--on-primary', '#150928');
       style.setProperty('--secondary', '#9076fa');
       style.setProperty('--secondary-ink', '#dcd2fe');
+      style.setProperty('--primary-contrast', contrastOn('#b88bf8', '#150928'));
     } else {
       style.setProperty('--primary', pCol);
       style.setProperty('--primary-ink', adjustBrightness(pCol, -25));
       style.setProperty('--on-primary', '#ffffff');
       style.setProperty('--secondary', sCol);
       style.setProperty('--secondary-ink', adjustBrightness(sCol, -25));
+      style.setProperty('--primary-contrast', contrastOn(pCol, '#ffffff'));
     }
 
     style.setProperty('--font-heading', "'" + hFont + "', 'Plus Jakarta Sans', 'Outfit', 'Urbanist', -apple-system, sans-serif");
@@ -1070,6 +1085,43 @@
 
   window.__tlApplyTheme = applyGlobalTheme;
 
+  // ---------------------------------------------------------------------
+  // GLOBAL TABLE-HEADER THEME
+  // Every table column header uses the theme PRIMARY colour as its
+  // background and an auto-contrast text colour (white on dark primary,
+  // near-black on light primary). A padded `:root` selector + !important
+  // out-specifies any per-page header rule, and the <style> is appended at
+  // the end of <body> (per-page CSS lives in <head>, before it) so it wins
+  // source order too. It reads live CSS vars, so it follows the theme.
+  // ---------------------------------------------------------------------
+  var R5 = ':root:root:root:root:root ';
+  var TH_CSS =
+    R5 + 'th,' +
+    R5 + 'thead th,' +
+    R5 + '.table th,' +
+    R5 + '.ivb-table th{' +
+    'background: var(--primary) !important;' +
+    'color: var(--primary-contrast, var(--on-primary, #ffffff)) !important;' +
+    'border-bottom-color: transparent !important;' +
+    '}' +
+    R5 + 'th .ico,' +
+    R5 + 'thead th .ico{' +
+    'color: var(--primary-contrast, var(--on-primary, #ffffff));' +
+    '}';
+
+  function injectTableHeaderTheme() {
+    if (document.getElementById('tl-th-theme')) return;
+    var st = document.createElement('style');
+    st.id = 'tl-th-theme';
+    st.textContent = TH_CSS;
+    (document.body || document.documentElement).appendChild(st);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectTableHeaderTheme);
+  } else {
+    injectTableHeaderTheme();
+  }
+
   // Initialize from cache or defaults immediately
   try {
     var cached = JSON.parse(localStorage.getItem('tessly:theme-config') || 'null');
@@ -1079,7 +1131,7 @@
     applyGlobalTheme({});
   }
 
-  // Synchronize live with backend /api/settings
+// Synchronize live with backend /api/settings
   async function syncTheme() {
     try {
       var res = await fetch('/api/settings');
