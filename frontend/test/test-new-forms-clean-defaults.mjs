@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer';
 import path from 'path';
+import fs from 'node:fs';
 
 const artifactDir = path.resolve("test-reports"); fs.mkdirSync(artifactDir, { recursive: true });
 

@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer';
 import { strict as assert } from 'assert';
 import path from 'path';
+import fs from 'node:fs';
 
 const BASE_URL = 'http://localhost:3000';
 const artifactDir = path.resolve("test-reports"); fs.mkdirSync(artifactDir, { recursive: true });
