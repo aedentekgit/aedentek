@@ -27,8 +27,12 @@ import {
 import { getAllEmis, calculateEmi, getEmiById, createEmi, updateEmi, payEmi, deleteEmi } from '../controllers/accounts/acctEmiController.js';
 
 import { getInwardExpenses } from '../controllers/accounts/acctInwardExpenseController.js';
+import { requireRole, ROLES } from '../middleware/rbac.js';
 
 const router = express.Router();
+
+// Role-based protection: Accounts module is restricted to Admin and Manager (Staff forbidden)
+router.use(requireRole([ROLES.ADMIN, ROLES.MANAGER]));
 
 // --- Chart of accounts & general ledger -----------------------------------
 router.get('/chart-of-accounts', getChartOfAccounts);

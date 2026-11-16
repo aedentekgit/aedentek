@@ -1,0 +1,22 @@
+# Version Control & Logs
+.git/
+*.log
+
+# Test Reports & Lockfiles
+test-reports/
+**/package-lock.json
+
+# Frontend & Node Heavy Folders
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+
+# Backend Heavy Folders (if using Python/Java)
+**/venv/
+**/.venv/
+**/__pycache__/
+**/target/
+- Keep responses concise. Output only the changed code blocks without long explanations.
+- For UI/UX design, use a classic, clean enterprise CRM layout: crisp borders, standard sans-serif typography, neutral backgrounds, clear data tables, and zero heavy animations or glassmorphism.
+- Do not scan ignored folders or rewrite entire files unless asked.

@@ -2,7 +2,7 @@
 
 **Contract version:** 1.0
 **Backend base:** `http://localhost:5001` (vite dev server proxies `/api/*` → `:5001`)
-**Frontend dev server:** `http://localhost:5173`
+**Frontend dev server:** `http://localhost:1234`
 
 > The frontend calls `/api/...` with **relative** paths. The vite proxy forwards them.
 
@@ -20,6 +20,18 @@ All responses follow the app's existing envelope:
 // error
 { success: false, message: 'Reason' }   // HTTP 4xx/5xx
 ```
+
+### Branches — `/api/hr/branches`
+
+| Method | Path | Body / Query | Returns |
+|---|---|---|---|
+| GET | `/api/hr/branches` | `?status=&q=` | `data: Branch[]`, `kpis: {total, active, inactive}`, `defaultBranch: string` |
+| GET | `/api/hr/branches/options` | — | `data: string[]` (active branch names), `defaultBranch: string` |
+| GET | `/api/hr/branches/:id` | — | `data: Branch` |
+| POST | `/api/hr/branches` | `{name, code, city, address, phone, email, manager, status, isDefault}` | `201`, `data: Branch` |
+| PUT | `/api/hr/branches/:id` | partial `{..., isDefault}` | `data: Branch` |
+| PUT | `/api/hr/branches/:id/default` | — | `data: Branch` (sets as default branch, unsets other branches) |
+| DELETE | `/api/hr/branches/:id` | — | `data: {id}` (blocked if employees assigned) |
 
 ### Employees — `/api/staff`
 

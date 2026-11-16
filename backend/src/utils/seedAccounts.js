@@ -75,9 +75,9 @@ export const seedAccountsData = async () => {
 
     if ((await Emi.countDocuments()) === 0) {
       const plans = [
-        { productName: 'Commercial Treadmill Pro X', category: 'Gym Equipment', principal: 240000, emiCount: 12, interestRate: 10, startDate: '2026-09-05', paidCount: 2, processingCharges: 2400, transactionFee: 99, branch: 'Bandra', notes: 'Supplier finance — 12 months' },
-        { productName: 'Biometric Access Terminals (4)', category: 'IT & Electronics', principal: 96000, emiCount: 6, interestRate: 0, startDate: '2026-10-10', paidCount: 1, processingCharges: 960, transactionFee: 0, branch: 'Andheri', notes: 'No-cost EMI offer' },
-        { productName: 'Studio Sound System', category: 'Appliances', principal: 180000, emiCount: 18, interestRate: 12, startDate: '2026-11-15', paidCount: 0, processingCharges: 1800, transactionFee: 50, branch: 'All Branches', notes: '' }
+        { productName: 'Commercial Treadmill Pro X', category: 'Gym Equipment', principal: 240000, emiCount: 12, interestRate: 10, startDate: '2026-09-05', emiDate: '2026-09-05', paidCount: 2, processingCharges: 2400, transactionFee: 99, branch: 'Bandra', notes: 'Supplier finance — 12 months' },
+        { productName: 'Biometric Access Terminals (4)', category: 'IT & Electronics', principal: 96000, emiCount: 6, interestRate: 0, startDate: '2026-10-10', emiDate: '2026-10-10', paidCount: 1, processingCharges: 960, transactionFee: 0, branch: 'Andheri', notes: 'No-cost EMI offer' },
+        { productName: 'Studio Sound System', category: 'Appliances', principal: 180000, emiCount: 18, interestRate: 12, startDate: '2026-11-15', emiDate: '2026-11-15', paidCount: 0, processingCharges: 1800, transactionFee: 50, branch: 'All Branches', notes: '' }
       ];
       for (let i = 0; i < plans.length; i += 1) {
         const { schedule, ...d } = computeEmi(plans[i]); // eslint-disable-line no-unused-vars

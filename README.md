@@ -92,7 +92,7 @@ cd frontend
 npm install
 npm run dev
 ```
-The Vite development server runs at `http://localhost:3000`.
+The Vite development server runs at `http://localhost:1234`.
 All requests to `/api/*` are automatically proxied to the backend on `http://localhost:5001`.
 
 ### 4. Running Both from Root

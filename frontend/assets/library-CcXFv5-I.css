@@ -1,2 +1,594 @@
 /*! Tessly — the sales desk of a stone and tile studio — © 2026 Hasib (OVERSHOOT). All rights reserved. Licensed, not sold: see LICENSE.md. */
-.lb-continue{margin-bottom:var(--gap)}.lb-continue__row{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;display:grid}.lb-cont{background:var(--card-2);text-align:left;border-radius:16px;align-items:center;gap:12px;min-width:0;padding:10px 12px;display:flex}.lb-cont:hover{background:var(--well)}.lb-cont__ico{background:var(--tile);width:38px;height:38px;color:var(--on-tile);border-radius:12px;flex:none;place-items:center;display:grid}.lb-saved{font-weight:600;font-size:var(--fs-sm);color:var(--muted);cursor:pointer;gap:8px}.lb-grid{gap:var(--gap);grid-template-columns:repeat(auto-fill,minmax(260px,1fr));display:grid}.lb-card{flex-direction:column;display:flex}.lb-card__open{z-index:1;border-radius:inherit;position:absolute;inset:0}.lb-card__head{background:var(--tile);min-height:92px;color:var(--on-tile);flex-wrap:wrap;align-content:flex-start;align-items:center;gap:8px;padding:14px 16px;display:flex;position:relative}.lb-card__head:after{content:"";background:color-mix(in srgb, var(--on-tile) 8%, transparent);border-radius:18px;width:64px;height:64px;position:absolute;bottom:-14px;right:14px;transform:rotate(12deg)}.lb-card__cat{font-size:var(--fs-2xs);background:color-mix(in srgb, var(--on-tile) 11%, transparent);border-radius:999px;padding:3px 9px;font-weight:700}.lb-card__mins{font-size:var(--fs-xs);color:var(--on-tile-dim);align-items:center;gap:4px;font-weight:600;display:inline-flex}.lb-card__mins .ico{width:13px;height:13px}.lb-card__done{font-size:var(--fs-2xs);background:var(--on-tile);color:var(--tile);border-radius:999px;align-items:center;gap:3px;margin-left:auto;padding:3px 8px;font-weight:700;display:inline-flex}.lb-card__done .ico{stroke-width:2.6px;width:11px;height:11px}.lb-card__body{flex-direction:column;flex:1;gap:8px;padding:14px 16px 16px;display:flex}.lb-card__title{font-size:var(--fs-lg);letter-spacing:-.005em;font-weight:600;line-height:1.3}.lb-card__sum{color:var(--muted);font-size:var(--fs-md);-webkit-line-clamp:2;-webkit-box-orient:vertical;display:-webkit-box;overflow:hidden}.lb-card__foot{justify-content:space-between;align-items:center;margin-top:auto;display:flex}.lb-card__by{font-size:var(--fs-sm);color:var(--muted);font-weight:600}.lb-mark{z-index:2;color:var(--faint);position:relative}.lb-mark.is-on{color:var(--primary-ink)}.lb-mark.is-on .ico{fill:currentColor}.lb-quote{background:var(--tile);color:var(--on-tile);font-size:var(--fs-xl);letter-spacing:-.01em;border-radius:16px;padding:16px 18px;font-weight:600;line-height:1.35}.lb-points{margin-top:12px;display:grid}.lb-points li{border-bottom:1px solid var(--line);align-items:flex-start;gap:12px;padding:11px 0;font-weight:600;display:flex}.lb-points li:last-child{border-bottom:0}.lb-points li .check{margin-top:1px}.lb-points li.is-done span{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1.5px}.lb-finish{display:inline-block}@media (width<=760px){.lb-grid,.lb-continue__row{grid-template-columns:1fr}}.lb-card .row .meter{flex:1}
+
+/* ==========================================================================
+   PLAYBOOKS PAGE (STUDIO > PLAYBOOKS) RESPONSIVE UI/UX STYLING
+   ========================================================================== */
+
+/* Page Container & Spacing */
+.page.lb {
+  min-width: 0;
+  width: 100%;
+}
+
+/* 1. "Pick up where you left off" Section (.lb-continue) */
+.lb-continue,
+.card.lb-continue {
+  margin-bottom: var(--gap, 20px) !important;
+  background: var(--card) !important;
+  border: 1px solid var(--line) !important;
+  border-left: 1px solid var(--line) !important;
+  border-radius: var(--r-card, 20px) !important;
+  padding: 18px 20px !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.lb-continue .card__head {
+  margin-bottom: 14px;
+  padding: 0;
+}
+
+.lb-continue .card__title {
+  font-size: var(--fs-lg, 16px);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.lb-continue__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 12px;
+}
+
+.lb-cont {
+  background: var(--card-2);
+  text-align: left;
+  border-radius: 16px;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px 14px;
+  display: flex;
+  border: 1px solid var(--line);
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.lb-cont:hover {
+  background: var(--card);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(20, 28, 45, 0.14);
+  border-color: var(--line-2);
+}
+
+.lb-cont:active {
+  transform: translateY(0);
+}
+
+.lb-cont__ico {
+  background: var(--tile);
+  width: 42px;
+  height: 42px;
+  color: var(--on-tile);
+  border-radius: 12px;
+  flex: none;
+  place-items: center;
+  display: grid;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.lb-cont__ico .ico {
+  width: 20px;
+  height: 20px;
+}
+
+.lb-cont .li__main {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lb-cont .li__main b {
+  font-size: var(--fs-md, 13.5px);
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+}
+
+.lb-cont .li__main small {
+  color: var(--muted);
+  font-size: var(--fs-xs, 12px);
+  font-weight: 500;
+}
+
+.lb-cont .ico:last-child {
+  color: var(--faint);
+  flex: none;
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.lb-cont:hover .ico:last-child {
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+/* 2. Toolbar & Category Filters */
+.lb .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.lb .toolbar .toolbar__search,
+html body html body html body .lb .toolbar__search {
+  flex: 1 1 260px !important;
+  min-width: 220px !important;
+  max-width: 380px !important;
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
+
+.lb .toolbar .toolbar__search .input,
+html body html body html body .lb .toolbar__search .input {
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  line-height: 36px !important;
+  border-radius: var(--r-ctl, 11px) !important;
+  padding-left: 38px !important;
+  padding-right: 14px !important;
+  background: var(--card) !important;
+  border: 1px solid var(--line) !important;
+  font-size: var(--fs-base, 14px) !important;
+  color: var(--text) !important;
+  box-shadow: 0 1px 2px rgba(20, 28, 45, 0.04) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+}
+
+.lb .toolbar .toolbar__search .input:hover,
+html body html body html body .lb .toolbar__search .input:hover {
+  border-color: var(--line-2) !important;
+  background-color: var(--card-2) !important;
+}
+
+.lb .toolbar .toolbar__search .input:focus,
+html body html body html body .lb .toolbar__search .input:focus {
+  background-color: var(--card) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent) !important;
+}
+
+/* Visible placeholder specifically for Playbooks search */
+html body html body html body html body html body html body .lb .toolbar input::placeholder,
+html body html body html body html body html body html body .lb .toolbar__search input::placeholder,
+html body html body html body html body html body html body .lb .toolbar__search .input::placeholder {
+  color: var(--muted) !important;
+  opacity: 0.85 !important;
+  -webkit-text-fill-color: var(--muted) !important;
+  font-size: var(--fs-sm, 13px) !important;
+  font-weight: 500 !important;
+}
+
+.lb .toolbar .toolbar__search .ico {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: var(--muted) !important;
+  width: 16px !important;
+  height: 16px !important;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.lb .toolbar .chip {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: var(--fs-sm, 12.5px);
+  font-weight: 600;
+  background: var(--card);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.lb .toolbar .chip:hover {
+  background: var(--card-2);
+  color: var(--text);
+  border-color: var(--line-2);
+}
+
+.lb .toolbar .chip.is-on {
+  background: var(--text);
+  color: var(--card);
+  border-color: var(--text);
+}
+
+.lb-saved {
+  font-weight: 600;
+  font-size: var(--fs-sm, 12.5px);
+  color: var(--muted);
+  cursor: pointer;
+  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+
+/* 3. Playbook Cards (.lb-card) */
+.lb-card,
+.card.lb-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--card) !important;
+  border: 1px solid var(--line) !important;
+  border-left: 1px solid var(--line) !important;
+  border-radius: var(--r-card, 20px) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease;
+}
+
+.lb-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px -12px rgba(20, 28, 45, 0.16);
+  border-color: var(--line-2) !important;
+}
+
+/* Invisible full-card click trigger (never rendered as an icon button) */
+.lb-card__open,
+button.lb-card__open,
+html body .lb-card__open,
+html body button.lb-card__open {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  pointer-events: auto !important;
+  display: block !important;
+}
+
+.lb-card__open::before,
+.lb-card__open::after,
+button.lb-card__open::before,
+button.lb-card__open::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Card Header with Toned Background & Geometry */
+.lb-card__head {
+  background: var(--tile);
+  min-height: 96px;
+  color: var(--on-tile);
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 18px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.lb-card__head::after {
+  content: "";
+  background: color-mix(in srgb, var(--on-tile) 9%, transparent);
+  border-radius: 20px;
+  width: 72px;
+  height: 72px;
+  position: absolute;
+  bottom: -18px;
+  right: 14px;
+  transform: rotate(12deg);
+  pointer-events: none;
+}
+
+.lb-card__cat {
+  font-size: var(--fs-2xs, 11px);
+  background: color-mix(in srgb, var(--on-tile) 14%, transparent);
+  color: var(--on-tile);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.lb-card__mins {
+  font-size: var(--fs-xs, 12px);
+  color: var(--on-tile-dim);
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  display: inline-flex;
+}
+
+.lb-card__mins .ico {
+  width: 14px;
+  height: 14px;
+}
+
+.lb-card__done {
+  font-size: var(--fs-2xs, 11px);
+  background: var(--on-tile);
+  color: var(--tile);
+  border-radius: 999px;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 4px 10px;
+  font-weight: 700;
+  display: inline-flex;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lb-card__done .ico {
+  stroke-width: 2.6px;
+  width: 12px;
+  height: 12px;
+}
+
+/* Card Body */
+.lb-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+  padding: 16px 18px 18px;
+}
+
+.lb-card__title {
+  font-size: var(--fs-lg, 16px);
+  letter-spacing: -0.01em;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+  min-height: 44px;
+}
+
+.lb-card__sum {
+  color: var(--muted);
+  font-size: var(--fs-md, 13.5px);
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 40px;
+}
+
+.lb-card__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.lb-card__by {
+  font-size: var(--fs-sm, 12.5px);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.lb-mark {
+  z-index: 5;
+  color: var(--faint);
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.lb-mark:hover {
+  background-color: var(--well);
+  color: var(--primary-ink);
+}
+
+.lb-mark.is-on {
+  color: var(--primary-ink);
+}
+
+.lb-mark.is-on .ico {
+  fill: currentColor;
+}
+
+.lb-card .row {
+  align-items: center;
+  margin-top: 6px;
+}
+
+.lb-card .row .meter {
+  flex: 1;
+}
+
+/* 4. Playbook Drawer / Modal Detail View */
+.lb-quote {
+  background: var(--tile);
+  color: var(--on-tile);
+  font-size: var(--fs-xl, 17px);
+  letter-spacing: -0.01em;
+  border-radius: 16px;
+  padding: 18px 20px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.lb-points {
+  margin-top: 14px;
+  display: grid;
+}
+
+.lb-points li {
+  border-bottom: 1px solid var(--line);
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  font-weight: 600;
+  display: flex;
+}
+
+.lb-points li:last-child {
+  border-bottom: 0;
+}
+
+.lb-points li .check {
+  margin-top: 2px;
+}
+
+.lb-points li.is-done span {
+  color: var(--faint);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.lb-finish {
+  display: inline-block;
+}
+
+/* ==========================================================================
+   5. FLUID & COMPREHENSIVE RESPONSIVE BREAKPOINTS (.lb-grid & layout)
+   ========================================================================== */
+
+/* Default / Wide Desktop (>= 1440px): 3 to 4 balanced columns */
+.lb-grid {
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  display: grid;
+}
+
+/* Large Displays (>= 1600px): Clean 4-column layout */
+@media (min-width: 1600px) {
+  .lb-grid {
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 24px;
+  }
+}
+
+/* Medium Desktop / Small Laptop (1100px - 1439px): 3 columns */
+@media (max-width: 1439px) and (min-width: 1100px) {
+  .lb-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .lb-continue__row {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+}
+
+/* Tablet Landscape (860px - 1099px): 2 balanced columns */
+@media (max-width: 1099px) and (min-width: 860px) {
+  .lb-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .lb-continue__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .lb .toolbar .toolbar__search {
+    flex: 1 1 240px !important;
+  }
+}
+
+/* Tablet Portrait & Large Handhelds (641px - 859px): 2 columns or smart wrap */
+@media (max-width: 859px) {
+  .lb .toolbar {
+    gap: 10px;
+  }
+  .lb .toolbar .toolbar__search,
+  html body html body html body .lb .toolbar__search {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .lb-saved {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 859px) and (min-width: 641px) {
+  .lb-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .lb-continue__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+/* Mobile Devices (<= 640px): Single stacked column with comfortable touch padding */
+@media (max-width: 640px) {
+  .lb-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+  }
+  .lb-continue__row {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .lb-continue,
+  .card.lb-continue {
+    padding: 14px 16px !important;
+    border-radius: 16px !important;
+  }
+  .lb-card,
+  .card.lb-card {
+    border-radius: 16px !important;
+  }
+  .lb-card__head {
+    min-height: 84px;
+    padding: 14px 16px;
+  }
+  .lb-card__body {
+    padding: 14px 16px 16px;
+  }
+  .lb .toolbar {
+    align-items: stretch;
+  }
+  .lb .toolbar .toolbar__search,
+  html body html body html body .lb .toolbar__search {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+  .lb-saved {
+    margin-left: 0;
+    margin-top: 6px;
+    justify-content: flex-start;
+  }
+}

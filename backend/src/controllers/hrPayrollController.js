@@ -7,6 +7,10 @@ import PayrollAdjustment from '../models/PayrollAdjustment.js';
 import StaffAttendance from '../models/StaffAttendance.js';
 import LeaveRequest from '../models/LeaveRequest.js';
 import {
+  replaceJournalForSource,
+  removeJournalForSource
+} from '../utils/accountsEngine.js';
+import {
   computePayslip,
   serialisePayslip,
   summariseRun,
@@ -14,6 +18,51 @@ import {
   datesInPeriod,
   toPeriodKey
 } from '../utils/hrEngine.js';
+
+/** Sync Payroll run with the General Ledger in Accounts */
+export const syncPayrollJournal = async (run) => {
+  try {
+    if (!run || run.status === 'Draft') {
+      await removeJournalForSource('Payroll', run?._id?.toString() || '');
+      return;
+    }
+
+    const gross = round2(run.totalGross || 0);
+    const net = round2(run.totalNet || 0);
+    const deductions = round2(gross - net);
+
+    const lines = [
+      { accountCode: '5100', debit: gross, credit: 0 }
+    ];
+
+    if (run.status === 'Paid') {
+      lines.push({ accountCode: '1020', debit: 0, credit: net });
+    } else {
+      lines.push({ accountCode: '2100', debit: 0, credit: net });
+    }
+
+    if (deductions > 0) {
+      lines.push({ accountCode: '2200', debit: 0, credit: deductions });
+    } else if (deductions < 0) {
+      // If net exceeds gross due to positive adjustments/bonuses, debit additional expense
+      lines.push({ accountCode: '5100', debit: Math.abs(deductions), credit: 0 });
+    }
+
+    const payload = {
+      date: (run.paidAt || run.finalizedAt || run.processedAt || new Date().toISOString()).slice(0, 10),
+      description: `Payroll ${run.status.toLowerCase()} for period ${run.period} — ${run.branch}`,
+      sourceModule: 'Payroll',
+      sourceId: run._id.toString(),
+      reference: `PAY-${run.period}`,
+      branch: run.branch || 'All Branches',
+      lines
+    };
+
+    await replaceJournalForSource('Payroll', run._id.toString(), payload);
+  } catch (err) {
+    console.error('Failed to sync payroll to GL:', err.message);
+  }
+};
 
 /** The period a date string falls into, e.g. "2026-11-04" -> "2026-11". */
 const periodOf = (date) => String(date || '').slice(0, 7);
@@ -205,6 +254,7 @@ export const finalizePayrollRun = async (req, res, next) => {
     run.status = 'Finalized';
     run.finalizedAt = new Date().toISOString();
     await run.save();
+    await syncPayrollJournal(run);
     return res.status(200).json({
       success: true,
       message: `Payroll run for ${run.period} finalized`,
@@ -230,6 +280,7 @@ export const markPayrollRunPaid = async (req, res, next) => {
     run.status = 'Paid';
     run.paidAt = new Date().toISOString();
     await run.save();
+    await syncPayrollJournal(run);
     return res.status(200).json({
       success: true,
       message: `Payroll run for ${run.period} marked as paid`,
@@ -267,6 +318,9 @@ export const deletePayrollRun = async (req, res, next) => {
     }
 
     await PayrollRun.findByIdAndDelete(run._id);
+    try {
+      await removeJournalForSource('Payroll', run._id.toString());
+    } catch (e) {}
 
     return res.status(200).json({
       success: true,

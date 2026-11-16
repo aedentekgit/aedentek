@@ -12,10 +12,10 @@
   <meta property="og:description" content="Clients, deals, projects, invoices and outreach for a surfaces studio, in one animated CRM." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400..700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script>
-    /* Before first paint: the saved theme and sidebar rail, so a reload never
-       flashes the wrong colours or the wide sidebar. Under ?record the page
+    /* Before first paint: the saved theme, typography and sidebar rail, so a reload never
+       flashes the wrong colours, fonts or the wide sidebar. Under ?record the page
        waits for the rig and ignores saved choices. */
     (function (d) {
       d.classList.add('js');
@@ -24,8 +24,31 @@
       try {
         if (!rec) {
           var t = JSON.parse(localStorage.getItem('tessly:theme') || '"light"');
-          d.dataset.theme = t === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : t;
+          var isDark = t === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : t === 'dark';
+          d.dataset.theme = isDark ? 'dark' : 'light';
           if (localStorage.getItem('tessly:rail') === '1') d.classList.add('is-rail');
+
+          // Pre-paint theme color & font tokens
+          var tc = JSON.parse(localStorage.getItem('tessly:theme-config') || 'null') || {};
+          var pCol = tc.primaryColor || '#7627c4';
+          var sCol = tc.secondaryColor || '#4d33b6';
+          var hFont = tc.headerFont || 'Plus Jakarta Sans';
+          var pFont = tc.paragraphFont || 'Inter';
+          if (isDark) {
+            d.style.setProperty('--primary', '#b88bf8');
+            d.style.setProperty('--primary-ink', '#e9d5ff');
+            d.style.setProperty('--on-primary', '#150928');
+            d.style.setProperty('--secondary', '#9076fa');
+          } else {
+            d.style.setProperty('--primary', pCol);
+            d.style.setProperty('--primary-ink', '#5b1d9c');
+            d.style.setProperty('--on-primary', '#ffffff');
+            d.style.setProperty('--secondary', sCol);
+            d.style.setProperty('--secondary-ink', '#38248c');
+          }
+          d.style.setProperty('--font-heading', "'" + hFont + "', 'Plus Jakarta Sans', 'Outfit', 'Urbanist', -apple-system, sans-serif");
+          d.style.setProperty('--font-paragraph', "'" + pFont + "', 'Inter', 'Plus Jakarta Sans', 'Urbanist', -apple-system, sans-serif");
+          d.style.setProperty('--font', "var(--font-paragraph)");
         }
       } catch (e) {}
       /* rail-on: the saved choice at 1280 and up, always between 761 and 1279 */
@@ -46,7 +69,7 @@
     })(document.documentElement);
   </script>
   <script src="/assets/date-range.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/ui-D4_WaMI9-iD6s2Siu.js">
+  <link rel="modulepreload" crossorigin href="/assets/ui-D4_WaMI9-9jWbE7tT.js">
   <link rel="icon" href="/assets/favicon-BvtZ-r0E.ico" sizes="48x48">
   <link rel="icon" href="/assets/favicon-BtLzst_0.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon-D1Kk0PIP.png">
@@ -73,16 +96,161 @@
 
     /* 3) Native <select> listbox + options inherit the app surface */
     select, select option{ background-color: var(--card, #ffffff); color: var(--text, #141a26); }
-    select option:checked{ background-color: var(--primary, #2c52cf); color: var(--on-primary, #fff); }
+    select option:checked{ background-color: var(--primary, #7627c4); color: var(--on-primary, #fff); }
     select option:disabled{ color: var(--faint, #7d8697); }
 
     /* 4) Date / month / time calendar indicator + popups */
     input[type="date"], input[type="month"], input[type="time"], input[type="datetime-local"]{ color-scheme: inherit; }
     input::-webkit-calendar-picker-indicator{ cursor: pointer; opacity: .8; }
     :root[data-theme="dark"] input::-webkit-calendar-picker-indicator{ filter: invert(1); }
+
+    /* ====================================================================
+       GLOBAL THEME COLOR & TYPOGRAPHY SYSTEM (EXCEPT SIDEBAR)
+       ==================================================================== */
+    :root {
+      --primary: #7627c4;
+      --primary-ink: #5b1d9c;
+      --on-primary: #ffffff;
+      --secondary: #4d33b6;
+      --secondary-ink: #38248c;
+      --font-heading: "Plus Jakarta Sans", "Outfit", "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-paragraph: "Plus Jakarta Sans", "Inter", "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font: var(--font-paragraph);
+    }
+    :root[data-theme="dark"] {
+      --primary: #b88bf8;
+      --primary-ink: #e9d5ff;
+      --on-primary: #150928;
+      --secondary: #9076fa;
+      --secondary-ink: #dcd2fe;
+    }
+
+    /* Headings in every section */
+    h1, h2, h3, h4, h5, h6,
+    .card__title, .page-head__title, .page-head h1,
+    .admin-group__title, .section-title, .brand__title,
+    .modal__title, .drawer__title, .tl-dialog__title,
+    .ivb-head__title, .crumbs, .st-me .li__main b,
+    .kpi__value, .kpi__label, .table th,
+    .st-themes button.st-theme .st-theme__lbl {
+      font-family: var(--font-heading) !important;
+      color: var(--text);
+    }
+    h1, .page-head__title, .page-head h1 {
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+    h2, h3, .card__title, .admin-group__title {
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+    }
+    h4, h5, h6 {
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+    }
+
+    /* Body text, Paragraphs, and helpers across every section */
+    body, p, span, dl, dd, li, td, .muted, .faint, .sub, .card__sub,
+    .admin-field-desc, .admin-group__desc, .helper, .field-desc {
+      font-family: var(--font-paragraph);
+      line-height: 1.5;
+    }
+
+    /* Interactive controls & forms in every section */
+    button, input, select, textarea {
+      font-family: var(--font-paragraph);
+    }
+
+    .field > span:first-child, .form-grid label, .palette__hex, .admin-toggle-info b,
+    .table th, .dd-hero__label, .side__label, .legend span {
+      font-family: var(--font-heading);
+      letter-spacing: 0.04em;
+    }
+
+    .btn, .btn--primary, .btn--ghost, .btn--sm, .st-actions .btn {
+      font-family: var(--font-heading);
+      font-weight: 600;
+    }
+    .tabs .tab, .ivb-tabs .tab, .nav__item {
+      font-family: var(--font-heading);
+    }
+
+    /* Primary theme color for buttons & active states */
+    .btn--primary, .st-actions .btn--primary, .top .btn--primary.top__new {
+      background: var(--primary) !important;
+      color: var(--on-primary) !important;
+    }
+    :focus-visible, .input:focus, .select:focus, .textarea:focus {
+      outline-color: var(--primary) !important;
+      border-color: var(--primary) !important;
+    }
+    .st-theme.is-on {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent) !important;
+    }
+    .st-theme__ok {
+      color: var(--primary) !important;
+    }
+
+    /* SIDEBAR PROTECTION ("except sidebar") — retains dark aesthetic & citron accent */
+    .side {
+      background: var(--side, #121417) !important;
+      color: var(--side-text, #f1f3ee) !important;
+    }
+    .side .brand__mark {
+      background: var(--side-accent, #cfe3a6) !important;
+      color: var(--on-side-accent, #1f2a12) !important;
+    }
+    .side .nav__item.is-active {
+      color: var(--side-text, #f1f3ee) !important;
+    }
+    .side .nav__item.is-active::before {
+      background: var(--side-accent, #cfe3a6) !important;
+    }
+    .side .side__goal-bar i {
+      background: var(--citron, #d8e45a) !important;
+    }
+
+    /* GLOBAL SCREEN ZOOM IN / OUT FLUID RESPONSIVE ENGINE */
+    :root {
+      --app-max: 100% !important;
+    }
+    .app {
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+    }
+    .side {
+      left: var(--side-x, 14px) !important;
+    }
+    @media (min-width: 761px) {
+      .main {
+        padding-left: calc(var(--side-w, 248px) + var(--side-x, 14px) + var(--gutter, 16px)) !important;
+        padding-right: var(--gutter, 16px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      html.rail-on .main {
+        padding-left: calc(var(--rail-w, 84px) + var(--side-x, 14px) + var(--gutter, 16px)) !important;
+        padding-right: var(--gutter, 16px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+    @media (max-width: 760px) {
+      .main {
+        padding-left: var(--gutter, 12px) !important;
+        padding-right: var(--gutter, 12px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
   </style>
-  <script type="module" crossorigin src="/assets/index-CmJXUdLc.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-DzF5bQG7.css">
+  <script type="module" crossorigin src="/assets/index-h9hnt6o8.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-P83IHF4j.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>

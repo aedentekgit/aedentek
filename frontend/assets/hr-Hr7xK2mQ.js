@@ -44,7 +44,7 @@ import {
 import { usePaged } from './pager.js';
 import { FormWizard, Panel, PreviewCard, useFormMode } from './wizard.js';
 
-const { useState, useEffect, useMemo } = ReactHooks();
+const { useState, useEffect, useMemo, useRef, useLayoutEffect } = ReactHooks();
 
 // The shared bundle exposes React's *automatic* runtime, where the third
 // argument of jsx()/jsxs() is a KEY. This module is authored in the classic
@@ -228,7 +228,11 @@ function useBranches(active = true) {
     apiFetch('/api/hr/branches/options').then((res) => {
       if (!alive) return;
       const payload = res.data || {};
-      if (res.ok && payload.success && Array.isArray(payload.data)) setBranches(payload.data);
+      if (res.ok && payload.success && Array.isArray(payload.data)) {
+        const arr = [...payload.data];
+        arr.defaultBranch = payload.defaultBranch || (arr.length > 0 ? arr[0] : '');
+        setBranches(arr);
+      }
     });
     return () => {
       alive = false;
@@ -299,10 +303,11 @@ function ActionButton({ icon, label, onClick, disabled, variant = 'default', dan
   });
 }
 
-function RowActions({ onEdit, onDelete, editLabel = 'Edit', deleteLabel = 'Delete' }) {
+function RowActions({ onEdit, onDelete, editLabel = 'Edit', deleteLabel = 'Delete', extra = null }) {
   return jsxs('div', {
     className: 'hr-row-actions',
     children: [
+      extra,
       jsx(ActionButton, {
         icon: 'edit',
         label: editLabel,
@@ -316,23 +321,38 @@ function RowActions({ onEdit, onDelete, editLabel = 'Edit', deleteLabel = 'Delet
         danger: true,
         onClick: onDelete
       })
-    ]
+    ].filter(Boolean)
   });
 }
 
 function HrTable({ head, headNode, rows, renderRow, emptyTitle, emptyText, emptyIcon, paged }) {
   const offset = paged && paged.pagination ? paged.pagination.from - 1 : 0;
-  const hasHead = Array.isArray(head) && head.length > 0;
-  const hasSno = (hasHead && (head[0] === 'S No' || head[0] === 'S NO' || head[0] === '#')) ||
+  let tableHead = Array.isArray(head) ? [...head] : head;
+  const hasHead = Array.isArray(tableHead) && tableHead.length > 0;
+  const hasSno = (hasHead && (tableHead[0] === 'S No' || tableHead[0] === 'S NO' || tableHead[0] === '#')) ||
                  (headNode && headNode.props && Array.isArray(headNode.props.children) && headNode.props.children[0]?.key === 'sno');
+
+  // Auto-detect if renderRow produces more cells than head (e.g. actions column omitted in head)
+  if (hasHead && rows && rows.length > 0 && typeof renderRow === 'function') {
+    try {
+      const sample = renderRow(rows[0], 0);
+      const cells = sample && sample.props && Array.isArray(sample.props.children)
+        ? sample.props.children
+        : (sample && sample.props && sample.props.children ? [sample.props.children] : []);
+      const expectedCount = hasSno ? tableHead.length - 1 : tableHead.length;
+      if (cells.length > expectedCount && !tableHead.some((h) => typeof h === 'string' && /action/i.test(h))) {
+        tableHead.push('Actions');
+      }
+    } catch (e) {}
+  }
 
   let theadElement = headNode;
   if (!headNode && hasHead) {
     const theadChildren = hasSno
-      ? head.map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
+      ? tableHead.map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
       : [
           jsx('th', { key: 'sno', style: { width: 56, minWidth: 56, maxWidth: 56, textAlign: 'center', paddingLeft: 8, paddingRight: 8 }, children: 'S No' }),
-          ...head.map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
+          ...tableHead.map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
         ];
     theadElement = jsx('tr', { children: theadChildren });
   } else if (headNode && !hasSno && headNode.props && Array.isArray(headNode.props.children)) {
@@ -345,7 +365,7 @@ function HrTable({ head, headNode, rows, renderRow, emptyTitle, emptyText, empty
       }
     };
   }
-  const colCount = hasHead ? (hasSno ? head.length : head.length + 1) : (headNode ? 99 : 1);
+  const colCount = hasHead ? (hasSno ? tableHead.length : tableHead.length + 1) : (headNode ? 99 : 1);
 
   const tableEl = jsx('div', {
     className: 'table-wrap',
@@ -496,7 +516,7 @@ const HR_MODULE_CONFIG = {
     formTitle: 'Add branch',
     formSub: 'Renaming a branch updates the employees and leave types that use it.',
     needsStaff: false,
-    initial: () => ({ name: '', code: '', city: '', address: '', phone: '', email: '', manager: '', status: 'Active' }),
+    initial: () => ({ name: '', code: '', city: '', address: '', phone: '', email: '', manager: '', status: 'Active', isDefault: false }),
     fields: [
       textField('name', 'Branch name', { required: true, placeholder: 'Bandra' }),
       textField('code', 'Code', { placeholder: 'BA' }),
@@ -505,7 +525,8 @@ const HR_MODULE_CONFIG = {
       { name: 'phone', label: 'Phone', type: 'text', placeholder: '+91 98765 43210' },
       { name: 'email', label: 'Email', type: 'email', placeholder: 'branch@company.com' },
       { name: 'address', label: 'Address', type: 'textarea', span: 'span-2', placeholder: 'Street, area' },
-      { name: 'status', label: 'Status', type: 'select', options: ['Active', 'Inactive'] }
+      { name: 'status', label: 'Status', type: 'select', options: ['Active', 'Inactive'] },
+      { name: 'isDefault', label: 'Default option', type: 'toggle', span: 'span-2', description: 'Set this branch as default across the CRM' }
     ],
     payload: (values) => ({
       name: values.name.trim(),
@@ -515,7 +536,8 @@ const HR_MODULE_CONFIG = {
       phone: (values.phone || '').trim(),
       email: (values.email || '').trim(),
       address: (values.address || '').trim(),
-      status: values.status || 'Active'
+      status: values.status || 'Active',
+      isDefault: Boolean(values.isDefault)
     }),
     kpis: (k) => [
       { label: 'Total branches', value: fmtCount(k.total), tone: 'cobalt', icon: 'building' },
@@ -528,7 +550,31 @@ const HR_MODULE_CONFIG = {
         cell: (r) =>
           jsxs('span', {
             className: 'li__main',
-            children: [jsx('b', { children: r.name }), jsx('small', { children: r.code || '—' })]
+            children: [
+              jsxs('span', {
+                style: { display: 'inline-flex', alignItems: 'center', gap: 6 },
+                children: [
+                  jsx('b', { children: r.name }),
+                  r.isDefault
+                    ? jsx('span', {
+                        className: 'status-pill status-pill--good branch-default-badge',
+                        style: {
+                          fontSize: '10.5px',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em',
+                          padding: '2px 7px',
+                          borderRadius: '999px',
+                          background: 'var(--primary, #7627c4)',
+                          color: 'var(--on-primary, #ffffff)'
+                        },
+                        children: 'Default'
+                      })
+                    : null
+                ]
+              }),
+              jsx('small', { children: r.code || '—' })
+            ]
           })
       },
       { head: 'City', cell: (r) => asText(r.city) },
@@ -945,10 +991,20 @@ function GenericHrModule({ config }) {
   const renderControl = (field) => {
     const value = values[field.name];
     if (field.type === 'toggle') {
-      return jsx(CheckboxToggle, {
-        on: Boolean(value),
-        label: field.label,
-        onChange: () => setValue(field.name, !value)
+      return jsxs('label', {
+        className: 'toggle-control',
+        style: { display: 'inline-flex', alignItems: 'center', gap: 10, cursor: 'pointer', minHeight: 38, marginTop: 4 },
+        children: [
+          jsx(CheckboxToggle, {
+            on: Boolean(value),
+            label: field.label,
+            onChange: () => setValue(field.name, !value)
+          }),
+          jsx('span', {
+            style: { fontSize: 13, fontWeight: 500, color: 'var(--ink)' },
+            children: field.description || (value ? 'Default option active' : 'Set as default option')
+          })
+        ]
       });
     }
     if (field.type === 'select') {
@@ -966,14 +1022,15 @@ function GenericHrModule({ config }) {
       );
     }
     if (field.type === 'branch') {
+      const effBranch = value !== undefined && value !== '' ? value : (branchList.defaultBranch || 'All Branches');
       return jsx(
         'select',
         {
           className: 'select',
-          value: value || 'All Branches',
+          value: effBranch,
           onChange: (ev) => setValue(field.name, ev.target.value)
         },
-        branchOptions(branchList, value, true).map((opt) => jsx('option', { value: opt, key: opt, children: opt }))
+        branchOptions(branchList, effBranch, true).map((opt) => jsx('option', { value: opt, key: opt, children: opt }))
       );
     }
     if (field.type === 'staff') {
@@ -1113,6 +1170,22 @@ function GenericHrModule({ config }) {
                         jsx('td', {
                           className: 'hr-actions-cell',
                           children: jsx(RowActions, {
+                            extra: config.entity === 'branch' && !row.isDefault
+                              ? jsx(ActionButton, {
+                                  icon: 'star',
+                                  label: 'Set as default branch',
+                                  variant: 'default',
+                                  onClick: async () => {
+                                    const res = await apiFetch(`/api/hr/branches/${row._id}/default`, { method: 'PUT' });
+                                    if (res.ok && res.data && res.data.success) {
+                                      toast(`${row.name} is now the default branch`, { icon: 'check' });
+                                      reload();
+                                    } else {
+                                      toast((res.data && res.data.message) || res.error || 'Could not set default branch', { icon: 'x' });
+                                    }
+                                  }
+                                })
+                              : null,
                             onEdit: () => startEdit(row),
                             onDelete: (ev) => handleDelete(row, ev.currentTarget)
                           })
@@ -1184,7 +1257,7 @@ const STAFF_SECTION_INFO = {
 };
 
 function renderStaffField(key, ctx) {
-  const { staff, isEdit, shiftOptions, branchList } = ctx;
+  const { staff, isEdit, shiftOptions, branchList, snap, setSnap } = ctx;
   {
               if (key === 'createLogin') {
                 return jsx(
@@ -1244,13 +1317,22 @@ function renderStaffField(key, ctx) {
                 );
               }
               if (key === 'branch') {
-                const current = staff && staff.branch ? staff.branch : '';
+                const defaultBranch = branchList.defaultBranch || (branchList.length > 0 ? branchList[0] : '');
+                const current = staff && staff.branch ? staff.branch : (snap && snap.branch !== undefined ? snap.branch : defaultBranch);
                 return jsx(
                   HrField,
                   { key, label: 'Branch', required: true },
                   jsx(
                     'select',
-                    { className: 'select', name: 'branch', defaultValue: current },
+                    {
+                      className: 'select',
+                      name: 'branch',
+                      value: current,
+                      onChange: (ev) => {
+                        const val = ev.target.value;
+                        if (setSnap) setSnap((prev) => ({ ...prev, branch: val }));
+                      }
+                    },
                     branchOptions(branchList, current, false).map((opt) =>
                       jsx('option', { value: opt, key: opt || '__none', children: opt || 'Select branch' })
                     )
@@ -1338,8 +1420,14 @@ function StaffFormPage({ editId }) {
     });
   }, [editId]);
 
+  useEffect(() => {
+    if (!isEdit && branchList.defaultBranch && !snap.branch) {
+      setSnap((prev) => ({ ...prev, branch: branchList.defaultBranch }));
+    }
+  }, [isEdit, branchList.defaultBranch]);
+
   const shiftOptions = shifts.rows.map((s) => ({ value: s._id, label: s.name }));
-  const ctx = { staff, isEdit, shiftOptions, branchList };
+  const ctx = { staff, isEdit, shiftOptions, branchList, snap, setSnap };
 
   const readForm = () => {
     const el = document.getElementById('hr-staff-form');
@@ -1917,7 +2005,7 @@ function AttendancePage() {
             loading
               ? jsx(EmptyState, { icon: 'clock', title: 'Loading…', text: 'Fetching attendance records.' })
               : jsx(HrTable, {
-                  head: ['Date', 'Staff', 'Role', 'Check in', 'Check out', 'Working hours', 'Status'],
+                  head: ['Date', 'Staff', 'Role', 'Check in', 'Check out', 'Working hours', 'Status', 'Actions'],
                   rows: visible,
                   paged,
                   emptyIcon: 'clock',
@@ -2255,7 +2343,7 @@ function LeavePage() {
             children: loading
               ? jsx(EmptyState, { icon: 'clock', title: 'Loading…', text: 'Fetching leave requests.' })
               : jsx(HrTable, {
-                  head: ['Employee', 'Type', 'From', 'To', 'Days', 'Paid', 'LOP', 'Status'],
+                  head: ['Employee', 'Type', 'From', 'To', 'Days', 'Paid', 'LOP', 'Status', 'Actions'],
                   rows: visible,
                   paged,
                   emptyIcon: 'calendar',
@@ -2672,7 +2760,7 @@ function PayrollPage() {
         children: loading
           ? jsx(EmptyState, { icon: 'clock', title: 'Loading…', text: 'Fetching payroll runs.' })
           : jsx(HrTable, {
-              head: ['Period', 'Branch', 'Status', 'Employees', 'Gross', 'Deductions', 'Net'],
+              head: ['Period', 'Branch', 'Status', 'Employees', 'Gross', 'Deductions', 'Net', 'Actions'],
               rows,
               emptyIcon: 'finance',
               emptyTitle: 'No payroll runs yet',
@@ -2739,7 +2827,7 @@ function PayrollPage() {
             children: detailLoading
               ? jsx(EmptyState, { icon: 'clock', title: 'Loading…', text: 'Fetching payslips.' })
               : jsx(HrTable, {
-                  head: ['Payslip no', 'Employee', 'Role', 'Gross', 'Earnings', 'Deductions', 'Net'],
+                  head: ['Payslip no', 'Employee', 'Role', 'Gross', 'Earnings', 'Deductions', 'Net', 'Actions'],
                   rows: payslips,
                   emptyIcon: 'receipt',
                   emptyTitle: 'No payslips',
@@ -2800,7 +2888,9 @@ function HrPage({ route }) {
       jsx(PageHeader, {
         crumbs: [
           { label: 'Workspace' },
-          { label: 'Human Resources', href: '/hr/staff' },
+          (sub === 'branches' || sub === 'leave-types' || sub === 'shifts')
+            ? { label: 'Masters', href: '/clients/service-types' }
+            : { label: 'Human Resources', href: '/hr/staff' },
           { label: meta.title }
         ],
         title: meta.title,

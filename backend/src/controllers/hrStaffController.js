@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Staff from '../models/Staff.js';
 import SalaryStructure from '../models/SalaryStructure.js';
 import User from '../models/User.js';
@@ -153,7 +154,19 @@ export const getStaffBranches = async (req, res, next) => {
 // ---------------------------------------------------------------------------
 export const getStaffById = async (req, res, next) => {
   try {
-    const staff = await Staff.findById(req.params.id);
+    let staff = null;
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      staff = await Staff.findById(req.params.id);
+    }
+    if (!staff) {
+      staff = await Staff.findOne({
+        $or: [
+          { staffCode: req.params.id },
+          { employeeCode: req.params.id },
+          { biometricId: req.params.id }
+        ]
+      });
+    }
     if (!staff) {
       return res.status(404).json({ success: false, message: 'Staff member not found' });
     }
@@ -233,7 +246,19 @@ export const createStaff = async (req, res, next) => {
 // ---------------------------------------------------------------------------
 export const updateStaff = async (req, res, next) => {
   try {
-    const staff = await Staff.findById(req.params.id);
+    let staff = null;
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      staff = await Staff.findById(req.params.id);
+    }
+    if (!staff) {
+      staff = await Staff.findOne({
+        $or: [
+          { staffCode: req.params.id },
+          { employeeCode: req.params.id },
+          { biometricId: req.params.id }
+        ]
+      });
+    }
     if (!staff) {
       return res.status(404).json({ success: false, message: 'Staff member not found' });
     }
@@ -254,7 +279,7 @@ export const updateStaff = async (req, res, next) => {
     }
 
     const allowed = [
-      'salutation', 'firstName', 'middleName', 'lastName', 'dob', 'gender', 'maritalStatus',
+      'salutation', 'firstName', 'middleName', 'lastName', 'email', 'phone', 'dob', 'gender', 'maritalStatus',
       'nationality', 'bloodGroup', 'department', 'role', 'branch', 'branchRef', 'shift', 'shiftName',
       'employmentType', 'joiningDate', 'status', 'basic', 'hra', 'transportAllowance',
       'telephoneAllowance', 'foodAllowance', 'specialAllowance', 'otherEarnings', 'otherDeductions',
@@ -289,7 +314,19 @@ export const updateStaff = async (req, res, next) => {
 // ---------------------------------------------------------------------------
 export const deleteStaff = async (req, res, next) => {
   try {
-    const staff = await Staff.findById(req.params.id);
+    let staff = null;
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      staff = await Staff.findById(req.params.id);
+    }
+    if (!staff) {
+      staff = await Staff.findOne({
+        $or: [
+          { staffCode: req.params.id },
+          { employeeCode: req.params.id },
+          { biometricId: req.params.id }
+        ]
+      });
+    }
     if (!staff) {
       return res.status(404).json({ success: false, message: 'Staff member not found' });
     }

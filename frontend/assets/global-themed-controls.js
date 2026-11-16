@@ -731,12 +731,25 @@
   // React-owned children are not rewritten. Text-labeled CTAs, close/menu
   // toggles, theme/nav chrome, switches and form submits are all skipped.
   // ---------------------------------------------------------------------
-  const CHIP_SKIP = /(^|\s)(side__close|side__theme|side__collapse|top__bell|top__sidebar-toggle|me-btn|nav__chev|nav__item|ibtn--close|switch|tabbar__|side-goal|form-save-row)(\s|$)/;
+  // Helper to strictly identify calendar elements and containers
+  function isCalendarElement(el) {
+    if (!el) return false;
+    const cls = typeof el.className === 'string' ? el.className : (el.className?.baseVal || '');
+    if (/(^|\s)ca-/.test(cls)) return true;
+    if (el.closest && el.closest('.ca-wrap, .ca-grid, .ca-cell, .ca-month, .ca-day, .ca-ag, .ca-row, .ca-list, [class*="ca-"]')) return true;
+    return false;
+  }
+
+  const CHIP_SKIP = /(^|\s)(side__close|side__theme|side__collapse|top__bell|top__sidebar-toggle|me-btn|nav__chev|nav__item|ibtn--close|switch|tabbar__|side-goal|form-save-row|tl-cancel|lb-card__open|lb-cont|lb-mark|ca-\S*)(\s|$)/;
   function globalActKind(el) {
-    const s = ((el.getAttribute('title') || '') + ' ' + (el.getAttribute('aria-label') || '') + ' ' + (el.className || '') + ' ' + (el.textContent || '')).toLowerCase()
+    if (el.classList.contains('lb-card__open') || el.classList.contains('lb-cont')) return null;
+    if (isCalendarElement(el)) return null;
+    const rawText = (el.textContent || '').trim();
+    if (/^(cancel|close|dismiss|back|abort|discard|reset)$/i.test(rawText)) return null;
+    const s = ((el.getAttribute('title') || '') + ' ' + (el.getAttribute('aria-label') || '') + ' ' + (el.className || '') + ' ' + rawText).toLowerCase()
       .slice(0, 80);
     if (/set as default|make default|set default/.test(s)) return 'star';
-    if (/delete|remove|trash|archive|revoke|cancel/.test(s)) return 'delete';
+    if (/(delete|remove|trash|archive|revoke|cancel\s+invoice)/.test(s)) return 'delete';
     if (/edit|update|modify|pencil|rename/.test(s)) return 'edit';
     if (/download|pdf|export|print/.test(s)) return 'download';
     if (/send|share|mail|dispatch|resend|remind/.test(s)) return 'send';
@@ -744,9 +757,42 @@
     return null; // not a recognised action icon -> leave untouched
   }
   function enhanceActionButtons() {
+    // Strip any erroneously applied tl-act classes from calendar elements (.ca-chip, .ca-cell, .ca-more, etc.)
+    document.querySelectorAll('.ca-chip, .ca-cell, .ca-more, .ca-month, .ca-grid, .ca-row, [class*="ca-"], .ca-wrap button, .ca-grid button, .ca-cell button, .ca-day button, .ca-ag button').forEach(el => {
+      if (el.dataset.tlAct || el.classList.contains('tl-act')) {
+        delete el.dataset.tlAct;
+        el.classList.remove('tl-act', 'tl-act--delete', 'tl-act--edit', 'tl-act--view', 'tl-act--download', 'tl-act--send', 'tl-act--star', 'tl-act--text');
+      }
+    });
+
     document.querySelectorAll('button, a.ibtn, a.btn').forEach(el => {
+      if (isCalendarElement(el)) {
+        if (el.dataset.tlAct || el.classList.contains('tl-act')) {
+          delete el.dataset.tlAct;
+          el.classList.remove('tl-act', 'tl-act--delete', 'tl-act--edit', 'tl-act--view', 'tl-act--download', 'tl-act--send', 'tl-act--star', 'tl-act--text');
+        }
+        return;
+      }
+      if (el.classList.contains('lb-card__open') || el.classList.contains('lb-cont')) {
+        if (el.dataset.tlAct) {
+          delete el.dataset.tlAct;
+          el.classList.remove('tl-act', 'tl-act--delete', 'tl-act--edit', 'tl-act--view', 'tl-act--download', 'tl-act--send', 'tl-act--star', 'tl-act--text');
+          if (el.getAttribute('title')) el.removeAttribute('title');
+        }
+        return;
+      }
+      const txt = (el.textContent || '').trim();
+      if (/^(cancel|close|dismiss|back|abort|discard|reset)$/i.test(txt) || el.classList.contains('tl-cancel') || el.dataset.tlCancel) {
+        if (el.dataset.tlAct) {
+          delete el.dataset.tlAct;
+          el.classList.remove('tl-act', 'tl-act--delete', 'tl-act--edit', 'tl-act--view', 'tl-act--download', 'tl-act--send', 'tl-act--star', 'tl-act--text');
+          if (el.getAttribute('title') === 'Delete') el.removeAttribute('title');
+          if (el.getAttribute('aria-label') === 'Delete') el.removeAttribute('aria-label');
+        }
+        return;
+      }
       if (el.dataset.tlAct) return;                                  // already a table chip
-      if (el.closest('.tl-dialog, .menu, .finder, .tl-stage')) return;
+      if (el.closest('.tl-dialog, .menu, .finder, .tl-stage, .ca-wrap, .ca-grid, .ca-cell, .ca-month, .ca-day, .ca-ag, [class*="ca-"]')) return;
       if (CHIP_SKIP.test(' ' + (el.className || '') + ' ')) return;
       if (el.closest('.side__foot, .tabbar')) return;
       if (el.getAttribute('role') === 'switch') return;
@@ -754,7 +800,6 @@
       if (el.classList.contains('btn--primary')) return;             // keep primary CTAs
       const kind = globalActKind(el);
       if (!kind) return;                                              // only view/edit/delete/download/send/star
-      const txt = (el.textContent || '').trim();
       const hasIcon = !!el.querySelector('svg, .ico');
       // Chip action controls that carry an icon (icon-only OR icon + label);
       // skip text-only long labels (real CTAs like "Save profile").
@@ -800,6 +845,7 @@
   function enhanceCancelButtons() {
     document.querySelectorAll('button:not([data-tl-cancel])').forEach((b) => {
       if (b.closest('.tl-act-cell')) return;
+      if (isCalendarElement(b)) return;
       if (/^\s*cancel\s*$/i.test(b.textContent || '')) { b.dataset.tlCancel = '1'; b.classList.add('tl-cancel'); }
     });
   }
@@ -1093,21 +1139,163 @@
   // out-specifies any per-page header rule, and the <style> is appended at
   // the end of <body> (per-page CSS lives in <head>, before it) so it wins
   // source order too. It reads live CSS vars, so it follows the theme.
+  //
+  // EXCLUSION: Document templates, quotation/invoice sheets, preview stages
+  // and printable sheets must strictly use their own template palette
+  // (vis.thBg / template colour swatches), NEVER the CRM theme colour.
   // ---------------------------------------------------------------------
   var R5 = ':root:root:root:root:root ';
+  var NOT_TMPL = ':not([data-spec-sheet] *):not(.spec-sheet *):not([data-spec-items] *):not([data-spec-items]):not(.tmpl-preview *):not(.inv-editor__sheet *):not(#printable-invoice-doc *)';
   var TH_CSS =
-    R5 + 'th,' +
-    R5 + 'thead th,' +
-    R5 + '.table th,' +
-    R5 + '.ivb-table th{' +
+    R5 + 'th' + NOT_TMPL + ',' +
+    R5 + 'thead th' + NOT_TMPL + ',' +
+    R5 + '.table th' + NOT_TMPL + ',' +
+    R5 + '.ivb-table th' + NOT_TMPL + '{' +
     'background: var(--primary) !important;' +
     'color: var(--primary-contrast, var(--on-primary, #ffffff)) !important;' +
     'border-bottom-color: transparent !important;' +
     '}' +
-    R5 + 'th .ico,' +
-    R5 + 'thead th .ico{' +
+    R5 + 'th' + NOT_TMPL + ' .ico,' +
+    R5 + 'thead th' + NOT_TMPL + ' .ico{' +
     'color: var(--primary-contrast, var(--on-primary, #ffffff));' +
     '}';
+
+  // ---------------------------------------------------------------------
+  // GLOBAL CARD LEFT-ACCENT BORDER (theme colour)
+  // Every card gets a 4px left accent strip in the live theme PRIMARY
+  // colour. It reads var(--primary), so it follows the theme engine
+  // across light/dark mode and any custom primary set in Settings.
+  // ---------------------------------------------------------------------
+  var CARD_CSS =
+    R5 + '.card:not(.lb-card):not(.lb-continue){' +
+    'border-left:4px solid var(--primary) !important;' +
+    '}' +
+    R5 + '.lb-card, ' + R5 + '.lb-continue{' +
+    'border-left:1px solid var(--line) !important;' +
+    '}';
+
+  // ---------------------------------------------------------------------
+  // GLOBAL TABULAR SEARCH-LEFT LAYOUT
+  // 1. In every card header that carries a search control in its right-hand
+  //    tool cluster (tabular masters like Project Stages / Service Types /
+  //    Leave history), the search field is lifted to the LEFT of the header
+  //    row, next to the card title — filters/actions stay on the right.
+  // 2. The visible placeholder text of every tabular search field is removed
+  //    (rendered transparent) so the field shows only its icon.
+  // The reparenting is DOM-level and is re-healed by a MutationObserver, so
+  // React re-renders that rebuild the header never undo the layout.
+  // ---------------------------------------------------------------------
+  var SL_CSS =
+    R5 + 'header.card__head.is-search-left{' +
+    'justify-content:flex-start !important;' +
+    '} ' +
+    R5 + 'header.card__head.is-search-left > .card__tools{' +
+    'margin-left:auto !important;' +
+    '} ' +
+    R5 + 'header.card__head.is-search-left > .tl-search-left-field,' +
+    R5 + '.tl-search-left-field{' +
+    'flex:0 1 380px !important; width:380px !important; max-width:380px !important; min-width:280px !important;' +
+    '} ' +
+    R5 + '@media (max-width:760px){' +
+    R5 + 'header.card__head.is-search-left > .tl-search-left-field, .tl-search-left-field{width:100% !important; max-width:100% !important; min-width:0 !important; flex:1 1 100% !important;}' +
+    '} ' +
+    R5 + '.card__head input::placeholder,' +
+    R5 + '.card__tools input::placeholder,' +
+    R5 + '.page:not(.lb) .toolbar input::placeholder,' +
+    R5 + '.page:not(.lb) .toolbar__search input::placeholder{' +
+    'color:transparent !important;' +
+    '}';
+
+  function injectSearchLeftLayout() {
+    if (document.getElementById('tl-search-left')) return;
+    var st = document.createElement('style');
+    st.id = 'tl-search-left';
+    st.textContent = SL_CSS;
+    (document.body || document.documentElement).appendChild(st);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectSearchLeftLayout);
+  } else {
+    injectSearchLeftLayout();
+  }
+
+  function findSearchField(scope) {
+    var s = scope.querySelector('.toolbar__search');
+    if (s) return s;
+    s = scope.querySelector('input[type="search"]');
+    if (s) return s;
+    var inps = scope.querySelectorAll('input');
+    for (var i = 0; i < inps.length; i++) {
+      var ph = inps[i].getAttribute('placeholder') || '';
+      var id = inps[i].getAttribute('id') || '';
+      if (/search/i.test(ph) || /search/i.test(id)) return inps[i];
+    }
+    return null;
+  }
+
+  function healSearchLeft() {
+    var heads = document.querySelectorAll('header.card__head');
+    for (var i = 0; i < heads.length; i++) {
+      var head = heads[i];
+      var lifted = head.querySelector('.tl-search-left-field');
+      if (head.classList.contains('is-search-left') && lifted && lifted.parentNode === head && head.firstChild === lifted) continue;
+      if (lifted) { head.classList.remove('is-search-left'); lifted.classList.remove('tl-search-left-field'); }
+      var tools = head.querySelector('.card__tools');
+      if (!tools) continue;
+      var s = findSearchField(tools);
+      if (!s) continue;
+      // If s is a bare input, wrap it into a .toolbar__search with SVG search icon
+      if (s.tagName === 'INPUT') {
+        var wrap = document.createElement('label');
+        wrap.className = 'toolbar__search tl-search-left-field';
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'ico');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.innerHTML = '<circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"></circle><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>';
+        s.style.width = '';
+        s.style.height = '';
+        s.type = 'search';
+        s.parentNode.insertBefore(wrap, s);
+        wrap.appendChild(svg);
+        wrap.appendChild(s);
+        s = wrap;
+      }
+      // Lift the search field to the very left of the header row.
+      head.insertBefore(s, head.firstChild);
+      s.classList.add('tl-search-left-field');
+      head.classList.add('is-search-left');
+    }
+  }
+
+  (function observeSearchLeft() {
+    function run() {
+      healSearchLeft();
+    }
+    var queued = false;
+    var obs = new MutationObserver(function (muts) {
+      var relevant = false;
+      for (var i = 0; i < muts.length; i++) {
+        var ns = muts[i].addedNodes;
+        for (var j = 0; j < ns.length; j++) {
+          var n = ns[j];
+          if (n.nodeType !== 1) continue;
+          if (n.classList && (n.classList.contains('card__head') || n.classList.contains('card__tools'))) { relevant = true; break; }
+          if (n.querySelector && n.querySelector('.card__head, .card__tools')) { relevant = true; break; }
+        }
+        if (relevant) break;
+      }
+      if (!relevant || queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; run(); });
+    });
+    function start() {
+      run();
+      obs.observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+    else start();
+  })();
 
   function injectTableHeaderTheme() {
     if (document.getElementById('tl-th-theme')) return;
@@ -1120,6 +1308,49 @@
     document.addEventListener('DOMContentLoaded', injectTableHeaderTheme);
   } else {
     injectTableHeaderTheme();
+  }
+
+  function injectCardAccentBorder() {
+    if (document.getElementById('tl-card-accent')) return;
+    var st = document.createElement('style');
+    st.id = 'tl-card-accent';
+    st.textContent = CARD_CSS;
+    (document.body || document.documentElement).appendChild(st);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectCardAccentBorder);
+  } else {
+    injectCardAccentBorder();
+  }
+
+  // ---------------------------------------------------------------------
+  // GLOBAL FLUID ZOOM IN / OUT & RESPONSIVE LAYOUT ENGINE
+  // Eliminates dead centering gaps on zoom out / wide screens,
+  // locks sidebar at left edge, and guarantees fluid full-width response.
+  // ---------------------------------------------------------------------
+  var FLUID_ZOOM_CSS =
+    ':root{--app-max:100% !important;}' +
+    '.app{max-width:100% !important;width:100% !important;margin:0 !important;}' +
+    '.side{left:var(--side-x, 14px) !important;}' +
+    '@media (min-width: 761px){' +
+    'html .main, .main{padding-left:calc(var(--side-w, 248px) + var(--side-x, 14px) + var(--gutter, 16px)) !important;padding-right:var(--gutter, 16px) !important;width:100% !important;box-sizing:border-box !important;}' +
+    'html.rail-on .main, .rail-on .main{padding-left:calc(var(--rail-w, 84px) + var(--side-x, 14px) + var(--gutter, 16px)) !important;padding-right:var(--gutter, 16px) !important;width:100% !important;box-sizing:border-box !important;}' +
+    '}' +
+    '@media (max-width: 760px){' +
+    'html .main, .main{padding-left:var(--gutter, 12px) !important;padding-right:var(--gutter, 12px) !important;width:100% !important;box-sizing:border-box !important;}' +
+    '}';
+
+  function injectFluidZoomEngine() {
+    if (document.getElementById('tl-fluid-zoom')) return;
+    var st = document.createElement('style');
+    st.id = 'tl-fluid-zoom';
+    st.textContent = FLUID_ZOOM_CSS;
+    (document.body || document.documentElement).appendChild(st);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectFluidZoomEngine);
+  } else {
+    injectFluidZoomEngine();
   }
 
   // Initialize from cache or defaults immediately

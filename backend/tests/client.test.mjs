@@ -78,11 +78,24 @@ async function runTests() {
     assert.equal(omni.projects.length, 2);
     assert.equal(omni.invoices.length, 2);
     assert.equal(omni.payments.length, 2);
+    assert.equal(omni.social.length, 3);
+    assert.equal(omni.monthlySchedule.length, 3);
     assert.equal(omni.compliance.gstinValid, true);
     assert.equal(omni.financialSummary.totalBilled, 826000);
     assert.equal(omni.financialSummary.totalPaid, 672000);
     assert.equal(omni.financialSummary.totalOutstanding, 154000);
-    console.log('✓ Reset and seeded 3 clients with all 11 submodules and accurate financial ledger');
+
+    // Verify for EACH customer that EACH section is an Array form collection
+    const arraySections = [
+      'contacts', 'websites', 'social', 'credentials', 'projects',
+      'invoices', 'payments', 'tickets', 'documents', 'timeline', 'monthlySchedule'
+    ];
+    for (const c of resetRes.body.data) {
+      for (const sec of arraySections) {
+        assert.ok(Array.isArray(c[sec]), `Expected ${c.company}.${sec} to be an Array collection, got ${typeof c[sec]}`);
+      }
+    }
+    console.log('✓ Reset and seeded 3 clients with all 11 submodules (guaranteed array form collections) and accurate financial ledger');
 
     // TEST 2: List & KPI Telemetry
     console.log('\nTest 2: GET /api/clients');
@@ -193,6 +206,132 @@ async function runTests() {
     assert.equal(delCredRes.status, 200);
     assert.equal(delCredRes.body.data.credentials.length, 0);
     console.log('✓ Credential secret stored in encrypted vault and deleted cleanly');
+
+    // TEST 9b: Add, List, Update & Delete Social Channel
+    console.log('\nTest 9b: POST, GET, PUT & DELETE /api/clients/:id/social');
+    const addSocRes = await request('POST', `/api/clients/${zId}/social`, {
+      name: 'GitHub Enterprise',
+      handle: 'github.com/zenith-cloudworks',
+      desc: 'Source code repositories and automated CI webhooks',
+      href: 'https://github.com/zenith-cloudworks',
+      tone: 'violet'
+    });
+    assert.equal(addSocRes.status, 201);
+    assert.equal(addSocRes.body.data.social.length, 1);
+    const socId = addSocRes.body.data.social[0].id;
+    assert.equal(addSocRes.body.data.social[0].name, 'GitHub Enterprise');
+
+    // List via paginated lists endpoint
+    const listSocRes = await request('GET', `/api/clients/${zId}/lists/social`);
+    assert.equal(listSocRes.status, 200);
+    assert.equal(listSocRes.body.total, 1);
+    assert.equal(listSocRes.body.data[0].id, socId);
+
+    // Update social channel
+    const updSocRes = await request('PUT', `/api/clients/${zId}/social/${socId}`, {
+      desc: 'Updated corporate repository pipeline'
+    });
+    assert.equal(updSocRes.status, 200);
+    const updatedSoc = updSocRes.body.data.social.find((s) => s.id === socId);
+    assert.equal(updatedSoc.desc, 'Updated corporate repository pipeline');
+
+    // Delete social channel
+    const delSocRes = await request('DELETE', `/api/clients/${zId}/social/${socId}`);
+    assert.equal(delSocRes.status, 200);
+    assert.equal(delSocRes.body.data.social.length, 0);
+    console.log('✓ Social channel added, listed via /lists/social, updated and deleted cleanly');
+
+    // TEST 9c: Document Upload as Array Type (Multiple Documents with Name, fileName, type, size, data)
+    console.log('\nTest 9c: Document Upload as Array Type (POST /api/clients/:id/documents)');
+
+    // 1. Validation test: missing name in array element
+    const invalidArrayRes = await request('POST', `/api/clients/${zId}/documents`, {
+      documents: [
+        { name: 'Valid Document', fileName: 'valid.pdf' },
+        { name: '', fileName: 'unnamed.pdf' }
+      ]
+    });
+    assert.equal(invalidArrayRes.status, 400);
+    assert.ok(invalidArrayRes.body.message.includes('Document 2'));
+    console.log('✓ Validation properly rejected unnamed document within array');
+
+    // 2. Successful multiple document upload as array type
+    const multiDocPayload = {
+      category: 'MSA',
+      startDate: '2026-01-01',
+      endDate: '2027-01-01',
+      notes: 'Master executed documents',
+      documents: [
+        {
+          name: 'Master Services Agreement (MSA)',
+          fileName: 'msa_signed.pdf',
+          size: '1.2 MB',
+          type: 'PDF',
+          data: 'data:application/pdf;base64,JVBERi0xLjQK...',
+          category: 'MSA'
+        },
+        {
+          name: 'Non-Disclosure Agreement (NDA)',
+          fileName: 'nda_countersigned.pdf',
+          size: '480 KB',
+          type: 'PDF',
+          data: 'data:application/pdf;base64,JVBERi0xLjQK...',
+          category: 'NDA'
+        },
+        {
+          name: 'GST Registration Certificate',
+          fileName: 'gst_certificate.png',
+          size: '220 KB',
+          type: 'PNG',
+          data: 'data:image/png;base64,iVBORw0KGgo...',
+          category: 'Other'
+        }
+      ]
+    };
+
+    const addDocsRes = await request('POST', `/api/clients/${zId}/documents`, multiDocPayload);
+    assert.equal(addDocsRes.status, 201);
+    assert.equal(addDocsRes.body.success, true);
+    assert.equal(addDocsRes.body.documents.length, 3);
+    assert.equal(addDocsRes.body.data.documents.length, 3);
+    assert.equal(addDocsRes.body.documents[0].name, 'Master Services Agreement (MSA)');
+    assert.equal(addDocsRes.body.documents[0].fileName, 'msa_signed.pdf');
+    assert.equal(addDocsRes.body.documents[1].name, 'Non-Disclosure Agreement (NDA)');
+    assert.equal(addDocsRes.body.documents[2].name, 'GST Registration Certificate');
+    console.log('✓ Successfully uploaded 3 documents simultaneously using array payload');
+
+    // 3. Direct array root payload test [doc1, doc2]
+    const directArrayRes = await request('POST', `/api/clients/${zId}/documents`, [
+      { name: 'Letter of Undertaking (LOU)', fileName: 'lou_2026.pdf', category: 'LOU' }
+    ]);
+    assert.equal(directArrayRes.status, 201);
+    assert.equal(directArrayRes.body.documents.length, 1);
+    assert.equal(directArrayRes.body.data.documents.length, 4);
+    console.log('✓ Direct root array payload [doc] successfully processed');
+
+    // 4. Verify via paginated documents endpoint
+    const listDocsRes = await request('GET', `/api/clients/${zId}/lists/documents`);
+    assert.equal(listDocsRes.status, 200);
+    assert.equal(listDocsRes.body.total, 4);
+    assert.equal(listDocsRes.body.data.length, 4);
+    console.log('✓ Listed all documents via /lists/documents repository');
+
+    // 5. Update single document
+    const docToUpdate = addDocsRes.body.documents[0];
+    const updateDocRes = await request('PUT', `/api/clients/${zId}/documents/${docToUpdate.id}`, {
+      name: 'Master Services Agreement (MSA) - Amendment 1',
+      notes: 'Renewed for FY 2026-2027'
+    });
+    assert.equal(updateDocRes.status, 200);
+    const updatedDoc = updateDocRes.body.data.documents.find((d) => d.id === docToUpdate.id);
+    assert.equal(updatedDoc.name, 'Master Services Agreement (MSA) - Amendment 1');
+    console.log('✓ Successfully updated document metadata');
+
+    // 6. Delete document
+    const delDocRes = await request('DELETE', `/api/clients/${zId}/documents/${docToUpdate.id}`);
+    assert.equal(delDocRes.status, 200);
+    assert.equal(delDocRes.body.data.documents.length, 3);
+    console.log('✓ Successfully deleted document from repository');
 
     // TEST 10: Delete Client
     console.log('\nTest 10: DELETE /api/clients/:id');

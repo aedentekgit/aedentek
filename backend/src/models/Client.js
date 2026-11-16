@@ -21,6 +21,21 @@ const websiteSubSchema = new mongoose.Schema({
   hostingExpiry: { type: String }
 }, { _id: false });
 
+const socialSubSchema = new mongoose.Schema({
+  id: { type: String, default: () => `soc-${Date.now()}-${Math.random().toString(36).substr(2, 4)}` },
+  clientId: { type: String },
+  key: { type: String, default: 'web' },
+  name: { type: String, required: true },
+  handle: { type: String, default: '' },
+  desc: { type: String, default: '' },
+  status: { type: String, default: 'Active' }, // Active | Connected | Verified
+  kind: { type: String, default: 'good' }, // good | info | warn
+  href: { type: String, default: '#' },
+  cta: { type: String, default: 'View Channel' },
+  icon: { type: String, default: 'globe' },
+  tone: { type: String, default: 'blue' } // blue | ink | violet | amber | green
+}, { _id: false });
+
 const credentialSubSchema = new mongoose.Schema({
   id: { type: String, default: () => `cred-${Date.now()}-${Math.random().toString(36).substr(2, 4)}` },
   clientId: { type: String },
@@ -103,6 +118,7 @@ const documentSubSchema = new mongoose.Schema({
   startDate: { type: String, default: '' },
   endDate: { type: String, default: '' },
   notes: { type: String, default: '' },
+  fileName: { type: String, default: '' },
   data: { type: String, default: '' } // base64 data URL of the uploaded file
 }, { _id: false });
 
@@ -175,16 +191,18 @@ const clientSchema = new mongoose.Schema({
   monthlySchedule: { type: [billingRowSchema], default: [] },
   createdDate: { type: Date, default: Date.now },
 
-  // 11 Sub-Module Embedded Datasets
-  contacts: [contactSubSchema],
-  websites: [websiteSubSchema],
-  credentials: [credentialSubSchema],
-  projects: [projectSubSchema],
-  invoices: [invoiceRefSubSchema],
-  payments: [paymentSubSchema],
-  tickets: [ticketSubSchema],
-  documents: [documentSubSchema],
-  timeline: [timelineSubSchema],
+  // 12 Sub-Module Embedded Datasets (guaranteed array form collections)
+  contacts: { type: [contactSubSchema], default: [] },
+  websites: { type: [websiteSubSchema], default: [] },
+  social: { type: [socialSubSchema], default: [] },
+  credentials: { type: [credentialSubSchema], default: [] },
+  projects: { type: [projectSubSchema], default: [] },
+  invoices: { type: [invoiceRefSubSchema], default: [] },
+  payments: { type: [paymentSubSchema], default: [] },
+  tickets: { type: [ticketSubSchema], default: [] },
+  documents: { type: [documentSubSchema], default: [] },
+  timeline: { type: [timelineSubSchema], default: [] },
+  monthlySchedule: { type: [billingRowSchema], default: [] },
   compliance: { type: complianceSubSchema, default: () => ({}) },
 
   // Live Financial Summary

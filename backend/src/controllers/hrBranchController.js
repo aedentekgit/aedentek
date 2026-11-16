@@ -29,7 +29,9 @@ export const getAllBranches = async (req, res, next) => {
     const counts = await Staff.aggregate([{ $group: { _id: '$branch', n: { $sum: 1 } } }]);
     const byName = new Map(counts.map((c) => [c._id, c.n]));
     const data = docs.map((d) => ({ ...d.toObject(), staffCount: byName.get(d.name) || 0 }));
-    return res.status(200).json({ success: true, message: 'Branches retrieved successfully', data, kpis: kpis(all) });
+    const defaultDoc = all.find((d) => d.isDefault && d.status === 'Active') || all.find((d) => d.isDefault) || all[0];
+    const defaultBranch = defaultDoc ? defaultDoc.name : '';
+    return res.status(200).json({ success: true, message: 'Branches retrieved successfully', data, kpis: kpis(all), defaultBranch });
   } catch (error) {
     return next(error);
   }
@@ -39,10 +41,13 @@ export const getAllBranches = async (req, res, next) => {
 export const getBranchOptions = async (req, res, next) => {
   try {
     const docs = await Branch.find({ status: 'Active' }).sort({ name: 1 });
+    const defaultDoc = docs.find((d) => d.isDefault) || docs[0];
+    const defaultBranch = defaultDoc ? defaultDoc.name : '';
     return res.status(200).json({
       success: true,
       message: 'Branch options retrieved successfully',
-      data: docs.map((d) => d.name)
+      data: docs.map((d) => d.name),
+      defaultBranch
     });
   } catch (error) {
     return next(error);
@@ -61,7 +66,16 @@ export const getBranchById = async (req, res, next) => {
 
 export const createBranch = async (req, res, next) => {
   try {
-    const doc = await Branch.create(req.body);
+    const payload = { ...req.body };
+    const wantsDefault = payload.isDefault === true || payload.isDefault === 'true';
+    if (wantsDefault) {
+      await Branch.updateMany({}, { isDefault: false });
+      payload.isDefault = true;
+    } else {
+      const count = await Branch.countDocuments();
+      payload.isDefault = count === 0;
+    }
+    const doc = await Branch.create(payload);
     return res.status(201).json({ success: true, message: `${ENTITY} created successfully`, data: doc });
   } catch (error) {
     return isDuplicate(error) ? duplicate(res) : next(error);
@@ -73,6 +87,12 @@ export const updateBranch = async (req, res, next) => {
     const doc = await Branch.findById(req.params.id);
     if (!doc) return res.status(404).json({ success: false, message: `${ENTITY} not found` });
     const oldName = doc.name;
+    if (req.body.isDefault === true || req.body.isDefault === 'true') {
+      await Branch.updateMany({ _id: { $ne: doc._id } }, { isDefault: false });
+      req.body.isDefault = true;
+    } else if (req.body.isDefault === false || req.body.isDefault === 'false') {
+      req.body.isDefault = false;
+    }
     Object.assign(doc, req.body);
     await doc.save();
     if (doc.name !== oldName) {
@@ -83,6 +103,24 @@ export const updateBranch = async (req, res, next) => {
     return res.status(200).json({ success: true, message: `${ENTITY} updated successfully`, data: doc });
   } catch (error) {
     return isDuplicate(error) ? duplicate(res) : next(error);
+  }
+};
+
+export const setDefaultBranch = async (req, res, next) => {
+  try {
+    const doc = await Branch.findById(req.params.id);
+    if (!doc) return res.status(404).json({ success: false, message: `${ENTITY} not found` });
+    await Branch.updateMany({}, { isDefault: false });
+    doc.isDefault = true;
+    doc.status = 'Active';
+    await doc.save();
+    return res.status(200).json({
+      success: true,
+      message: `${doc.name} set as default branch`,
+      data: doc
+    });
+  } catch (error) {
+    return next(error);
   }
 };
 

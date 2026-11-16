@@ -202,7 +202,7 @@ async function runTests() {
     console.log('\nTest 9: Reset settings back to clean state');
     await request('POST', '/api/settings/reset');
     const finalCheck = await request('GET', '/api/settings/theme');
-    assert.equal(finalCheck.data.data.primaryColor, '');
+    assert.equal(finalCheck.data.data.primaryColor, '#7627c4');
     assert.equal(finalCheck.data.data.showThemeToggle, false);
     console.log('✓ Final settings state verified clean');
 

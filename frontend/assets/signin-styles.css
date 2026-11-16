@@ -1313,15 +1313,79 @@ header.top .search:focus-within,
   }
 }
 
-/* Full-height layout for Inbox view without top PageHeader */
-.page.ib {
-  padding-top: 0 !important;
-}
+/* Full-height fixed layout for Inbox view (no outer window scrolling needed) */
+@media (min-width: 761px) {
+  html:has(.page.ib),
+  body:has(.page.ib) {
+    overflow: hidden !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overscroll-behavior: none !important;
+  }
 
-.ib-grid {
-  height: calc(100dvh - var(--top-h, 68px) - 52px) !important;
-  max-height: calc(100dvh - var(--top-h, 68px) - 40px) !important;
-  margin-top: 4px !important;
+  .app:has(.page.ib) {
+    overflow: hidden !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    position: relative !important;
+  }
+
+  .app:has(.page.ib) .sr,
+  .app:has(.page.ib) #live {
+    top: 0 !important;
+    left: 0 !important;
+    bottom: auto !important;
+  }
+
+  .app:has(.page.ib) .main {
+    overflow: hidden !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    padding-bottom: var(--side-x, 14px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .app:has(.page.ib) .top {
+    flex-shrink: 0 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .app:has(.page.ib) .main > main {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  .page.ib {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .page.ib .ib-grid {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+  }
+
+  .page.ib .ib-list,
+  .page.ib .ib-conv {
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+  }
 }
 
 @media print {
@@ -1392,21 +1456,47 @@ header.top .search:focus-within,
 .toolbar .toolbar__search,
 .acct-toolbar .toolbar__search,
 .hr-toolbar .toolbar__search,
-.client-master-toolbar .toolbar__search {
+.client-master-toolbar .toolbar__search,
+.card__head .toolbar__search,
+.card__tools .toolbar__search,
+header.card__head > .tl-search-left-field,
+.tl-search-left-field.toolbar__search,
+.tl-search-left-field {
   position: relative !important;
   display: inline-flex !important;
   align-items: center !important;
-  min-width: 320px !important;
-  max-width: 440px !important;
   width: 380px !important;
+  min-width: 280px !important;
+  max-width: 380px !important;
   height: 38px !important;
   flex: 0 1 380px !important;
   margin: 0 !important;
   vertical-align: middle !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 760px) {
+  .toolbar__search,
+  .toolbar .toolbar__search,
+  .acct-toolbar .toolbar__search,
+  .hr-toolbar .toolbar__search,
+  .client-master-toolbar .toolbar__search,
+  .card__head .toolbar__search,
+  .card__tools .toolbar__search,
+  header.card__head > .tl-search-left-field,
+  .tl-search-left-field.toolbar__search,
+  .tl-search-left-field {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+  }
 }
 
 .toolbar__search .ico,
-.toolbar__search svg {
+.toolbar__search svg,
+.tl-search-left-field .ico,
+.tl-search-left-field svg {
   position: absolute !important;
   left: 14px !important;
   top: 50% !important;
@@ -1424,7 +1514,8 @@ header.top .search:focus-within,
 .toolbar__search .input,
 .toolbar__search input[type="search"],
 .toolbar__search input[type="text"],
-.toolbar__search input {
+.toolbar__search input,
+.tl-search-left-field input {
   height: 38px !important;
   min-height: 38px !important;
   max-height: 38px !important;
@@ -3937,14 +4028,47 @@ td.acct-actions-cell .acct-row-actions, td.hr-actions-cell .hr-row-actions,
 .phead__sub { display: none !important; }
 
 /* ==========================================================================
-   Tighter page side gaps (global): the space between the sidebar and the content
-   (left) and between the content and the window edge (right) is now the same
-   small --gutter on both sides.
+   GLOBAL SCREEN ZOOM IN / OUT FLUID RESPONSIVE ENGINE
+   Eliminates screen letterboxing/dead margins on zoom out and wide screens.
+   Ensures consistent, symmetric gutters, locked sidebar left alignment,
+   and zero horizontal overflow across any zoom level (25% to 500%).
    ========================================================================== */
-html:root { --gutter: clamp(10px, 1.1vw, 16px); }
+html:root {
+  --app-max: 100% !important;
+  --gutter: clamp(10px, 1.1vw, 16px);
+}
+.app {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+.side {
+  left: var(--side-x, 14px) !important;
+}
 @media (min-width: 761px) {
-  html .main { padding-left: calc(var(--side-w) + var(--side-x) + var(--gutter)); }
-  html.rail-on .main { padding-left: calc(var(--rail-w) + var(--side-x) + var(--gutter)); }
+  html .main,
+  .main {
+    padding-left: calc(var(--side-w) + var(--side-x) + var(--gutter)) !important;
+    padding-right: var(--gutter) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  html.rail-on .main,
+  .rail-on .main {
+    padding-left: calc(var(--rail-w) + var(--side-x) + var(--gutter)) !important;
+    padding-right: var(--gutter) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+@media (max-width: 760px) {
+  html .main,
+  .main {
+    padding-left: var(--gutter) !important;
+    padding-right: var(--gutter) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
 }
 
 /* ==========================================================================
@@ -4236,6 +4360,19 @@ html body .finance-settings-hub .card.card--flush > .card__head{margin:0!importa
 html body .finance-settings-hub .card:not(.card--flush) > :not(.card__head){margin-left:24px!important;margin-right:24px!important}
 html body .finance-settings-hub .card:not(.card--flush) > :last-child{margin-bottom:24px!important}
 html body .finance-settings-hub .gst-list-card > :not(.card__head){margin:0!important}
+
+/* Compact 3-section settings cards (Invoice Sender / Banking & Wire / GST & HSN Slabs):
+   tighter header & footer rows + smaller chevron icon so the collapsed default
+   state stays professional; open on click for the full form. */
+html body .finance-settings-hub .fin-sec > .card > .card__head{padding:12px 20px!important;margin:0 0 14px!important;gap:12px!important}
+html body .finance-settings-hub .fin-sec > .card > .card__head .card__title{font-size:var(--fs-lg)!important}
+html body .finance-settings-hub .fin-sec > .card > .card__head .card__sub{font-size:var(--fs-xs)!important}
+html body .finance-settings-hub .fin-sec > .card{padding-bottom:14px!important}
+html body .finance-settings-hub .fin-sec .form-save-row{padding-top:10px!important;margin:6px 24px 0!important}
+html body .finance-settings-hub .fin-sec > .card > .form-save-row{margin-bottom:0!important}
+html body .finance-settings-hub .fin-sec .form-save-row .btn{height:34px!important;font-size:12.5px!important;padding:0 14px!important}
+html body .finance-settings-hub .fin-sec .btn.tl-chev{width:28px!important;min-width:28px!important;height:28px!important;border-radius:8px!important}
+html body .finance-settings-hub .fin-sec .btn.tl-chev .ico{width:14px!important;height:14px!important}
 
 /* Field labels stay on one line so inputs in a row line up; upload button is positioned by JS */
 html body label.field > span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block}
@@ -4787,11 +4924,14 @@ html body .form-save-row .btn:disabled{opacity:.6;cursor:not-allowed}
 
 /* Cancel = secondary twin of the primary submit button, everywhere */
 html body button.tl-cancel{
-  height:38px;min-width:96px;padding:0 18px;border-radius:10px;
-  display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  font:600 13px var(--font);white-space:nowrap;cursor:pointer;
+  height:38px!important;min-width:96px!important;padding:0 18px!important;border-radius:10px!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+  font:600 13px var(--font)!important;font-size:13px!important;line-height:normal!important;white-space:nowrap!important;cursor:pointer!important;
   background:var(--card)!important;color:var(--text)!important;border:1px solid var(--line-2)!important;box-shadow:none!important;
+  text-indent:0!important;
   transition:border-color .15s,color .15s,background .15s}
+html body button.tl-cancel::before{display:none!important;content:none!important}
+html body button.tl-cancel > *{display:inline!important}
 html body button.tl-cancel:hover:not(:disabled){border-color:var(--primary)!important;color:var(--primary)!important;background:color-mix(in srgb,var(--primary) 6%,var(--card))!important}
 html body button.tl-cancel:disabled{opacity:.6;cursor:not-allowed}
 
@@ -5436,4 +5576,67 @@ html body .btn--primary:hover,
 html body .tl-dialog__btn--primary:not(.is-danger):hover,
 html body .top .btn--primary.top__new:hover {
   filter: brightness(1.06);
+}
+
+
+/* =====================================================================
+   GLOBAL TABLE HEADER THEME (dynamic primary colour)
+   Every column header across all table variants uses the theme PRIMARY
+   colour as background; text colour auto-flips via --primary-contrast
+   (computed from primary luminance in the theme engine). Appended last so
+   it wins over all per-module header overrides above.
+   ===================================================================== */
+html body .table th,
+html body .table thead th,
+html body .finance-settings-hub .card--flush .table thead th,
+html body .inex-split .table-wrap thead th,
+html body .ivb-table th,
+html body .ivb .ivb-table th{
+  background: var(--primary) !important;
+  color: var(--primary-contrast, var(--on-primary, #ffffff)) !important;
+  border-bottom-color: transparent !important;
+}
+
+
+
+
+/* ============================================================================
+   TEMPLATES PAGE — ONLY THE RIGHT-SIDE PREVIEW CONTAINER SCROLLS
+   (appended last so it wins the cascade; ≥1151px only)
+   · the left "Template Library" list goes static (undoes the earlier
+     sticky-left-gallery rules above)
+   · the app shell is locked to the viewport, so the document does not scroll
+   · the right-side LIVE PREVIEW stage is the single internal scroller
+   ========================================================================== */
+@media (min-width:1151px){
+  /* 1) Left library: static, no own scroll, no card chrome */
+  html body .tmpl-gallery{
+    position:static !important;height:auto !important;max-height:none !important;
+    overflow:visible !important;overscroll-behavior:auto !important;
+    display:grid !important;flex-direction:row !important;
+    background:transparent !important;border:0 !important;box-shadow:none !important;padding:0 !important;
+    min-height:0 !important;
+  }
+  html body .tmpl-gallery__head{position:static !important;z-index:auto !important;background:transparent !important;margin:0 !important;padding:0 !important;border-bottom:0 !important}
+  html body .tmpl-gallery__head p{display:block}
+  html body .tmpl-gallery>*{flex:auto !important}
+
+  /* 2) App shell locked to the viewport so the document itself never scrolls.
+     The .main / #main chain must be a flex column so the grid row (minmax(0,1fr))
+     is clamped to the viewport and the right stage becomes the only scroller. */
+  html body .app:has(.tmpl-page[data-tmpl-layout]){height:100dvh !important;min-height:0 !important;overflow:hidden !important}
+  html body .app:has(.tmpl-page[data-tmpl-layout])> .main{display:flex !important;flex-direction:column !important;height:100% !important;min-height:0 !important;overflow:hidden !important;padding-bottom:0 !important}
+  html body .app:has(.tmpl-page[data-tmpl-layout]) #main{flex:1 1 auto !important;min-height:0 !important;overflow:hidden !important;display:flex !important;flex-direction:column !important}
+
+  /* 3) Page frame: header stays put; grid fills the remaining height */
+  html body .commissions-page:has(> .tmpl-page[data-tmpl-layout]){height:auto !important;min-height:0 !important;overflow:hidden !important;display:flex !important;flex-direction:column !important;flex:1 1 auto !important}
+  html body .commissions-page:has(> .tmpl-page[data-tmpl-layout])> .phead{flex:0 0 auto !important}
+  html body .commissions-page:has(> .tmpl-page[data-tmpl-layout]) .tmpl-page{flex:1 1 auto !important;min-height:0 !important;overflow:hidden !important;display:flex !important;flex-direction:column !important}
+  html body .commissions-page:has(> .tmpl-page[data-tmpl-layout]) .tmpl-grid{flex:1 1 auto !important;min-height:0 !important;overflow:hidden !important;align-items:stretch !important}
+  html body .commissions-page:has(> .tmpl-page[data-tmpl-layout]) .tmpl-grid>*{min-height:0 !important}
+
+  /* 4) Right column: fixed bar on top, stage is the only scroller */
+  html body .tmpl-preview{position:static !important;height:auto !important;min-height:0 !important;overflow:hidden !important;display:flex !important;flex-direction:column !important}
+  html body .tmpl-preview__bar{flex:0 0 auto !important}
+  html body .tmpl-preview__stage{flex:1 1 auto !important;min-height:0 !important;overflow-y:auto !important}
 }

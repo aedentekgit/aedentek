@@ -1,6 +1,7 @@
 import Propagation from '../models/Propagation.js';
 import Invoice from '../models/Invoice.js';
 import { livePropagations } from '../utils/seedFinance.js';
+import { syncFinanceInvoiceJournal } from './invoiceController.js';
 
 // Helper to generate next sequential invoice number (e.g. INV-2026-0119)
 export const generateNextInvoiceNumber = async () => {
@@ -170,6 +171,19 @@ export const convertPropagationToInvoice = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Propagation not found' });
     }
 
+    // Idempotency: if already converted, return existing invoice
+    if (propagation.status === 'Accepted') {
+      const existing = await Invoice.findOne({ propagationId: propagation._id });
+      if (existing) {
+        return res.status(200).json({
+          success: true,
+          message: `Propagation already converted to invoice ${existing.invoiceNumber}`,
+          invoice: existing,
+          propagation,
+        });
+      }
+    }
+
     // Generate next sequential invoice number
     const nextInvoiceNumber = await generateNextInvoiceNumber();
 
@@ -228,6 +242,7 @@ export const convertPropagationToInvoice = async (req, res, next) => {
 
     const newInvoice = new Invoice(invoicePayload);
     const savedInvoice = await newInvoice.save();
+    await syncFinanceInvoiceJournal(savedInvoice);
 
     // Transition parent propagation status to Accepted
     propagation.status = 'Accepted';

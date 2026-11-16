@@ -6,10 +6,13 @@ import {
   updateSection,
   resetSettings,
 } from '../controllers/settingsController.js';
+import { requireRole, ROLES } from '../middleware/rbac.js';
 
 const router = Router();
 
-// Master settings endpoints
+// Master settings endpoints — Restricted strictly to Administrator
+router.use(requireRole([ROLES.ADMIN]));
+
 router.route('/')
   .get(getSettings)
   .put(updateSettings);

@@ -27,3 +27,4 @@ frontend/.vite/
 
 # Built frontend (rebuilt inside Docker)
 frontend/dist/
+arrow_crop.png

@@ -3,6 +3,54 @@ import { getOrInitSettings } from './settingsController.js';
 import { liveInvoices } from '../utils/seedFinance.js';
 import { generateNextInvoiceNumber } from './propagationController.js';
 import { computeDiscount, discountError } from '../utils/invoiceDiscount.js';
+import {
+  replaceJournalForSource,
+  removeJournalForSource,
+  round2,
+  CASH_ACCOUNT_FOR_MODE
+} from '../utils/accountsEngine.js';
+
+/** Sync Finance Invoice with the General Ledger in Accounts */
+export const syncFinanceInvoiceJournal = async (invoice) => {
+  try {
+    if (!invoice || invoice.status === 'Draft') {
+      await removeJournalForSource('FinanceInvoice', invoice?._id?.toString() || '');
+      return;
+    }
+
+    const grandTotal = round2(invoice.totalAmount || 0);
+    const tax = round2(invoice.tax || invoice.gstAmount || 0);
+    const revenue = round2(Math.max(0, grandTotal - tax));
+    const paid = round2(invoice.paidAmount || 0);
+
+    const lines = [
+      { accountCode: '1100', debit: grandTotal, credit: 0 },
+      { accountCode: '4000', debit: 0, credit: revenue }
+    ];
+    if (tax > 0) {
+      lines.push({ accountCode: '2200', debit: 0, credit: tax });
+    }
+    if (paid > 0) {
+      const cashAcct = CASH_ACCOUNT_FOR_MODE[invoice.paymentMode] || '1020';
+      lines.push({ accountCode: cashAcct, debit: paid, credit: 0 });
+      lines.push({ accountCode: '1100', debit: 0, credit: paid });
+    }
+
+    const payload = {
+      date: invoice.issueDate || new Date().toISOString().slice(0, 10),
+      description: `Finance invoice ${invoice.invoiceNumber} — ${invoice.clientName}`,
+      sourceModule: 'FinanceInvoice',
+      sourceId: invoice._id.toString(),
+      reference: invoice.invoiceNumber,
+      branch: invoice.branch || 'All Branches',
+      lines
+    };
+
+    await replaceJournalForSource('FinanceInvoice', invoice._id.toString(), payload);
+  } catch (err) {
+    console.error('Failed to sync finance invoice to GL:', err.message);
+  }
+};
 
 // GET /api/invoices
 export const getInvoices = async (req, res, next) => {
@@ -97,6 +145,7 @@ export const createInvoice = async (req, res, next) => {
 
     const invoice = new Invoice(payload);
     const saved = await invoice.save();
+    await syncFinanceInvoiceJournal(saved);
 
     res.status(201).json({
       success: true,
@@ -204,6 +253,7 @@ export const updateInvoice = async (req, res, next) => {
     }
 
     const saved = await invoice.save();
+    await syncFinanceInvoiceJournal(saved);
     res.status(200).json({
       success: true,
       message: 'Invoice updated successfully',
@@ -241,6 +291,7 @@ export const recordPayment = async (req, res, next) => {
     invoice.status = invoice.balance === 0 ? 'Paid' : 'Partially Paid';
 
     const saved = await invoice.save();
+    await syncFinanceInvoiceJournal(saved);
 
     res.status(200).json({
       success: true,
@@ -259,6 +310,7 @@ export const deleteInvoice = async (req, res, next) => {
     if (!invoice) {
       return res.status(404).json({ success: false, message: 'Invoice not found' });
     }
+    await removeJournalForSource('FinanceInvoice', req.params.id);
 
     res.status(200).json({
       success: true,
@@ -274,8 +326,12 @@ export const deleteInvoice = async (req, res, next) => {
 export const resetInvoices = async (req, res, next) => {
   try {
     await Invoice.deleteMany({});
+    try {
+      await removeJournalForSource('FinanceInvoice', '', { sourceIdPrefix: true });
+    } catch (e) {}
     for (const inv of liveInvoices) {
-      await Invoice.create(inv);
+      const created = await Invoice.create(inv);
+      await syncFinanceInvoiceJournal(created);
     }
     const fresh = await Invoice.find().sort({ createdAt: -1 });
     res.status(200).json({

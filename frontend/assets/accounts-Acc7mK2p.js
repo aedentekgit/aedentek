@@ -603,16 +603,31 @@ function AcctField({ label, required, error, className, children }) {
 
 function AcctTable({ head, headNode, rows, renderRow, emptyTitle, emptyText, emptyIcon, paged }) {
   const offset = paged && paged.pagination ? paged.pagination.from - 1 : 0;
-  const hasHead = Array.isArray(head) && head.length > 0;
-  const hasSno = hasHead && (head[0] === 'S No' || head[0] === 'S NO' || head[0] === '#');
+  let tableHead = Array.isArray(head) ? [...head] : head;
+  const hasHead = Array.isArray(tableHead) && tableHead.length > 0;
+  const hasSno = hasHead && (tableHead[0] === 'S No' || tableHead[0] === 'S NO' || tableHead[0] === '#');
+
+  // Auto-detect if renderRow produces more cells than head (e.g. actions column omitted in head)
+  if (hasHead && rows && rows.length > 0 && typeof renderRow === 'function') {
+    try {
+      const sample = renderRow(rows[0], 0);
+      const cells = sample && sample.props && Array.isArray(sample.props.children)
+        ? sample.props.children
+        : (sample && sample.props && sample.props.children ? [sample.props.children] : []);
+      const expectedCount = hasSno ? tableHead.length - 1 : tableHead.length;
+      if (cells.length > expectedCount && !tableHead.some((h) => typeof h === 'string' && /action/i.test(h))) {
+        tableHead.push('Actions');
+      }
+    } catch (e) {}
+  }
 
   const theadChildren = hasSno || !hasHead
-    ? (head || []).map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
+    ? (tableHead || []).map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
     : [
         jsx('th', { key: 'sno', style: { width: 56, minWidth: 56, maxWidth: 56, textAlign: 'center', paddingLeft: 8, paddingRight: 8 }, children: 'S No' }),
-        ...head.map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
+        ...tableHead.map((h) => jsx('th', { key: h, style: { textAlign: 'center' }, children: h }))
       ];
-  const colCount = hasHead ? (hasSno ? head.length : head.length + 1) : 1;
+  const colCount = hasHead ? (hasSno ? tableHead.length : tableHead.length + 1) : 1;
 
   const tableEl = jsx('div', {
     className: 'table-wrap',
@@ -768,17 +783,24 @@ const areaField = (name, label, extra) => Object.assign({ name, label, type: 'te
 /** Theme-styled branch dropdown fed by the HR branch master. */
 function BranchSelect({ value, onChange }) {
   const [list, setList] = useState([]);
+  const [defaultBranch, setDefaultBranch] = useState('');
   useEffect(() => {
     let alive = true;
     apiFetch('/api/hr/branches/options').then((res) => {
       const payload = res.data || {};
-      if (alive && res.ok && payload.success && Array.isArray(payload.data)) setList(payload.data);
+      if (alive && res.ok && payload.success && Array.isArray(payload.data)) {
+        setList(payload.data);
+        if (payload.defaultBranch) {
+          setDefaultBranch(payload.defaultBranch);
+          if (!value && onChange) onChange(payload.defaultBranch);
+        }
+      }
     });
     return () => {
       alive = false;
     };
   }, []);
-  const current = value || 'All Branches';
+  const current = value || defaultBranch || 'All Branches';
   const options = ['All Branches', ...list];
   if (options.indexOf(current) < 0) options.push(current);
   return jsx(
@@ -3152,7 +3174,7 @@ function emiAddMonths(ymd, months) {
  * Live PREVIEW only — the server recomputes and stores the authoritative
  * values on save (reducing-balance EMI, first EMI due on the start date).
  */
-function previewEmi({ principal, emiCount, interestRate, startDate, processingCharges, transactionFee, initialPayment }) {
+function previewEmi({ principal, emiCount, interestRate, startDate, emiDate, processingCharges, transactionFee, initialPayment }) {
   const initial = Math.max(0, Math.round((Number(initialPayment) || 0) * 100) / 100);
   const P = Math.round((Number(principal) - initial) * 100) / 100;
   if (!(Number(principal) > 0) || initial >= Number(principal)) return null;
@@ -3171,7 +3193,8 @@ function previewEmi({ principal, emiCount, interestRate, startDate, processingCh
     balance = Math.round((balance - principalPart) * 100) / 100;
   }
   total = Math.round(total * 100) / 100;
-  const endDate = emiAddMonths(startDate, n - 1);
+  const effectiveEmiDate = (emiDate && String(emiDate).trim()) || startDate;
+  const endDate = emiAddMonths(effectiveEmiDate, n - 1);
   const r2 = (v) => Math.round((Number(v) || 0) * 100) / 100;
   const processing = Math.max(0, r2(processingCharges));
   const fee = Math.max(0, r2(transactionFee));
@@ -3180,6 +3203,7 @@ function previewEmi({ principal, emiCount, interestRate, startDate, processingCh
     emiAmount,
     totalPayable: total,
     totalInterest: Math.round((total - P) * 100) / 100,
+    emiDate: effectiveEmiDate,
     endDate,
     endMonth: endDate.slice(0, 7),
     months: n,
@@ -3203,6 +3227,7 @@ function EmiDrawer({ emi, onDone }) {
     emiCount: emi ? emi.emiCount : '',
     interestRate: emi ? emi.interestRate : '',
     startDate: emi ? emi.startDate || '' : '',
+    emiDate: emi ? (emi.emiDate || emi.startDate || '') : '',
     paidCount: emi ? emi.paidCount || 0 : 0,
     initialPayment: emi ? emi.initialPayment || 0 : '',
     processingCharges: emi ? emi.processingCharges || 0 : '',
@@ -3246,6 +3271,7 @@ function EmiDrawer({ emi, onDone }) {
         emiCount: count,
         interestRate: toNum(values.interestRate),
         startDate: values.startDate,
+        emiDate: values.emiDate || values.startDate,
         paidCount: toNum(values.paidCount),
         initialPayment: toNum(values.initialPayment),
         processingCharges: toNum(values.processingCharges),
@@ -3323,13 +3349,24 @@ function EmiDrawer({ emi, onDone }) {
                 type: 'date',
                 name: 'startDate',
                 value: values.startDate,
-                onChange: (ev) => setValue('startDate', ev.target.value)
+                onChange: (ev) => {
+                  const d = ev.target.value;
+                  setValue('startDate', d);
+                  if (!values.emiDate || values.emiDate === values.startDate) setValue('emiDate', d);
+                }
+              }) }),
+              jsx(AcctField, { label: 'EMI date', children: jsx('input', {
+                className: 'input',
+                type: 'date',
+                name: 'emiDate',
+                value: values.emiDate,
+                onChange: (ev) => setValue('emiDate', ev.target.value)
               }) }),
               jsx(AcctField, { label: 'EMIs already paid', children: numberInput('paidCount', { min: '0', step: '1' }) }),
               jsx(AcctField, { label: 'Initial payment (₹, paid upfront)', children: numberInput('initialPayment', { min: '0', placeholder: '0' }) }),
               jsx(AcctField, { label: 'Processing charges (₹, one-time)', children: numberInput('processingCharges', { min: '0', placeholder: '0' }) }),
               jsx(AcctField, { label: 'Transaction fee (₹ per EMI)', children: numberInput('transactionFee', { min: '0', placeholder: '0' }) }),
-              jsx(AcctField, { label: 'Branch', children: jsx(BranchSelect, { value: values.branch, onChange: (v) => setValue('branch', v) }) }),
+              jsx(AcctField, { label: 'Branch', className: 'span-2', children: jsx(BranchSelect, { value: values.branch, onChange: (v) => setValue('branch', v) }) }),
               jsx(AcctField, { label: 'Notes', className: 'span-2', children: jsx('input', {
                 className: 'input',
                 name: 'notes',
@@ -3353,6 +3390,7 @@ function EmiDrawer({ emi, onDone }) {
                     jsx(PreviewRow, { label: 'Initial payment (upfront)', value: fmtINR(preview.initial) }),
                     jsx(PreviewRow, { label: 'Amount financed', value: fmtINR(preview.financed) }),
                     jsx(PreviewRow, { label: 'Monthly EMI', value: fmtINR(preview.emiAmount), tone: 'total' }),
+                    jsx(PreviewRow, { label: 'EMI date', value: shortDate(preview.emiDate || values.emiDate || values.startDate) }),
                     jsx(PreviewRow, { label: 'End date', value: shortDate(preview.endDate) }),
                     jsx(PreviewRow, { label: 'End month', value: `${monthLabel(preview.endMonth)} · ${preview.months} month${preview.months === 1 ? '' : 's'}` }),
                     jsx(PreviewRow, { label: 'Total interest', value: fmtINR(preview.totalInterest) }),
@@ -3439,7 +3477,7 @@ function EmiPage() {
             loading
               ? jsx(EmptyState, { icon: 'clock', title: 'Loading…', text: 'Fetching the EMI register.' })
               : jsx(AcctTable, {
-                  head: ['EMI #', 'Product', 'Category', 'Amount', 'Initial', 'Interest', 'Processing', 'Txn fee', 'EMIs', 'Monthly EMI', 'Start', 'End month', 'Outstanding', 'Status', 'Actions'],
+                  head: ['EMI #', 'Product', 'Category', 'Amount', 'Initial', 'Interest', 'Processing', 'Txn fee', 'EMIs', 'Monthly EMI', 'Start', 'EMI date', 'End month', 'Outstanding', 'Status', 'Actions'],
                   rows: visible,
                   paged,
                   emptyIcon: 'archive',
@@ -3466,6 +3504,7 @@ function EmiPage() {
                         jsx('td', { children: jsx('span', { className: 'muted', children: `${row.paidCount} / ${row.emiCount}` }) }),
                         jsx('td', { children: jsx('b', { children: fmtINR(row.emiAmount) }) }),
                         jsx('td', { children: shortDate(row.startDate) }),
+                        jsx('td', { children: jsx('span', { className: row.emiDate ? '' : 'muted', children: shortDate(row.emiDate || row.startDate) }) }),
                         jsx('td', {
                           children: jsxs('span', {
                             className: 'li__main',

@@ -1,7 +1,7 @@
 [
   {
     "id": "S-01",
-    "label": "create profile → 201",
+    "label": "create first profile → 201 and it becomes the default",
     "ok": true,
     "detail": "HTTP 201"
   },
@@ -153,7 +153,7 @@
     "id": "N-01",
     "label": "new invoice snapshots the default sender (B)",
     "ok": true,
-    "detail": "QA-PROF-1794206857101 B"
+    "detail": "QA-PROF-1794735066137 B"
   },
   {
     "id": "N-02",
@@ -195,11 +195,11 @@
     "id": "K-04",
     "label": "deleting the default bank promotes another and mirrors it",
     "ok": true,
-    "detail": "\"50200088192831\""
+    "detail": "\"900030012345\""
   },
   {
     "id": "K-05",
-    "label": "deleting another bank profile keeps one default mirrored",
+    "label": "deleting the last bank profile clears the mirrored bank details",
     "ok": true,
     "detail": ""
   },
@@ -223,13 +223,13 @@
   },
   {
     "id": "D-04",
-    "label": "deleting another sender keeps one default mirrored",
+    "label": "deleting the last sender clears settings.invoiceSender",
     "ok": true,
     "detail": ""
   },
   {
     "id": "G-01",
-    "label": "create slab → 201",
+    "label": "first slab becomes the default",
     "ok": true,
     "detail": ""
   },

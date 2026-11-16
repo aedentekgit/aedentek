@@ -26,14 +26,6 @@ const artifactDir = path.resolve("test-reports"); fs.mkdirSync(artifactDir, { re
   await new Promise(r => setTimeout(r, 600));
   await page.screenshot({ path: path.join(artifactDir, 'preview_2_retail_light.png') });
 
-  // 3. Settlement Fintech
-  await page.evaluate(() => {
-    const c = document.querySelector('[data-template-card="fintech"]');
-    if (c) c.click();
-  });
-  await new Promise(r => setTimeout(r, 600));
-  await page.screenshot({ path: path.join(artifactDir, 'preview_3_settlement_fintech.png') });
-
   // Re-select classic corporate as default
   await page.evaluate(() => {
     const c = document.querySelector('[data-template-card="classic"]');
@@ -43,6 +35,6 @@ const artifactDir = path.resolve("test-reports"); fs.mkdirSync(artifactDir, { re
   await new Promise(r => setTimeout(r, 400));
 
   await browser.close();
-  console.log('Successfully captured previews for all 3 templates');
+  console.log('Successfully captured previews for all 2 templates');
 })();
 

@@ -75,6 +75,50 @@ export const SEED_CLIENTS = [
         hostingExpiry: '2027-01-15'
       }
     ],
+    social: [
+      {
+        id: 'soc-omni-1',
+        clientId: 'client-omni-retail',
+        key: 'li',
+        name: 'LinkedIn Corporate',
+        handle: 'linkedin.com/company/omni-retail-solutions',
+        desc: 'Institutional retail logistics & commerce announcements',
+        status: 'Connected',
+        kind: 'good',
+        href: 'https://linkedin.com',
+        cta: 'View Page',
+        icon: 'globe',
+        tone: 'blue'
+      },
+      {
+        id: 'soc-omni-2',
+        clientId: 'client-omni-retail',
+        key: 'x',
+        name: 'Twitter / X Commerce Feed',
+        handle: '@omni_retail',
+        desc: 'Public catalog rollouts and logistics notices',
+        status: 'Active',
+        kind: 'info',
+        href: 'https://twitter.com',
+        cta: 'View Channel',
+        icon: 'globe',
+        tone: 'ink'
+      },
+      {
+        id: 'soc-omni-3',
+        clientId: 'client-omni-retail',
+        key: 'gh',
+        name: 'GitHub Organization',
+        handle: 'github.com/omni-retail',
+        desc: 'Source repos for vendor catalog microservices',
+        status: 'Verified',
+        kind: 'good',
+        href: 'https://github.com',
+        cta: 'Open Repo',
+        icon: 'globe',
+        tone: 'violet'
+      }
+    ],
     credentials: [
       {
         id: 'cred-omni-1',
@@ -236,6 +280,16 @@ export const SEED_CLIENTS = [
       tdsRate: '2.0% (Section 194C / 194J)',
       itcEligible: true
     },
+    monthlyBilling: {
+      amount: 50000,
+      gstMode: 'With GST',
+      gstRate: 18
+    },
+    monthlySchedule: [
+      { id: 'bill-omni-1', month: '2026-08', dueDate: '2026-08-15', baseAmount: 50000, gstAmount: 9000, totalAmount: 59000, status: 'Paid', paidDate: '2026-08-14', notes: 'Monthly Retainer Cloud Support' },
+      { id: 'bill-omni-2', month: '2026-09', dueDate: '2026-09-15', baseAmount: 50000, gstAmount: 9000, totalAmount: 59000, status: 'Paid', paidDate: '2026-09-12', notes: 'Monthly Retainer Cloud Support' },
+      { id: 'bill-omni-3', month: '2026-10', dueDate: '2026-10-15', baseAmount: 50000, gstAmount: 9000, totalAmount: 59000, status: 'Pending', paidDate: '', notes: 'Monthly Retainer Cloud Support' }
+    ],
     financialSummary: {
       totalBilled: 826000,
       totalPaid: 672000,
@@ -283,6 +337,64 @@ export const SEED_CLIENTS = [
         sslExpiry: '2027-06-15',
         domainExpiry: '2028-05-20',
         hostingExpiry: '2027-06-01'
+      }
+    ],
+    social: [
+      {
+        id: 'soc-kavita-1',
+        clientId: 'client-kavita-edu',
+        key: 'li',
+        name: 'LinkedIn Corporate',
+        handle: 'linkedin.com/company/kavitaedutech',
+        desc: 'Edutech leadership & learning technology announcements',
+        status: 'Connected',
+        kind: 'good',
+        href: 'https://linkedin.com/company/kavitaedutech',
+        cta: 'View Page',
+        icon: 'globe',
+        tone: 'blue'
+      },
+      {
+        id: 'soc-kavita-2',
+        clientId: 'client-kavita-edu',
+        key: 'x',
+        name: 'Twitter / X Feed',
+        handle: '@kavita_edu',
+        desc: 'Student video streaming announcements & app updates',
+        status: 'Active',
+        kind: 'info',
+        href: 'https://twitter.com/kavita_edu',
+        cta: 'View Channel',
+        icon: 'globe',
+        tone: 'ink'
+      },
+      {
+        id: 'soc-kavita-3',
+        clientId: 'client-kavita-edu',
+        key: 'yt',
+        name: 'YouTube Masterclass Channel',
+        handle: 'youtube.com/@kavitaedutech',
+        desc: 'Video lecture portal channel & masterclass demos',
+        status: 'Active',
+        kind: 'good',
+        href: 'https://youtube.com',
+        cta: 'Watch Stream',
+        icon: 'globe',
+        tone: 'amber'
+      },
+      {
+        id: 'soc-kavita-4',
+        clientId: 'client-kavita-edu',
+        key: 'gh',
+        name: 'GitHub Organization',
+        handle: 'github.com/kavita-edutech',
+        desc: 'DRM video encryption player SDK and native wrappers',
+        status: 'Verified',
+        kind: 'good',
+        href: 'https://github.com/kavita-edutech',
+        cta: 'Open Repo',
+        icon: 'globe',
+        tone: 'violet'
       }
     ],
     credentials: [
@@ -354,6 +466,15 @@ export const SEED_CLIENTS = [
       tdsRate: '2.0% (Standard)',
       itcEligible: true
     },
+    monthlyBilling: {
+      amount: 25000,
+      gstMode: 'With GST',
+      gstRate: 18
+    },
+    monthlySchedule: [
+      { id: 'bill-kavita-1', month: '2026-09', dueDate: '2026-09-10', baseAmount: 25000, gstAmount: 4500, totalAmount: 29500, status: 'Paid', paidDate: '2026-09-08', notes: 'Monthly Retainer DRM Maintenance' },
+      { id: 'bill-kavita-2', month: '2026-10', dueDate: '2026-10-10', baseAmount: 25000, gstAmount: 4500, totalAmount: 29500, status: 'Pending', paidDate: '', notes: 'Monthly Retainer DRM Maintenance' }
+    ],
     financialSummary: {
       totalBilled: 177000,
       totalPaid: 0,
@@ -401,6 +522,50 @@ export const SEED_CLIENTS = [
         sslExpiry: '2027-08-30',
         domainExpiry: '2029-03-10',
         hostingExpiry: '2027-09-01'
+      }
+    ],
+    social: [
+      {
+        id: 'soc-hyp-1',
+        clientId: 'client-hyperion-media',
+        key: 'li',
+        name: 'LinkedIn Corporate',
+        handle: 'linkedin.com/company/hyperion-media-group',
+        desc: 'Global broadcasting network & corporate media press',
+        status: 'Connected',
+        kind: 'good',
+        href: 'https://linkedin.com',
+        cta: 'View Page',
+        icon: 'globe',
+        tone: 'blue'
+      },
+      {
+        id: 'soc-hyp-2',
+        clientId: 'client-hyperion-media',
+        key: 'x',
+        name: 'Twitter / X Media Feed',
+        handle: '@hyperionmedia_uk',
+        desc: 'Live broadcast alerts and transmission network updates',
+        status: 'Active',
+        kind: 'info',
+        href: 'https://twitter.com',
+        cta: 'View Channel',
+        icon: 'globe',
+        tone: 'ink'
+      },
+      {
+        id: 'soc-hyp-3',
+        clientId: 'client-hyperion-media',
+        key: 'gh',
+        name: 'GitHub Organization',
+        handle: 'github.com/hyperion-media',
+        desc: 'Video ingestion core pipeline repositories',
+        status: 'Verified',
+        kind: 'good',
+        href: 'https://github.com',
+        cta: 'Open Repo',
+        icon: 'globe',
+        tone: 'violet'
       }
     ],
     credentials: [
@@ -481,6 +646,15 @@ export const SEED_CLIENTS = [
       tdsRate: '0.0% (Foreign Remittance)',
       itcEligible: true
     },
+    monthlyBilling: {
+      amount: 75000,
+      gstMode: 'Without GST',
+      gstRate: 0
+    },
+    monthlySchedule: [
+      { id: 'bill-hyp-1', month: '2026-09', dueDate: '2026-09-15', baseAmount: 75000, gstAmount: 0, totalAmount: 75000, status: 'Paid', paidDate: '2026-09-15', notes: 'Monthly Retainer Overseas Streaming SLA' },
+      { id: 'bill-hyp-2', month: '2026-10', dueDate: '2026-10-15', baseAmount: 75000, gstAmount: 0, totalAmount: 75000, status: 'Paid', paidDate: '2026-10-15', notes: 'Monthly Retainer Overseas Streaming SLA' }
+    ],
     financialSummary: {
       totalBilled: 750000,
       totalPaid: 750000,
@@ -562,10 +736,18 @@ export const getClientById = async (req, res, next) => {
       });
     }
 
+    const clientData = client.toObject();
+    [
+      'contacts', 'websites', 'social', 'credentials', 'projects',
+      'invoices', 'payments', 'tickets', 'documents', 'timeline', 'monthlySchedule'
+    ].forEach((sec) => {
+      if (!Array.isArray(clientData[sec])) clientData[sec] = [];
+    });
+
     res.status(200).json({
       success: true,
       message: 'Client 360 profile retrieved successfully',
-      data: client
+      data: clientData
     });
   } catch (error) {
     next(error);
@@ -670,6 +852,7 @@ export const createClient = async (req, res, next) => {
         hostingProvider: 'AWS Cloud',
         sslExpiry: '2027-12-31'
       }] : [],
+      social: [],
       credentials: [],
       projects: [],
       invoices: [],

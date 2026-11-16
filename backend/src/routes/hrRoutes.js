@@ -27,85 +27,87 @@ import {
 } from '../controllers/hrMasterControllers.js';
 
 import {
-  getAllBranches, getBranchOptions, getBranchById, createBranch, updateBranch, deleteBranch
+  getAllBranches, getBranchOptions, getBranchById, createBranch, updateBranch, deleteBranch, setDefaultBranch
 } from '../controllers/hrBranchController.js';
+import { requireRole, ROLES } from '../middleware/rbac.js';
 
 const router = express.Router();
 
-// --- Branches ------------------------------------------------------------
-router.get('/hr/branches', getAllBranches);
-router.get('/hr/branches/options', getBranchOptions);
-router.get('/hr/branches/:id', getBranchById);
-router.post('/hr/branches', createBranch);
-router.put('/hr/branches/:id', updateBranch);
-router.delete('/hr/branches/:id', deleteBranch);
+// --- Branches (Masters) — Admin only -------------------------------------
+router.get('/hr/branches', requireRole([ROLES.ADMIN]), getAllBranches);
+router.get('/hr/branches/options', getBranchOptions); // Open for branch dropdown options
+router.get('/hr/branches/:id', requireRole([ROLES.ADMIN]), getBranchById);
+router.post('/hr/branches', requireRole([ROLES.ADMIN]), createBranch);
+router.put('/hr/branches/:id/default', requireRole([ROLES.ADMIN]), setDefaultBranch);
+router.put('/hr/branches/:id', requireRole([ROLES.ADMIN]), updateBranch);
+router.delete('/hr/branches/:id', requireRole([ROLES.ADMIN]), deleteBranch);
 
-// --- Employees -----------------------------------------------------------
-router.get('/staff', getAllStaff);
-router.get('/staff/branches', getStaffBranches);
-router.get('/staff/:id', getStaffById);
-router.post('/staff', createStaff);
-router.put('/staff/:id', updateStaff);
-router.delete('/staff/:id', deleteStaff);
+// --- Employees — Admin & Manager only ------------------------------------
+router.get('/staff', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllStaff);
+router.get('/staff/branches', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getStaffBranches);
+router.get('/staff/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getStaffById);
+router.post('/staff', requireRole([ROLES.ADMIN, ROLES.MANAGER]), createStaff);
+router.put('/staff/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), updateStaff);
+router.delete('/staff/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), deleteStaff);
 
-// --- Biometric attendance ------------------------------------------------
-router.get('/hr/staff-attendance', getAllAttendance);
-router.get('/hr/staff-attendance/:id', getAttendanceById);
-router.post('/hr/staff-attendance', createAttendance);
+// --- Biometric attendance — Admin & Manager only -------------------------
+router.get('/hr/staff-attendance', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllAttendance);
+router.get('/hr/staff-attendance/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAttendanceById);
+router.post('/hr/staff-attendance', requireRole([ROLES.ADMIN, ROLES.MANAGER]), createAttendance);
 router.post('/hr/staff-attendance/punch', punchAttendance);
-router.put('/hr/staff-attendance/:id', updateAttendance);
-router.delete('/hr/staff-attendance/:id', deleteAttendance);
+router.put('/hr/staff-attendance/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), updateAttendance);
+router.delete('/hr/staff-attendance/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), deleteAttendance);
 
-// --- Leave requests ------------------------------------------------------
-router.get('/hr/leave', getAllLeaveRequests);
-router.get('/hr/leave/balance/:staffRef', getLeaveBalance);
-router.post('/hr/leave', createLeaveRequest);
-router.put('/hr/leave/:id', updateLeaveRequest);
-router.post('/hr/leave/:id/approve', approveLeaveRequest);
-router.post('/hr/leave/:id/reject', rejectLeaveRequest);
-router.delete('/hr/leave/:id', deleteLeaveRequest);
+// --- Leave requests — Admin & Manager only -------------------------------
+router.get('/hr/leave', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllLeaveRequests);
+router.get('/hr/leave/balance/:staffRef', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getLeaveBalance);
+router.post('/hr/leave', requireRole([ROLES.ADMIN, ROLES.MANAGER]), createLeaveRequest);
+router.put('/hr/leave/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), updateLeaveRequest);
+router.post('/hr/leave/:id/approve', requireRole([ROLES.ADMIN, ROLES.MANAGER]), approveLeaveRequest);
+router.post('/hr/leave/:id/reject', requireRole([ROLES.ADMIN, ROLES.MANAGER]), rejectLeaveRequest);
+router.delete('/hr/leave/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), deleteLeaveRequest);
 
-// --- Leave types ---------------------------------------------------------
-router.get('/hr/leave-types', getAllLeaveTypes);
-router.get('/hr/leave-types/:id', getLeaveTypeById);
-router.post('/hr/leave-types', createLeaveType);
-router.put('/hr/leave-types/:id', updateLeaveType);
-router.delete('/hr/leave-types/:id', deleteLeaveType);
+// --- Leave types (Masters) — Admin only ----------------------------------
+router.get('/hr/leave-types', requireRole([ROLES.ADMIN]), getAllLeaveTypes);
+router.get('/hr/leave-types/:id', requireRole([ROLES.ADMIN]), getLeaveTypeById);
+router.post('/hr/leave-types', requireRole([ROLES.ADMIN]), createLeaveType);
+router.put('/hr/leave-types/:id', requireRole([ROLES.ADMIN]), updateLeaveType);
+router.delete('/hr/leave-types/:id', requireRole([ROLES.ADMIN]), deleteLeaveType);
 
-// --- Shifts --------------------------------------------------------------
-router.get('/hr/shifts', getAllShifts);
-router.get('/hr/shifts/:id', getShiftById);
-router.post('/hr/shifts', createShift);
-router.put('/hr/shifts/:id', updateShift);
-router.delete('/hr/shifts/:id', deleteShift);
+// --- Shifts — Admin & Manager only ---------------------------------------
+router.get('/hr/shifts', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllShifts);
+router.get('/hr/shifts/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getShiftById);
+router.post('/hr/shifts', requireRole([ROLES.ADMIN, ROLES.MANAGER]), createShift);
+router.put('/hr/shifts/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), updateShift);
+router.delete('/hr/shifts/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), deleteShift);
 
-// --- Salary structures ---------------------------------------------------
-router.get('/salary-structures', getAllSalaryStructures);
-router.get('/salary-structures/:id', getSalaryStructureById);
-router.post('/salary-structures', createSalaryStructure);
-router.put('/salary-structures/:id', updateSalaryStructure);
-router.delete('/salary-structures/:id', deleteSalaryStructure);
+// --- Salary structures — Admin only --------------------------------------
+router.get('/salary-structures', requireRole([ROLES.ADMIN]), getAllSalaryStructures);
+router.get('/salary-structures/:id', requireRole([ROLES.ADMIN]), getSalaryStructureById);
+router.post('/salary-structures', requireRole([ROLES.ADMIN]), createSalaryStructure);
+router.put('/salary-structures/:id', requireRole([ROLES.ADMIN]), updateSalaryStructure);
+router.delete('/salary-structures/:id', requireRole([ROLES.ADMIN]), deleteSalaryStructure);
 
-// --- Salary advances -----------------------------------------------------
-router.get('/hr/advances', getAllSalaryAdvances);
-router.get('/hr/advances/:id', getSalaryAdvanceById);
-router.post('/hr/advances', createSalaryAdvance);
-router.put('/hr/advances/:id', updateSalaryAdvance);
-router.delete('/hr/advances/:id', deleteSalaryAdvance);
+// --- Salary advances — Admin only ----------------------------------------
+router.get('/hr/advances', requireRole([ROLES.ADMIN]), getAllSalaryAdvances);
+router.get('/hr/advances/:id', requireRole([ROLES.ADMIN]), getSalaryAdvanceById);
+router.post('/hr/advances', requireRole([ROLES.ADMIN]), createSalaryAdvance);
+router.put('/hr/advances/:id', requireRole([ROLES.ADMIN]), updateSalaryAdvance);
+router.delete('/hr/advances/:id', requireRole([ROLES.ADMIN]), deleteSalaryAdvance);
 
-// --- Payroll adjustments -------------------------------------------------
-router.get('/hr/adjustments', getAllPayrollAdjustments);
-router.get('/hr/adjustments/:id', getPayrollAdjustmentById);
-router.post('/hr/adjustments', createPayrollAdjustment);
-router.put('/hr/adjustments/:id', updatePayrollAdjustment);
-router.delete('/hr/adjustments/:id', deletePayrollAdjustment);
+// --- Payroll adjustments — Admin only ------------------------------------
+router.get('/hr/adjustments', requireRole([ROLES.ADMIN]), getAllPayrollAdjustments);
+router.get('/hr/adjustments/:id', requireRole([ROLES.ADMIN]), getPayrollAdjustmentById);
+router.post('/hr/adjustments', requireRole([ROLES.ADMIN]), createPayrollAdjustment);
+router.put('/hr/adjustments/:id', requireRole([ROLES.ADMIN]), updatePayrollAdjustment);
+router.delete('/hr/adjustments/:id', requireRole([ROLES.ADMIN]), deletePayrollAdjustment);
 
-// --- Payroll & payslips --------------------------------------------------
-router.get('/hr/payroll', getAllPayrollRuns);
-router.get('/hr/payroll/:id', getPayrollRunById);
-router.post('/hr/payroll/run', runPayroll);
-router.post('/hr/payroll/:id/finalize', finalizePayrollRun);
-router.post('/hr/payroll/:id/pay', markPayrollRunPaid);
-router.delete('/hr/payroll/:id', deletePayrollRun);
+// --- Payroll & payslips — Admin only -------------------------------------
+router.get('/hr/payroll', requireRole([ROLES.ADMIN]), getAllPayrollRuns);
+router.get('/hr/payroll/:id', requireRole([ROLES.ADMIN]), getPayrollRunById);
+router.post('/hr/payroll/run', requireRole([ROLES.ADMIN]), runPayroll);
+router.post('/hr/payroll/:id/finalize', requireRole([ROLES.ADMIN]), finalizePayrollRun);
+router.post('/hr/payroll/:id/pay', requireRole([ROLES.ADMIN]), markPayrollRunPaid);
+router.delete('/hr/payroll/:id', requireRole([ROLES.ADMIN]), deletePayrollRun);
 
 export default router;

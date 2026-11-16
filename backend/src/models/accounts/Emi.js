@@ -9,6 +9,7 @@ const emiSchema = new mongoose.Schema({
   emiCount: { type: Number, required: true, min: 1 },
   interestRate: { type: Number, required: true, min: 0, max: 100 },
   startDate: { type: String, required: true },
+  emiDate: { type: String, default: '' },
   paidCount: { type: Number, default: 0, min: 0 },
   initialPayment: { type: Number, default: 0, min: 0 },
   processingCharges: { type: Number, default: 0, min: 0 },

@@ -60,6 +60,9 @@ export const validateEmiInput = (b) => {
   const rate = Number(b.interestRate);
   if (!Number.isFinite(rate) || rate < 0 || rate > 100) errors.push('Interest percentage must be between 0 and 100');
   if (!parseYmd(b.startDate)) errors.push('Start date must be a valid date (YYYY-MM-DD)');
+  if (b.emiDate !== undefined && b.emiDate !== '' && b.emiDate !== null) {
+    if (!parseYmd(b.emiDate)) errors.push('EMI date must be a valid date (YYYY-MM-DD)');
+  }
   for (const [key, label] of [['processingCharges', 'Processing charges'], ['transactionFee', 'Transaction fee']]) {
     if (b[key] !== undefined && b[key] !== '' && b[key] !== null) {
       const v = Number(b[key]);
@@ -82,7 +85,7 @@ export const validateEmiInput = (b) => {
  * Full amortisation schedule + derived totals.
  * @returns {{ emiAmount, totalPayable, totalInterest, endDate, endMonth, durationMonths, schedule }}
  */
-export const computeEmi = ({ principal, emiCount, interestRate, startDate, processingCharges = 0, transactionFee = 0, initialPayment = 0 }) => {
+export const computeEmi = ({ principal, emiCount, interestRate, startDate, emiDate, processingCharges = 0, transactionFee = 0, initialPayment = 0 }) => {
   const initial = round2(Math.max(0, Number(initialPayment) || 0));
   const P = round2(Number(principal) - initial);
   const n = Number(emiCount);
@@ -91,6 +94,8 @@ export const computeEmi = ({ principal, emiCount, interestRate, startDate, proce
   const r = Number(interestRate) / 1200;
   const emi = r === 0 ? P / n : (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
   const emiAmount = round2(emi);
+
+  const effectiveEmiDate = (emiDate && String(emiDate).trim()) || startDate;
 
   const schedule = [];
   let balance = P;
@@ -102,7 +107,7 @@ export const computeEmi = ({ principal, emiCount, interestRate, startDate, proce
     balance = round2(balance - principalPart);
     schedule.push({
       no: i,
-      dueDate: addMonths(startDate, i - 1),
+      dueDate: addMonths(effectiveEmiDate, i - 1),
       emi: amount,
       principal: principalPart,
       interest,
@@ -128,6 +133,7 @@ export const computeEmi = ({ principal, emiCount, interestRate, startDate, proce
     totalCharges,
     totalCost: round2(initial + totalPayable + totalCharges),
     monthlyOutflow: round2(emiAmount + fee),
+    emiDate: effectiveEmiDate,
     endDate,
     endMonth: endDate.slice(0, 7),
     durationMonths: n,

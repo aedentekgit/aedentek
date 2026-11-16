@@ -16,11 +16,14 @@ import clientRoutes from './routes/clientRoutes.js';
 import serviceTypeRoutes from './routes/serviceTypeRoutes.js';
 import projectStageRoutes from './routes/projectStageRoutes.js';
 import { paginateResponses } from './middleware/paginate.js';
+import { authenticateUser } from './middleware/rbac.js';
+import authRoutes from './routes/authRoutes.js';
 import hrRoutes from './routes/hrRoutes.js';
 import accountsRoutes from './routes/accountsRoutes.js';
 import { seedFinanceData } from './utils/seedFinance.js';
 import { seedHrData } from './utils/seedHr.js';
 import { seedAccountsData } from './utils/seedAccounts.js';
+import { seedUserData } from './utils/seedUsers.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 // Load environment variables
@@ -38,7 +41,7 @@ const HAS_SPA = fs.existsSync(PUBLIC_DIR);
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 // Enable CORS for frontend clients
-const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
+const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:1234';
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -180,7 +183,9 @@ if (HAS_SPA) {
 }
 
 // Mount API routes
+app.use('/api', authenticateUser);
 app.use('/api', paginateResponses);
+app.use('/api/auth', authRoutes);
 app.use('/api/settings-profiles', settingsProfileRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/gst-rates', gstTaxRateRoutes);
@@ -203,6 +208,7 @@ export const startServer = async () => {
     await seedFinanceData();
     await seedHrData();
     await seedAccountsData();
+    await seedUserData();
     const server = app.listen(PORT, () => {
       console.log(`[Server] Aedentek CRM Backend running on http://localhost:${PORT}`);
       console.log(`[Server] API Health check available at http://localhost:${PORT}/api/health`);

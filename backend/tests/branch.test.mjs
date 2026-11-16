@@ -94,9 +94,27 @@ async function runTests() {
     const byCity = await request('GET', '/api/hr/branches?q=Pune');
     check(byCity.body.data.some((b) => b._id === id), 'search by city works');
 
-    console.log('\nTest 4: Dropdown options');
+    console.log('\nTest 4: Dropdown options + Default branch');
     let opts = await request('GET', '/api/hr/branches/options');
     check(opts.status === 200 && opts.body.data.includes(N1), 'active branch appears in /options');
+    check(opts.body.defaultBranch && typeof opts.body.defaultBranch === 'string', 'defaultBranch is provided in /options');
+    
+    // Set this branch as default
+    const setDef = await request('PUT', `/api/hr/branches/${id}/default`);
+    check(setDef.status === 200 && setDef.body.data.isDefault === true, 'PUT /api/hr/branches/:id/default sets isDefault');
+    opts = await request('GET', '/api/hr/branches/options');
+    check(opts.body.defaultBranch === N1, 'newly set default branch is reflected in /options defaultBranch');
+    
+    // Switch default back to Bandra
+    const bandra = (await request('GET', '/api/hr/branches')).body.data.find((b) => b.name === 'Bandra');
+    if (bandra) {
+      await request('PUT', `/api/hr/branches/${bandra._id}/default`);
+      const checkBandraDef = await request('GET', '/api/hr/branches/options');
+      check(checkBandraDef.body.defaultBranch === 'Bandra', 'switching default back to Bandra succeeds');
+      const unsetDefault = await request('GET', `/api/hr/branches/${id}`);
+      check(unsetDefault.body.data.isDefault === false, 'previously default branch is now isDefault: false');
+    }
+
     const inactive = await request('PUT', `/api/hr/branches/${id}`, { status: 'Inactive' });
     check(inactive.status === 200 && inactive.body.data.status === 'Inactive', 'PUT can mark a branch Inactive');
     opts = await request('GET', '/api/hr/branches/options');

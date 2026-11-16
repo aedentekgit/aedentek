@@ -2,7 +2,7 @@
 
 **Contract version:** 1.0
 **Backend base:** `http://localhost:5001` (vite proxies `/api/*` → `:5001`)
-**Frontend dev server:** `http://localhost:5173`
+**Frontend dev server:** `http://localhost:1234`
 
 > The frontend calls `/api/...` with **relative** paths.
 
@@ -446,8 +446,8 @@ The Stock Inward API (`/api/accounts/stock-inward`) is unchanged because Sales a
 | POST | `/emi/calculate` | Preview the calculation without saving |
 | DELETE | `/emi/:id` | Delete |
 
-Input: `productName`, `category`, `principal`, `emiCount` (whole number 1–600), `interestRate` (% per year, 0–100), `startDate` (YYYY-MM-DD), optional `paidCount`, `branch`, `notes`.
+Input: `productName`, `category`, `principal`, `emiCount` (whole number 1–600), `interestRate` (% per year, 0–100), `startDate` (YYYY-MM-DD), `emiDate` (YYYY-MM-DD, optional — defaults to `startDate`), optional `paidCount`, `initialPayment`, `processingCharges`, `transactionFee`, `branch`, `notes`.
 
-Computed by the server (client-supplied values are ignored): `emiAmount` (reducing balance, `P·r·(1+r)^n / ((1+r)^n − 1)`, `r = rate/1200`; `P/n` at 0 %), `totalPayable`, `totalInterest`, `endDate` (= start date + (n − 1) months, day clamped to month length), `endMonth` (`YYYY-MM`), `durationMonths`. The first EMI is due on the start date.
+Computed by the server (client-supplied values are ignored): `emiAmount` (reducing balance, `P·r·(1+r)^n / ((1+r)^n − 1)`, `r = rate/1200`; `P/n` at 0 %), `totalPayable`, `totalInterest`, `emiDate` (effective EMI deduction date), `endDate` (= emiDate + (n − 1) months, day clamped to month length), `endMonth` (`YYYY-MM`), `durationMonths`. The first EMI is due on the emiDate (or startDate if omitted).
 
 Live fields on every row: `status` (`Active` / `Overdue` when the next due date has passed / `Completed`), `nextDueDate`, `outstandingAmount`, `remainingCount`.

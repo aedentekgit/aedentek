@@ -25,7 +25,12 @@
     "test:batch3": "node test/test-batch3-ui.mjs",
     "test:wizard": "node test/test-wizard-ui.mjs",
     "test:propagations": "node test/test-propagations-ui.mjs",
-    "test:dropdown-placeholder": "node test/test-dropdown-placeholder-global.mjs"
+    "test:dropdown-placeholder": "node test/test-dropdown-placeholder-global.mjs",
+    "test:emi-date": "node test/test-emi-date-ui.mjs",
+    "test:client-doc-upload": "node test/test-client-document-upload.mjs",
+    "test:client-doc-array": "node test/test-client-document-array-upload.mjs",
+    "test:rbac": "node test/test-role-based-restrictions.mjs",
+    "test:auth-refresh": "node test/test-token-refresh-and-auto-logout.mjs"
   },
   "keywords": [
     "crm",

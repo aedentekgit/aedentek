@@ -63,9 +63,17 @@ server.listen(PORT, async () => {
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
 
+  // Authenticate session before navigating to protected routes
+  await page.goto(`http://localhost:${PORT}/login`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('input[type="email"]', { timeout: 15000 });
+  await page.type('input[type="email"]', 'ines@caldermoss.co');
+  await page.type('input[autocomplete="current-password"]', 'marble88');
+  await page.click('.lg-submit');
+  await sleep(1200);
+
   const load = async (route) => {
     await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.phead', { timeout: 15000 });
+    await page.waitForSelector('.phead, #hr-staff-form', { timeout: 15000 });
     await sleep(1200);
   };
   const rowOf = (name) => page.evaluate((n) => {
@@ -187,6 +195,58 @@ server.listen(PORT, async () => {
     const o = s ? [...s.options].map((x) => x.value) : [];
     return { isSelect: !!s, hasNew: o.includes(n), hasBandra: o.includes('Bandra') && o.includes('All Branches') };
   });
+
+  // ---------------------------------------------------------------- 5b
+  console.log('\n=== 5b. DEFAULT BRANCH OPTION, PRE-SELECTION & SWITCHING ===');
+  await load('/hr/branches');
+  const defaultInfo = await page.evaluate(() => {
+    const badge = document.querySelector('.branch-default-badge');
+    const toggle = document.querySelector('.toggle-control');
+    return {
+      hasBadge: !!badge,
+      badgeText: badge?.innerText?.trim(),
+      badgeRow: badge?.closest('tr')?.innerText?.replace(/\s+/g, ' '),
+      hasToggle: !!toggle,
+      toggleText: toggle?.innerText?.trim()
+    };
+  });
+  assert(defaultInfo.hasBadge && defaultInfo.badgeText === 'DEFAULT', 'default branch has prominent DEFAULT badge');
+  assert(defaultInfo.badgeRow && defaultInfo.badgeRow.includes('Bandra'), 'Bandra is the initial default branch');
+  assert(defaultInfo.hasToggle, 'Add branch form exposes "Default option" toggle');
+
+  // Verify Employee form pre-selects default branch
+  await load('/hr/staff/new');
+  let empSelected = await page.$eval('select[name="branch"]', (el) => el.value);
+  assert(empSelected === 'Bandra', `Employee creation form pre-selects default branch: Bandra (${empSelected})`);
+
+  // User can click and change it
+  await page.select('select[name="branch"]', 'Andheri');
+  empSelected = await page.$eval('select[name="branch"]', (el) => el.value);
+  assert(empSelected === 'Andheri', `User can change branch selection via dropdown to Andheri (${empSelected})`);
+
+  // Verify Expense drawer pre-selects default branch
+  await load('/accounts/expenses');
+  await page.evaluate(() => {
+    [...document.querySelectorAll('button')].find((b) => /Add expense/i.test(b.innerText))?.click();
+  });
+  await sleep(900);
+  let expSelected = await page.evaluate(() => {
+    const f = [...document.querySelectorAll('.field, label')].find((x) => /^\s*Branch/.test(x.innerText));
+    return f ? f.querySelector('select')?.value : null;
+  });
+  assert(expSelected === 'Bandra', `Expense drawer pre-selects default branch: Bandra (${expSelected})`);
+
+  // User can click and change it
+  await page.evaluate(() => {
+    const f = [...document.querySelectorAll('.field, label')].find((x) => /^\s*Branch/.test(x.innerText));
+    const s = f ? f.querySelector('select') : null;
+    if (s) { s.value = 'Andheri'; s.dispatchEvent(new Event('change', { bubbles: true })); }
+  });
+  expSelected = await page.evaluate(() => {
+    const f = [...document.querySelectorAll('.field, label')].find((x) => /^\s*Branch/.test(x.innerText));
+    return f ? f.querySelector('select')?.value : null;
+  });
+  assert(expSelected === 'Andheri', `User can change branch selection in expense drawer to Andheri (${expSelected})`);
 
   // ---------------------------------------------------------------- 6
   console.log('\n=== 6. DELETE ===');

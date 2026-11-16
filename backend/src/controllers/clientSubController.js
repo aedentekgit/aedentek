@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Client from '../models/Client.js';
 import ProjectStage from '../models/ProjectStage.js';
+import Invoice from '../models/Invoice.js';
 import { paginateArray } from '../middleware/paginate.js';
 import { addMonths } from '../utils/emiEngine.js';
 
@@ -166,7 +167,7 @@ const validateDoc = (d) => {
 
 const readDoc = (b, existing = {}) => {
   const out = { ...existing };
-  ['name', 'type', 'category', 'startDate', 'endDate', 'notes'].forEach((k) => { if (b[k] !== undefined) out[k] = b[k]; });
+  ['name', 'type', 'category', 'startDate', 'endDate', 'notes', 'fileName'].forEach((k) => { if (b[k] !== undefined) out[k] = b[k]; });
   if (b.data !== undefined) {
     out.data = b.data;
     if (b.data) out.size = b.size || sizeFromData(b.data);
@@ -180,13 +181,67 @@ export const addDocument = async (req, res, next) => {
   try {
     const client = await findClient(req.params.id);
     if (!client) return bad(res, 'Client not found', 404);
+
+    // Support array type upload (multiple documents at once)
+    const rawList = Array.isArray(req.body)
+      ? req.body
+      : (Array.isArray(req.body?.documents)
+          ? req.body.documents
+          : (Array.isArray(req.body?.files) ? req.body.files : null));
+
+    if (rawList && Array.isArray(rawList)) {
+      if (!rawList.length) return bad(res, 'At least one document is required');
+      const addedDocs = [];
+      const today = new Date().toISOString().slice(0, 10);
+      const parentMeta = req.body || {};
+
+      for (let i = 0; i < rawList.length; i++) {
+        const item = rawList[i];
+        const d = readDoc(
+          {
+            category: item.category || parentMeta.category || 'Other',
+            startDate: item.startDate || parentMeta.startDate || '',
+            endDate: item.endDate || parentMeta.endDate || '',
+            notes: item.notes || parentMeta.notes || '',
+            ...item
+          },
+          { type: 'PDF', category: 'Other', size: '—', uploadedAt: today, url: '#' }
+        );
+        const err = validateDoc(d);
+        if (err) return bad(res, `Document ${i + 1} (${d.name || 'unnamed'}): ${err}`);
+        const docRecord = {
+          ...d,
+          id: `doc-${Date.now()}-${i}-${Math.floor(Math.random() * 1000)}`
+        };
+        client.documents.push(docRecord);
+        addedDocs.push(docRecord);
+      }
+
+      log(
+        client,
+        'Multiple Contracts Added',
+        `${addedDocs.length} documents uploaded to repository: ${addedDocs.map(x => x.name).join(', ')}`,
+        'note',
+        req.body?.operator
+      );
+      await client.save();
+      return res.status(201).json({
+        success: true,
+        message: `${addedDocs.length} documents uploaded successfully`,
+        data: client,
+        documents: addedDocs
+      });
+    }
+
+    // Single document upload (existing flow)
     const d = readDoc(req.body || {}, { type: 'PDF', category: 'MSA', size: '—', uploadedAt: new Date().toISOString().slice(0, 10), url: '#' });
     const err = validateDoc(d);
     if (err) return bad(res, err);
-    client.documents.push({ ...d, id: `doc-${Date.now()}-${Math.floor(Math.random() * 1000)}` });
+    const newDoc = { ...d, id: `doc-${Date.now()}-${Math.floor(Math.random() * 1000)}` };
+    client.documents.push(newDoc);
     log(client, 'Contract Added', `'${d.name}' (${d.category}) added to repository`, 'note', req.body.operator);
     await client.save();
-    res.status(201).json({ success: true, message: `Contract '${d.name}' added`, data: client });
+    res.status(201).json({ success: true, message: `Contract '${d.name}' added`, data: client, document: newDoc });
   } catch (e) { next(e); }
 };
 
@@ -217,6 +272,70 @@ export const deleteDocument = async (req, res, next) => {
     log(client, 'Contract Removed', `'${doc.name}' deleted from repository`, 'trash', req.body?.operator);
     await client.save();
     res.json({ success: true, message: `Contract '${doc.name}' deleted`, data: client });
+  } catch (e) { next(e); }
+};
+
+// ---------------------------------------------------------------- SOCIAL CHANNELS
+export const addSocial = async (req, res, next) => {
+  try {
+    const client = await findClient(req.params.id);
+    if (!client) return bad(res, 'Client not found', 404);
+    const { name, handle = '', desc = '', href = '#', status = 'Active', kind = 'good', cta = 'View Channel', icon = 'globe', tone = 'blue' } = req.body || {};
+    if (!name || !String(name).trim()) return bad(res, 'Social channel name is required');
+    const newSoc = {
+      id: `soc-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      clientId: client.clientId,
+      key: (req.body.key || String(name).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8)) || 'web',
+      name: String(name).trim(),
+      handle: String(handle).trim(),
+      desc: String(desc).trim(),
+      href: String(href).trim() || '#',
+      status: String(status).trim() || 'Active',
+      kind: String(kind).trim() || 'good',
+      cta: String(cta).trim() || 'View Channel',
+      icon: String(icon).trim() || 'globe',
+      tone: String(tone).trim() || 'blue'
+    };
+    if (!Array.isArray(client.social)) client.social = [];
+    client.social.push(newSoc);
+    log(client, 'Social Channel Added', `'${newSoc.name}' added to social channels`, 'globe', req.body?.operator);
+    await client.save();
+    res.status(201).json({ success: true, message: `Social channel '${newSoc.name}' added`, data: client });
+  } catch (e) { next(e); }
+};
+
+export const updateSocial = async (req, res, next) => {
+  try {
+    const client = await findClient(req.params.id);
+    if (!client) return bad(res, 'Client not found', 404);
+    if (!Array.isArray(client.social)) client.social = [];
+    const soc = client.social.find((s) => s.id === req.params.socId);
+    if (!soc) return bad(res, 'Social channel not found', 404);
+    const b = req.body || {};
+    if ('name' in b && !String(b.name).trim()) return bad(res, 'Social channel name cannot be empty');
+    ['key', 'name', 'handle', 'desc', 'href', 'status', 'kind', 'cta', 'icon', 'tone'].forEach((k) => {
+      if (b[k] !== undefined) soc[k] = b[k];
+    });
+    client.markModified('social');
+    log(client, 'Social Channel Updated', `'${soc.name}' modified`, 'edit', req.body?.operator);
+    await client.save();
+    res.json({ success: true, message: `Social channel '${soc.name}' updated`, data: client });
+  } catch (e) { next(e); }
+};
+
+export const deleteSocial = async (req, res, next) => {
+  try {
+    const client = await findClient(req.params.id);
+    if (!client) return bad(res, 'Client not found', 404);
+    if (!Array.isArray(client.social)) client.social = [];
+    const idx = client.social.findIndex((s) => s.id === req.params.socId);
+    if (idx === -1) return bad(res, 'Social channel not found', 404);
+    const removed = client.social[idx];
+    client.social.splice(idx, 1);
+    client.markModified('social');
+    log(client, 'Social Channel Removed', `'${removed.name}' removed`, 'trash', req.body?.operator);
+    await client.save();
+    res.json({ success: true, message: `Social channel '${removed.name}' deleted`, data: client });
   } catch (e) { next(e); }
 };
 
@@ -467,7 +586,19 @@ export const deleteBillingRow = async (req, res, next) => {
 };
 
 // ---------------------------------------------------------------- PAGINATED EMBEDDED LISTS
-const LISTS = { websites: 'websites', credentials: 'credentials', projects: 'projects', invoices: 'invoices', payments: 'payments', documents: 'documents' };
+const LISTS = {
+  websites: 'websites',
+  social: 'social',
+  credentials: 'credentials',
+  projects: 'projects',
+  invoices: 'invoices',
+  payments: 'payments',
+  documents: 'documents',
+  contacts: 'contacts',
+  tickets: 'tickets',
+  timeline: 'timeline',
+  monthlySchedule: 'monthlySchedule'
+};
 
 // GET /:id/lists/:name?page=&limit=&projectId=
 export const getClientList = async (req, res, next) => {
@@ -477,8 +608,45 @@ export const getClientList = async (req, res, next) => {
     const client = await findClient(req.params.id);
     if (!client) return bad(res, 'Client not found', 404);
     let rows = (client[key] || []).map((x) => (x.toObject ? x.toObject() : x));
-    if (key === 'invoices' && req.query.projectId) {
-      rows = req.query.projectId === 'none' ? rows.filter((x) => !x.projectId) : rows.filter((x) => x.projectId === req.query.projectId);
+    if (key === 'invoices') {
+      try {
+        const invList = await Invoice.find({
+          $or: [
+            { clientId: client.clientId },
+            { clientName: client.name },
+            { clientName: client.company }
+          ]
+        }).sort({ createdAt: -1 });
+
+        const mappedInvs = invList.map((inv) => ({
+          id: inv._id.toString(),
+          no: inv.invoiceNumber,
+          invoiceNumber: inv.invoiceNumber,
+          title: inv.title || inv.projectName || 'Commercial Invoice',
+          issueDate: inv.issueDate,
+          date: inv.issueDate,
+          dueDate: inv.dueDate,
+          amount: inv.totalAmount,
+          total: inv.totalAmount,
+          paid: inv.paidAmount,
+          balance: inv.balance,
+          status: inv.status,
+          projectId: inv.projectName || '',
+          isFinanceInvoice: true
+        }));
+
+        const existingNos = new Set(mappedInvs.map((i) => i.no || i.invoiceNumber));
+        for (const r of rows) {
+          if (!existingNos.has(r.no || r.invoiceNumber)) {
+            mappedInvs.push(r);
+          }
+        }
+        rows = mappedInvs;
+      } catch (err) {}
+
+      if (req.query.projectId) {
+        rows = req.query.projectId === 'none' ? rows.filter((x) => !x.projectId) : rows.filter((x) => x.projectId === req.query.projectId);
+      }
     }
     if (key === 'documents') rows = rows.map(({ data, ...rest }) => ({ ...rest, hasFile: !!data })); // never ship file bytes in a list
     return res.json({ success: true, data: rows, total: rows.length });

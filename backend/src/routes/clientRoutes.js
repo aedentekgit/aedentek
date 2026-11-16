@@ -17,7 +17,8 @@ import {
   addProject, updateProject, deleteProject, updateInvoiceLink,
   addProjectStageEntry, updateProjectStageEntry, deleteProjectStageEntry,
   getBilling, saveBilling, clearBilling, addBillingRow, updateBillingRow, deleteBillingRow, getClientList,
-  addDocument, updateDocument, deleteDocument
+  addDocument, updateDocument, deleteDocument,
+  addSocial, updateSocial, deleteSocial
 } from '../controllers/clientSubController.js';
 
 const router = express.Router();
@@ -31,6 +32,9 @@ router.delete('/:id', deleteClient);
 router.post('/:id/websites', addWebsite);
 router.put('/:id/websites/:webId', updateWebsite);
 router.delete('/:id/websites/:webId', deleteWebsite);
+router.post('/:id/social', addSocial);
+router.put('/:id/social/:socId', updateSocial);
+router.delete('/:id/social/:socId', deleteSocial);
 router.post('/:id/credentials', addCredential);
 router.put('/:id/credentials/:credId', updateCredential);
 router.delete('/:id/credentials/:credId', deleteCredential);

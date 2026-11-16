@@ -7,19 +7,20 @@ import {
   deleteTaxRate,
   setDefaultTaxRate,
 } from '../controllers/gstTaxRateController.js';
+import { requireRole, ROLES } from '../middleware/rbac.js';
 
 const router = Router();
 
 router.route('/')
-  .get(getAllTaxRates)
-  .post(createTaxRate);
+  .get(requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllTaxRates)
+  .post(requireRole([ROLES.ADMIN]), createTaxRate);
 
-router.post('/:id/default', setDefaultTaxRate);
+router.post('/:id/default', requireRole([ROLES.ADMIN]), setDefaultTaxRate);
 
 router.route('/:id')
-  .get(getTaxRateById)
-  .put(updateTaxRate)
-  .delete(deleteTaxRate);
+  .get(requireRole([ROLES.ADMIN, ROLES.MANAGER]), getTaxRateById)
+  .put(requireRole([ROLES.ADMIN]), updateTaxRate)
+  .delete(requireRole([ROLES.ADMIN]), deleteTaxRate);
 
 export default router;
 

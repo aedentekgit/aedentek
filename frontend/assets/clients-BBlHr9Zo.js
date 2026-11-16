@@ -126,6 +126,11 @@ const DEFAULT_CLIENTS = [
       { id: 'w-1', domain: 'portal.omniretail.com', status: 'Live', hostingProvider: 'AWS Mumbai (ap-south-1)', sslExpiry: '2027-04-10', domainExpiry: '2028-02-15' },
       { id: 'w-2', domain: 'staging.omniretail.com', status: 'Staging', hostingProvider: 'Vercel Enterprise', sslExpiry: '2026-12-31', domainExpiry: '2028-02-15' }
     ],
+    social: [
+      { id: 'so-1', key: 'li', name: 'LinkedIn Corporate', handle: 'linkedin.com/company/omni-retail-solutions', desc: 'Institutional retail logistics & commerce announcements', status: 'Connected', kind: 'good', href: 'https://linkedin.com', cta: 'View Page', icon: 'globe', tone: 'blue' },
+      { id: 'so-2', key: 'x', name: 'Twitter / X Commerce Feed', handle: '@omni_retail', desc: 'Public catalog rollouts and logistics notices', status: 'Active', kind: 'info', href: 'https://twitter.com', cta: 'View Channel', icon: 'globe', tone: 'ink' },
+      { id: 'so-3', key: 'gh', name: 'GitHub Organization', handle: 'github.com/omni-retail', desc: 'Source repos for vendor catalog microservices', status: 'Verified', kind: 'good', href: 'https://github.com', cta: 'Open Repo', icon: 'globe', tone: 'violet' }
+    ],
     credentials: [
       { id: 'cr-1', type: 'AWS Cloud', label: 'AWS Production IAM Admin Console', loginUrl: 'https://omniretail.signin.aws.amazon.com/console', username: 'aedentek-ops', password: 'EncryptedSecretString123!', notes: 'IAM Role with restricted CloudFront and S3 bucket access' },
       { id: 'cr-2', type: 'MySQL', label: 'Aurora DB Cluster Replica Primary', loginUrl: 'mysql://cluster.omni.internal:3306', username: 'app_master_rw', password: 'OmniSecure$Key9921', notes: 'Production read-write instance in private VPC subnet' }
@@ -193,6 +198,12 @@ const DEFAULT_CLIENTS = [
     websites: [
       { id: 'wk-1', domain: 'app.kavitaedutech.io', status: 'Live', hostingProvider: 'DigitalOcean Bangalore', sslExpiry: '2027-06-15', domainExpiry: '2028-05-20' }
     ],
+    social: [
+      { id: 'sk-1', key: 'li', name: 'LinkedIn Corporate', handle: 'linkedin.com/company/kavitaedutech', desc: 'Edutech leadership & learning technology announcements', status: 'Connected', kind: 'good', href: 'https://linkedin.com/company/kavitaedutech', cta: 'View Page', icon: 'globe', tone: 'blue' },
+      { id: 'sk-2', key: 'x', name: 'Twitter / X Feed', handle: '@kavita_edu', desc: 'Student video streaming announcements & app updates', status: 'Active', kind: 'info', href: 'https://twitter.com/kavita_edu', cta: 'View Channel', icon: 'globe', tone: 'ink' },
+      { id: 'sk-3', key: 'yt', name: 'YouTube Masterclass Channel', handle: 'youtube.com/@kavitaedutech', desc: 'Video lecture portal channel & masterclass demos', status: 'Active', kind: 'good', href: 'https://youtube.com', cta: 'Watch Stream', icon: 'globe', tone: 'amber' },
+      { id: 'sk-4', key: 'gh', name: 'GitHub Organization', handle: 'github.com/kavita-edutech', desc: 'DRM video encryption player SDK and native wrappers', status: 'Verified', kind: 'good', href: 'https://github.com/kavita-edutech', cta: 'Open Repo', icon: 'globe', tone: 'violet' }
+    ],
     credentials: [
       { id: 'crk-1', type: 'Vimeo Video', label: 'Vimeo Pro OTT Video API Channel', loginUrl: 'https://vimeo.com/manage', username: 'dev@edutech.io', password: 'VimeoEdutech$2026', notes: 'API tokens with video upload and domain restriction controls' }
     ],
@@ -247,6 +258,11 @@ const DEFAULT_CLIENTS = [
     ],
     websites: [
       { id: 'wh-1', domain: 'cdn.hyperionmedia.co.uk', status: 'Live', hostingProvider: 'AWS Ireland (eu-west-1)', sslExpiry: '2027-08-30', domainExpiry: '2029-03-10' }
+    ],
+    social: [
+      { id: 'sh-1', key: 'li', name: 'LinkedIn Corporate', handle: 'linkedin.com/company/hyperion-media-group', desc: 'Global broadcasting network & corporate media press', status: 'Connected', kind: 'good', href: 'https://linkedin.com', cta: 'View Page', icon: 'globe', tone: 'blue' },
+      { id: 'sh-2', key: 'x', name: 'Twitter / X Media Feed', handle: '@hyperionmedia_uk', desc: 'Live broadcast alerts and transmission network updates', status: 'Active', kind: 'info', href: 'https://twitter.com', cta: 'View Channel', icon: 'globe', tone: 'ink' },
+      { id: 'sh-3', key: 'gh', name: 'GitHub Organization', handle: 'github.com/hyperion-media', desc: 'Video ingestion core pipeline repositories', status: 'Verified', kind: 'good', href: 'https://github.com', cta: 'Open Repo', icon: 'globe', tone: 'violet' }
     ],
     credentials: [
       { id: 'crh-1', type: 'GitHub', label: 'Hyperion Video Ingestion Core Repo', loginUrl: 'https://github.com/hyperion-media', username: 'aedentek-ci', password: 'ghp_HyperionSecureToken99!', notes: 'Deploy keys for automatic video pipeline builds' }
@@ -1015,11 +1031,12 @@ function Client360CommandCenter({ id }) {
   const [billStatus, setBillStatus] = useState('All');
   const lists = {
     websites: usePaged(`${API_BASE}/${id}/lists/websites`, {}, { enabled: activeTab === 'Websites', noun: 'domains' }),
+    social: usePaged(`${API_BASE}/${id}/lists/social`, {}, { enabled: activeTab === 'Social', noun: 'channels' }),
     credentials: usePaged(`${API_BASE}/${id}/lists/credentials`, {}, { enabled: activeTab === 'Credentials', noun: 'logins' }),
     projects: usePaged(`${API_BASE}/${id}/lists/projects`, {}, { enabled: activeTab === 'Projects', noun: 'projects' }),
     invoices: usePaged(`${API_BASE}/${id}/lists/invoices`, { projectId: invProjFilter === 'all' ? '' : invProjFilter }, { enabled: activeTab === 'Invoices', noun: 'invoices' }),
     payments: usePaged(`${API_BASE}/${id}/lists/payments`, {}, { enabled: activeTab === 'Payments', noun: 'payments' }),
-    documents: usePaged(`${API_BASE}/${id}/lists/documents`, {}, { enabled: activeTab === 'Documents', noun: 'contracts' })
+    documents: usePaged(`${API_BASE}/${id}/lists/documents`, {}, { enabled: activeTab === 'Documents' || activeTab === 'General', noun: 'documents' })
   };
   const billing = usePaged(`${API_BASE}/${id}/billing`, { status: billStatus === 'All' ? '' : billStatus }, { enabled: activeTab === 'Billing', noun: 'months' });
   const reloadListsRef = useRef(() => {});
@@ -1028,6 +1045,12 @@ function Client360CommandCenter({ id }) {
   const [billModal, setBillModal] = useState(null);
   const [timelineId, setTimelineId] = useState(null);
   const [activeStages, setActiveStages] = useState([]);
+  const [showAddSocModal, setShowAddSocModal] = useState(false);
+  const [newSocName, setNewSocName] = useState('');
+  const [newSocHandle, setNewSocHandle] = useState('');
+  const [newSocDesc, setNewSocDesc] = useState('');
+  const [newSocHref, setNewSocHref] = useState('');
+  const [newSocTone, setNewSocTone] = useState('blue');
   useEffect(() => {
     const s = billing.body && billing.body.settings;
     if (s) setBillForm({ amount: s.amount || '', gstMode: s.gstMode || 'Without GST', gstRate: s.gstRate ?? 18 });
@@ -1116,6 +1139,7 @@ function Client360CommandCenter({ id }) {
         domain: newDomain.trim(),
         ...(editing ? {} : { status: 'Live' }),
         hostingProvider: newHosting,
+        domainExpiry: newSslExpiry || '2028-05-20',
         sslExpiry: newSslExpiry || '2027-12-31'
       })
     });
@@ -1124,6 +1148,7 @@ function Client360CommandCenter({ id }) {
       setShowAddWebsiteModal(false);
       setEditWebId(null);
       setNewDomain('');
+      lists.websites.reload();
       loadClientDetails();
     } else {
       toast(editWebId ? 'Failed to update domain' : 'Failed to add domain', { icon: 'warn' });
@@ -1136,7 +1161,49 @@ function Client360CommandCenter({ id }) {
     const res = await apiFetch(`${API_BASE}/${id}/websites/${webId}`, { method: 'DELETE' });
     if (res.ok) {
       toast('Domain removed from catalog', { icon: 'trash' });
+      lists.websites.reload();
       loadClientDetails();
+    }
+  };
+
+  // Handle Add Social Channel
+  const handleAddSocial = async (e) => {
+    e.preventDefault();
+    if (!newSocName.trim()) return;
+    const res = await apiFetch(`${API_BASE}/${id}/social`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: newSocName.trim(),
+        handle: newSocHandle.trim(),
+        desc: newSocDesc.trim(),
+        href: newSocHref.trim() || '#',
+        tone: newSocTone
+      })
+    });
+    if (res.ok) {
+      toast(`Social channel '${newSocName.trim()}' added!`, { icon: 'check' });
+      setShowAddSocModal(false);
+      setNewSocName('');
+      setNewSocHandle('');
+      setNewSocDesc('');
+      setNewSocHref('');
+      lists.social.reload();
+      loadClientDetails();
+    } else {
+      toast('Failed to add channel: ' + (res.error || res.data?.message), { icon: 'warn' });
+    }
+  };
+
+  // Handle Delete Social Channel
+  const handleDeleteSocial = async (soc) => {
+    if (!(await window.themedConfirm(`Delete social channel "${soc.name}"?`))) return;
+    const res = await apiFetch(`${API_BASE}/${id}/social/${soc.id}`, { method: 'DELETE' });
+    if (res.ok) {
+      toast('Social channel removed', { icon: 'trash' });
+      lists.social.reload();
+      loadClientDetails();
+    } else {
+      toast('Failed to remove social channel', { icon: 'warn' });
     }
   };
 
@@ -1314,41 +1381,192 @@ function Client360CommandCenter({ id }) {
     else toast('Failed to link invoice', { icon: 'warn' });
   };
 
-  const blankDoc = { name: '', category: 'MSA', startDate: '', endDate: '', notes: '', data: '', fileName: '', size: '', type: 'PDF' };
+  const blankDoc = { name: '', category: 'Other', startDate: '', endDate: '', notes: '', data: '', fileName: '', size: '', type: 'FILE', files: [] };
   const openDocModal = (d) => {
     setFormErr('');
-    setDocModal(d ? { id: d.id, name: d.name || '', category: d.category || 'Other', startDate: d.startDate || '', endDate: d.endDate || '', notes: d.notes || '', data: '', fileName: d.data || d.hasFile ? 'Existing file attached' : '', size: d.size || '', type: d.type || 'PDF', hadData: !!(d.data || d.hasFile) } : { ...blankDoc });
+    setDocModal(d ? { id: d.id, name: d.name || '', category: d.category || 'Other', startDate: d.startDate || '', endDate: d.endDate || '', notes: d.notes || '', data: '', fileName: d.data || d.hasFile ? 'Existing file attached' : '', size: d.size || '', type: d.type || 'FILE', hadData: !!(d.data || d.hasFile), files: [] } : { ...blankDoc, files: [] });
   };
-  const onDocFile = async (e) => {
-    const file = e.target.files && e.target.files[0];
+  const onDocFiles = async (e) => {
+    const fileList = Array.from(e.target.files || []);
     e.target.value = '';
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { setFormErr('File must be smaller than 5 MB'); return; }
+    if (!fileList.length) return;
+    for (const f of fileList) {
+      if (f.size > 15 * 1024 * 1024) { setFormErr(`File "${f.name}" exceeds the 15 MB limit`); return; }
+    }
     setFormErr('');
-    const data = await readFileAsDataUrl(file);
-    setDocModal((m) => ({ ...m, data, fileName: file.name, size: fmtBytes(file.size), type: (file.name.split('.').pop() || 'FILE').toUpperCase(), name: m.name || file.name.replace(/\.[^.]+$/, '') }));
+    const newItems = [];
+    for (let i = 0; i < fileList.length; i++) {
+      const f = fileList[i];
+      const data = await readFileAsDataUrl(f);
+      const ext = (f.name.split('.').pop() || 'FILE').toUpperCase();
+      const baseName = f.name.replace(/\.[^.]+$/, '');
+      newItems.push({
+        key: `f-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`,
+        name: baseName,
+        fileName: f.name,
+        size: fmtBytes(f.size),
+        type: ext,
+        data
+      });
+    }
+    setDocModal((m) => {
+      const existingFiles = m.files || [];
+      const combined = [...existingFiles, ...newItems];
+      if (combined.length === 1 && m.name && m.name.trim()) {
+        combined[0].name = m.name.trim();
+      }
+      const primaryName = (m.name && m.name.trim()) || (combined.length === 1 ? combined[0].name : '');
+      return {
+        ...m,
+        name: primaryName,
+        files: combined,
+        fileName: combined.length === 1 ? combined[0].fileName : `${combined.length} files selected`,
+        size: combined.length === 1 ? combined[0].size : `${combined.length} files`,
+        type: combined.length === 1 ? combined[0].type : 'MULTI',
+        data: combined.length === 1 ? combined[0].data : ''
+      };
+    });
+  };
+  const updateDocFileItem = (key, field, val) => {
+    setDocModal((m) => ({
+      ...m,
+      files: (m.files || []).map((f) => (f.key === key ? { ...f, [field]: val } : f))
+    }));
+  };
+  const removeDocFileItem = (key) => {
+    setDocModal((m) => {
+      const rest = (m.files || []).filter((f) => f.key !== key);
+      return {
+        ...m,
+        files: rest,
+        fileName: rest.length ? (rest.length === 1 ? rest[0].fileName : `${rest.length} files selected`) : '',
+        name: rest.length === 1 && !m.name ? rest[0].name : m.name
+      };
+    });
   };
   const saveDoc = async (e) => {
     e.preventDefault();
     const m = docModal;
-    if (!m.name.trim()) { setFormErr('Contract name is required'); return; }
     if (m.startDate && m.endDate && m.endDate < m.startDate) { setFormErr('End date cannot be before the start date'); return; }
-    const body = { name: m.name.trim(), category: m.category, startDate: m.startDate, endDate: m.endDate, notes: m.notes, type: m.type };
-    if (m.data) { body.data = m.data; body.size = m.size; }
-    const res = await apiFetch(m.id ? `${API_BASE}/${id}/documents/${m.id}` : `${API_BASE}/${id}/documents`, { method: m.id ? 'PUT' : 'POST', body: JSON.stringify(body) });
-    if (res.ok) { toast(m.id ? 'Contract updated' : 'Contract added', { icon: 'check' }); setDocModal(null); loadClientDetails(); }
-    else setFormErr(res.data?.message || res.error || 'Failed to save contract');
+
+    // Single document edit mode
+    if (m.id) {
+      if (!m.name.trim()) { setFormErr('Document name is required'); return; }
+      const body = { name: m.name.trim(), category: m.category || 'Other', startDate: m.startDate, endDate: m.endDate, notes: m.notes, type: m.type || 'FILE' };
+      if (m.data) { body.data = m.data; body.size = m.size; body.fileName = m.fileName; }
+      const res = await apiFetch(`${API_BASE}/${id}/documents/${m.id}`, { method: 'PUT', body: JSON.stringify(body) });
+      if (res.ok) {
+        toast('Document updated', { icon: 'check' });
+        setDocModal(null);
+        lists.documents.reload();
+        loadClientDetails();
+      } else {
+        setFormErr(res.data?.message || res.error || 'Failed to save document');
+      }
+      return;
+    }
+
+    // New upload mode: multiple files array support
+    const files = m.files && m.files.length ? m.files : (m.data ? [{ name: m.name.trim(), fileName: m.fileName, size: m.size, type: m.type, data: m.data }] : []);
+    if (!files.length) {
+      if (!m.name.trim()) { setFormErr('Document name is required'); return; }
+      setFormErr('Please choose at least one document file to upload');
+      return;
+    }
+
+    // Validate that every document in the array has a name
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i];
+      const effectiveName = (f.name || (files.length === 1 ? m.name : '') || f.fileName || '').trim();
+      if (!effectiveName) {
+        setFormErr(`Document #${i + 1} (${f.fileName || 'file'}) requires a name`);
+        return;
+      }
+      f.name = effectiveName;
+    }
+
+    // Single document payload
+    if (files.length === 1) {
+      if (m.name && m.name.trim()) { files[0].name = m.name.trim(); }
+      const f = files[0];
+      const body = {
+        name: f.name,
+        fileName: f.fileName,
+        size: f.size,
+        type: f.type || 'FILE',
+        data: f.data,
+        category: m.category || 'Other',
+        startDate: m.startDate,
+        endDate: m.endDate,
+        notes: m.notes
+      };
+      const res = await apiFetch(`${API_BASE}/${id}/documents`, { method: 'POST', body: JSON.stringify(body) });
+      if (res.ok) {
+        toast('Document uploaded', { icon: 'check' });
+        setDocModal(null);
+        lists.documents.reload();
+        loadClientDetails();
+      } else {
+        setFormErr(res.data?.message || res.error || 'Failed to save document');
+      }
+      return;
+    }
+
+    // Multiple documents uploaded as array type
+    const payload = {
+      category: m.category || 'Other',
+      startDate: m.startDate,
+      endDate: m.endDate,
+      notes: m.notes,
+      documents: files.map((f) => ({
+        name: f.name,
+        fileName: f.fileName,
+        size: f.size,
+        type: f.type || 'FILE',
+        data: f.data,
+        category: m.category || 'Other',
+        startDate: m.startDate,
+        endDate: m.endDate,
+        notes: m.notes
+      }))
+    };
+
+    const res = await apiFetch(`${API_BASE}/${id}/documents`, { method: 'POST', body: JSON.stringify(payload) });
+    if (res.ok) {
+      toast(`${files.length} documents uploaded successfully`, { icon: 'check' });
+      setDocModal(null);
+      lists.documents.reload();
+      loadClientDetails();
+    } else {
+      setFormErr(res.data?.message || res.error || 'Failed to upload documents');
+    }
   };
   const deleteDoc = async (d) => {
-    if (!(await window.themedConfirm(`Delete contract "${d.name}"?`))) return;
+    if (!(await window.themedConfirm(`Delete document "${d.name}"?`))) return;
     const res = await apiFetch(`${API_BASE}/${id}/documents/${d.id}`, { method: 'DELETE' });
-    if (res.ok) { toast('Contract deleted', { icon: 'trash' }); loadClientDetails(); }
-    else toast('Failed to delete contract', { icon: 'warn' });
+    if (res.ok) {
+      toast('Document deleted', { icon: 'trash' });
+      lists.documents.reload();
+      loadClientDetails();
+    }
+    else toast('Failed to delete document', { icon: 'warn' });
   };
-  const downloadDoc = (d) => {
-    const full = (client.documents || []).find((x) => x.id === d.id) || d;
-    if (full.data) downloadDataUrl(full.data, d.name + (/\.[A-Za-z0-9]+$/.test(d.name) ? '' : '.' + String(d.type || 'pdf').toLowerCase()));
-    else toast('No file attached to this contract yet — edit it to upload one', { icon: 'warn' });
+  const downloadDoc = async (d) => {
+    let full = (client.documents || []).find((x) => x.id === d.id) || d;
+    if (!full.data) {
+      const r = await apiFetch(`${API_BASE}/${id}`);
+      if (r.ok && r.data?.data?.documents) {
+        const found = r.data.data.documents.find((x) => x.id === d.id);
+        if (found?.data) full = found;
+      }
+    }
+    if (full.data) {
+      const ext = (d.type || 'file').toLowerCase();
+      const dotExt = /\.[A-Za-z0-9]+$/.test(d.name) ? '' : '.' + ext;
+      downloadDataUrl(full.data, d.name + dotExt);
+    } else {
+      toast('No file content attached — edit document to upload a file', { icon: 'warn' });
+    }
   };
 
 
@@ -1367,7 +1585,7 @@ function Client360CommandCenter({ id }) {
     { id: 'Invoices', label: 'Invoices' },
     { id: 'Payments', label: 'Payments' },
     { id: 'Billing', label: 'Monthly Billing' },
-    { id: 'Documents', label: 'Contracts' },
+    { id: 'Documents', label: 'Contracts & Documents' },
   ];
 
   // Active-tab underline — mirrors the shared Settings section bar behaviour.
@@ -1708,6 +1926,111 @@ function Client360CommandCenter({ id }) {
                   ]
                 })
               })
+            }),
+            jsx('div', {
+              style: { gridColumn: '1 / -1' },
+              children: withPager(lists.documents, jsx(Card, {
+                title: 'Document Upload',
+                sub: 'Client documents, contracts, identity proofs, and verification files (PDF, image, and any format).',
+                tools: jsx('button', {
+                  type: 'button',
+                  id: 'general-doc-upload-btn',
+                  className: 'btn btn--sm btn--primary',
+                  onClick: () => openDocModal(null),
+                  children: jsxs('span', {
+                    style: { display: 'flex', alignItems: 'center', gap: 6 },
+                    children: [jsx(Icon, { name: 'upload' }), 'Upload Document']
+                  })
+                }),
+                flush: true,
+                children: jsx('div', {
+                  className: 'table-wrap',
+                  id: 'general-doc-table-wrap',
+                  children: jsxs('table', {
+                    className: 'table cd-table',
+                    id: 'general-doc-table',
+                    children: [
+                      jsx('thead', {
+                        children: jsxs('tr', {
+                          children: [
+                            jsx('th', { className: 'col-sno', children: 'S NO' }),
+                            jsx('th', { children: 'Document Name' }),
+                            jsx('th', { children: 'Format / Type' }),
+                            jsx('th', { children: 'File Size' }),
+                            jsx('th', { children: 'Upload Date' }),
+                            jsx('th', { style: { textAlign: 'right' }, children: 'Actions' })
+                          ]
+                        })
+                      }),
+                      jsx('tbody', {
+                        children: __rowsP(lists.documents, 6, 'note', 'No documents uploaded', 'Click "Upload Document" to attach PDF, image, or any format file to this client.', (doc, idx) =>
+                          jsxs('tr', {
+                            'data-doc-row': doc.id,
+                            children: [
+                              jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill ${idx < 3 ? 'sno-pill--top' : 'sno-pill--normal'}`, children: idx + 1 }) }),
+                              jsx('td', {
+                                children: jsxs('div', {
+                                  style: { display: 'flex', alignItems: 'center', gap: 8 },
+                                  children: [
+                                    jsx('span', { style: { color: 'var(--primary)' }, children: jsx(Icon, { name: 'note' }) }),
+                                    jsxs('div', {
+                                      children: [
+                                        jsx('b', { className: 'doc-row-name', children: doc.name }),
+                                        doc.notes ? jsx('div', { style: { fontSize: 'var(--fs-xs)', color: 'var(--muted)' }, children: doc.notes }) : null
+                                      ]
+                                    })
+                                  ]
+                                })
+                              }),
+                              jsx('td', {
+                                children: jsx('span', {
+                                  className: 'badge badge--neutral',
+                                  style: { fontWeight: 600, textTransform: 'uppercase', fontSize: '11px' },
+                                  children: doc.type || 'FILE'
+                                })
+                              }),
+                              jsx('td', { children: doc.size || '—' }),
+                              jsx('td', { children: doc.uploadedAt || '—' }),
+                              jsx('td', {
+                                style: { textAlign: 'right' },
+                                children: jsxs('div', {
+                                  style: { display: 'inline-flex', gap: 6, justifyContent: 'flex-end' },
+                                  children: [
+                                    jsx('button', {
+                                      type: 'button',
+                                      className: 'ibtn ibtn--sm ibtn--bare doc-row-download',
+                                      title: 'Download file',
+                                      'aria-label': 'Download file',
+                                      onClick: () => downloadDoc(doc),
+                                      children: jsx(Icon, { name: 'download' })
+                                    }),
+                                    jsx('button', {
+                                      type: 'button',
+                                      className: 'ibtn ibtn--sm ibtn--bare doc-row-edit',
+                                      title: 'Edit document',
+                                      'aria-label': 'Edit document',
+                                      onClick: () => openDocModal(doc),
+                                      children: jsx(Icon, { name: 'edit' })
+                                    }),
+                                    jsx('button', {
+                                      type: 'button',
+                                      className: 'ibtn ibtn--sm ibtn--bare doc-row-delete',
+                                      title: 'Delete document',
+                                      'aria-label': 'Delete document',
+                                      onClick: () => deleteDoc(doc),
+                                      children: jsx(Icon, { name: 'trash' })
+                                    })
+                                  ]
+                                })
+                              })
+                            ]
+                          }, doc.id)
+                        )
+                      })
+                    ]
+                  })
+                })
+              }))
             })
           ]
         }),
@@ -1716,7 +2039,7 @@ function Client360CommandCenter({ id }) {
       activeTab === 'Websites' &&
         withPager(lists.websites, jsx(Card, {
           title: 'Websites & Cloud Infrastructure',
-          sub: 'Configured domains, web applications, SSL certificate expirations, and hosting targets.',
+          sub: 'Configured domains, web applications, domain expiration dates, and hosting targets.',
           tools: jsx('button', {
             type: 'button', onClick: () => { setEditWebId(null); setNewDomain(''); setNewHosting('AWS Cloud'); setNewSslExpiry(''); setShowAddWebsiteModal(true); },
             className: 'btn btn--sm btn--primary',
@@ -1738,14 +2061,13 @@ function Client360CommandCenter({ id }) {
 jsx('th', { children: 'Domain / FQDN' }),
                           jsx('th', { children: 'Status' }),
                           jsx('th', { children: 'Hosting Provider' }),
-                          jsx('th', { children: 'SSL Certificate Expiry' }),
-                          jsx('th', { children: 'Domain Expiry' }),
+                          jsx('th', { children: 'Domain Expire Date' }),
                           jsx('th', { style: { textAlign: 'right' }, children: 'Actions' })
                         ]
                       })
                     }),
                     jsx('tbody', {
-                      children: __rowsP(lists.websites, 7, 'globe', 'No websites or domains configured', 'Add official client web applications and domains to monitor SSL & infrastructure.', (w, __i) =>
+                      children: __rowsP(lists.websites, 6, 'globe', 'No websites or domains configured', 'Add official client web applications and domains to monitor domain infrastructure.', (w, __i) =>
                         jsxs(
                           'tr',
                           {
@@ -1764,8 +2086,7 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                                 })
                               }),
                               jsx('td', { children: w.hostingProvider || 'Cloud Infrastructure' }),
-                              jsx('td', { children: w.sslExpiry || 'Auto-renew' }),
-                              jsx('td', { children: w.domainExpiry || '2028-02-15' }),
+                              jsx('td', { children: w.domainExpiry || w.sslExpiry || '2028-05-20' }),
                               jsx('td', {
                                 style: { textAlign: 'right' },
                                 children: jsxs('div', {
@@ -1783,7 +2104,7 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                                       type: 'button',
                                       className: 'ibtn ibtn--sm ibtn--bare',
                                       title: 'Edit Domain',
-                                      onClick: () => { setEditWebId(w.id); setNewDomain(w.domain || ''); setNewHosting(w.hostingProvider || ''); setNewSslExpiry(w.sslExpiry && /^\d{4}-\d{2}-\d{2}$/.test(w.sslExpiry) ? w.sslExpiry : ''); setShowAddWebsiteModal(true); },
+                                      onClick: () => { setEditWebId(w.id); setNewDomain(w.domain || ''); setNewHosting(w.hostingProvider || ''); const exp = w.domainExpiry || w.sslExpiry || ''; setNewSslExpiry(/^\d{4}-\d{2}-\d{2}$/.test(exp) ? exp : ''); setShowAddWebsiteModal(true); },
                                       children: jsx(Icon, { name: 'edit' })
                                     }),
                                     jsx('button', {
@@ -1811,42 +2132,71 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
       activeTab === 'Social' &&
         jsx(Card, {
           title: 'Social Channels & Corporate Feeds',
-          sub: 'Official commercial channels, developer repositories, and external brand handles.',
-          children: jsx('div', {
-            className: 'cd-social',
-            children: [
-              { key: 'li', name: 'LinkedIn Corporate', handle: 'linkedin.com/company', desc: 'Institutional updates & executive announcements', status: 'Connected', kind: 'good', href: 'https://linkedin.com', cta: 'View Page', icon: 'globe', tone: 'blue' },
-              { key: 'x', name: 'Twitter / X Feed', handle: '@aedentek_network', desc: 'Public announcements and brand mentions', status: 'Active', kind: 'info', href: 'https://twitter.com', cta: 'View Channel', icon: 'globe', tone: 'ink' },
-              { key: 'gh', name: 'GitHub Organization', handle: 'github.com/aedentek', desc: 'Source repositories & automated deploy webhooks', status: 'Verified', kind: 'good', href: 'https://github.com', cta: 'Open Repo', icon: 'globe', tone: 'violet' }
-            ].map((s) =>
-              jsxs(
-                'div',
-                {
-                  className: `cd-soc cd-soc--${s.tone}`,
-                  children: [
-                    jsxs('div', {
-                      className: 'cd-soc__top',
-                      children: [
-                        jsx('span', { className: 'cd-soc__ico', children: jsx(Icon, { name: s.icon }) }),
-                        jsx(StatusPill, { kind: s.kind, children: s.status })
-                      ]
-                    }),
-                    jsx('b', { className: 'cd-soc__name', children: s.name }),
-                    jsx('span', { className: 'cd-soc__handle', children: s.handle }),
-                    jsx('p', { className: 'cd-soc__desc', children: s.desc }),
-                    jsxs('a', {
-                      href: s.href,
-                      target: '_blank',
-                      rel: 'noreferrer',
-                      className: 'cd-soc__cta',
-                      children: [s.cta, jsx(Icon, { name: 'arrow-up-right' })]
-                    })
-                  ]
-                },
-                s.key
+          sub: 'Official commercial channels, developer repositories, and external brand handles for this client.',
+          tools: jsx('button', {
+            type: 'button',
+            onClick: () => {
+              setNewSocName('');
+              setNewSocHandle('');
+              setNewSocDesc('');
+              setNewSocHref('');
+              setNewSocTone('blue');
+              setShowAddSocModal(true);
+            },
+            className: 'btn btn--sm btn--primary',
+            children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'plus' }), 'Add Channel'] })
+          }),
+          children: (() => {
+            const currentSocial = (lists.social?.items && lists.social.items.length)
+              ? lists.social.items
+              : (Array.isArray(client.social) && client.social.length ? client.social : []);
+            if (!currentSocial.length) {
+              return jsx('div', { style: { padding: '24px 0' }, children: jsx(EmptyState, { icon: 'globe', title: 'No social channels configured', text: 'Add official commercial channels and brand handles for this client.' }) });
+            }
+            return jsx('div', {
+              className: 'cd-social',
+              children: currentSocial.map((s) =>
+                jsxs(
+                  'div',
+                  {
+                    className: `cd-soc cd-soc--${s.tone || 'blue'}`,
+                    children: [
+                      jsxs('div', {
+                        className: 'cd-soc__top',
+                        children: [
+                          jsx('span', { className: 'cd-soc__ico', children: jsx(Icon, { name: s.icon || 'globe' }) }),
+                          jsxs('div', {
+                            style: { display: 'flex', alignItems: 'center', gap: 8 },
+                            children: [
+                              jsx(StatusPill, { kind: s.kind || 'good', children: s.status || 'Active' }),
+                              jsx('button', {
+                                type: 'button',
+                                className: 'ibtn ibtn--sm action-chip action-chip--delete',
+                                title: `Remove ${s.name}`,
+                                onClick: () => handleDeleteSocial(s),
+                                children: jsx(Icon, { name: 'trash' })
+                              })
+                            ]
+                          })
+                        ]
+                      }),
+                      jsx('b', { className: 'cd-soc__name', children: s.name }),
+                      jsx('span', { className: 'cd-soc__handle', children: s.handle || '—' }),
+                      jsx('p', { className: 'cd-soc__desc', children: s.desc || 'No description provided' }),
+                      jsxs('a', {
+                        href: s.href || '#',
+                        target: '_blank',
+                        rel: 'noreferrer',
+                        className: 'cd-soc__cta',
+                        children: [s.cta || 'View Channel', jsx(Icon, { name: 'arrow-up-right' })]
+                      })
+                    ]
+                  },
+                  s.id || s.key
+                )
               )
-            )
-          })
+            });
+          })()
         }),
 
       // TAB 4: Credentials & Encrypted Server Vault
@@ -2291,7 +2641,7 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
           sub: 'Executed Master Services Agreements (MSA), Statements of Work (SOW), and NDA legal documents.',
           tools: jsx('button', {
             type: 'button', id: 'doc-add', className: 'btn btn--sm btn--primary', onClick: () => openDocModal(null),
-            children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'plus' }), 'Add Contract'] })
+            children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'upload' }), 'Upload Documents / Add Contract'] })
           }),
           children: lists.documents.rows.length
             ? jsx('div', {
@@ -2441,7 +2791,7 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                       jsxs('label', {
                         className: 'field',
                         children: [
-                          jsx('span', { children: 'SSL Expiry Date' }),
+                          jsx('span', { children: 'Domain Expire Date' }),
                           jsx('input', { className: 'input', type: 'date', value: newSslExpiry, onChange: (e) => setNewSslExpiry(e.target.value) })
                         ]
                       })
@@ -2452,6 +2802,84 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                     children: [
                       jsx('button', { type: 'button', className: 'btn btn--ghost', onClick: () => setShowAddWebsiteModal(false), children: 'Cancel' }),
                       jsx('button', { type: 'submit', className: 'btn btn--primary', children: editWebId ? 'Save Changes' : 'Add Domain' })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        }),
+
+      // MODAL: Add Social Channel
+      showAddSocModal &&
+        jsx('div', {
+          className: 'scrim',
+          style: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'grid', placeItems: 'center', zIndex: 1000 },
+          onClick: () => setShowAddSocModal(false),
+          children: jsxs('div', {
+            className: 'card',
+            style: { width: '100%', maxWidth: 480, padding: 24, margin: 20 },
+            onClick: (e) => e.stopPropagation(),
+            children: [
+              jsx('h2', { style: { fontSize: 'var(--fs-xl)', fontWeight: 700, marginBottom: 14 }, children: 'Add Social Channel' }),
+              jsxs('form', {
+                onSubmit: handleAddSocial,
+                children: [
+                  jsxs('div', {
+                    className: 'form-grid',
+                    children: [
+                      jsxs('label', {
+                        className: 'field span-2',
+                        children: [
+                          jsx('span', { children: 'Platform / Channel Name *' }),
+                          jsx('input', { className: 'input', required: true, value: newSocName, onChange: (e) => setNewSocName(e.target.value), placeholder: 'e.g. LinkedIn Corporate or YouTube' })
+                        ]
+                      }),
+                      jsxs('label', {
+                        className: 'field',
+                        children: [
+                          jsx('span', { children: 'Handle / Display' }),
+                          jsx('input', { className: 'input', value: newSocHandle, onChange: (e) => setNewSocHandle(e.target.value), placeholder: '@handle or domain' })
+                        ]
+                      }),
+                      jsxs('label', {
+                        className: 'field',
+                        children: [
+                          jsx('span', { children: 'Accent Theme' }),
+                          jsxs('select', {
+                            className: 'select',
+                            value: newSocTone,
+                            onChange: (e) => setNewSocTone(e.target.value),
+                            children: [
+                              jsx('option', { value: 'blue', children: 'Blue (Corporate)' }),
+                              jsx('option', { value: 'ink', children: 'Ink (Dark / X)' }),
+                              jsx('option', { value: 'violet', children: 'Violet (Developer)' }),
+                              jsx('option', { value: 'amber', children: 'Amber (Media / Video)' })
+                            ]
+                          })
+                        ]
+                      }),
+                      jsxs('label', {
+                        className: 'field span-2',
+                        children: [
+                          jsx('span', { children: 'Destination URL' }),
+                          jsx('input', { className: 'input', value: newSocHref, onChange: (e) => setNewSocHref(e.target.value), placeholder: 'https://...' })
+                        ]
+                      }),
+                      jsxs('label', {
+                        className: 'field span-2',
+                        children: [
+                          jsx('span', { children: 'Description' }),
+                          jsx('input', { className: 'input', value: newSocDesc, onChange: (e) => setNewSocDesc(e.target.value), placeholder: 'Channel purpose or feed details' })
+                        ]
+                      })
+                    ]
+                  }),
+                  jsxs('div', {
+                    style: { display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 },
+                    children: [
+                      jsx('button', { type: 'button', className: 'btn btn--ghost', onClick: () => setShowAddSocModal(false), children: 'Cancel' }),
+                      jsx('button', { type: 'submit', className: 'btn btn--primary', children: 'Add Channel' })
                     ]
                   })
                 ]
@@ -2579,29 +3007,164 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
           })
         }),
 
-      // MODAL: Contract (add / edit)
+      // MODAL: Document (add / edit)
       docModal &&
         jsx(ModalShell, {
-          title: docModal.id ? 'Edit Contract' : 'Add Contract',
-          sub: 'Upload the signed document and record its validity period.',
+          title: docModal.id ? 'Edit Document' : ((docModal.files && docModal.files.length > 1) ? `Upload ${docModal.files.length} Documents` : 'Upload Document'),
+          sub: 'Attach client agreements, identity proofs, and verification files (PDF, image, or any format).',
           onClose: () => setDocModal(null),
-          width: 560,
+          width: (docModal.files && docModal.files.length > 1) ? 660 : 560,
           children: jsxs('form', {
             onSubmit: saveDoc, id: 'doc-form', noValidate: true,
             children: [
               jsxs('div', {
                 className: 'form-grid',
                 children: [
-                  field('Contract Name *', jsx('input', { className: 'input', id: 'doc-name', value: docModal.name, onChange: (e) => setDocModal({ ...docModal, name: e.target.value }) }), true),
-                  field('Category', jsxs('select', { className: 'select', id: 'doc-category', value: docModal.category, onChange: (e) => setDocModal({ ...docModal, category: e.target.value }), children: ['MSA', 'SOW', 'NDA', 'LOU', 'Other'].map((s) => jsx('option', { value: s, children: s }, s)) })),
-                  field('Document File', jsxs('div', { style: { display: 'flex', alignItems: 'center', gap: 8 }, children: [jsxs('label', { className: 'btn btn--sm', style: { cursor: 'pointer' }, children: [jsx('span', { children: docModal.fileName || docModal.hadData ? 'Replace File' : 'Choose File' }), jsx('input', { type: 'file', id: 'doc-file', accept: '.pdf,.doc,.docx,.zip,image/*', onChange: onDocFile, style: { display: 'none' } })] }), jsx('span', { id: 'doc-file-name', style: { fontSize: 'var(--fs-xs)', color: 'var(--muted)' }, children: docModal.fileName || 'No file chosen' })] })),
+                  (docModal.files && docModal.files.length > 1)
+                    ? null
+                    : field('Document Name *', jsx('input', {
+                        className: 'input',
+                        id: 'doc-name',
+                        placeholder: 'e.g. GST Certificate / Incorporation / ID Proof',
+                        value: (docModal.files && docModal.files.length === 1) ? (docModal.files[0].name || '') : (docModal.name || ''),
+                        onChange: (e) => {
+                          const v = e.target.value;
+                          setDocModal((m) => {
+                            const updatedFiles = (m.files && m.files.length === 1) ? [{ ...m.files[0], name: v }] : (m.files || []);
+                            return { ...m, name: v, files: updatedFiles };
+                          });
+                        }
+                      }), true),
+                  field('Category', jsxs('select', {
+                    className: 'select',
+                    id: 'doc-category',
+                    value: docModal.category,
+                    onChange: (e) => setDocModal({ ...docModal, category: e.target.value }),
+                    children: ['Other', 'MSA', 'SOW', 'NDA', 'LOU'].map((s) => jsx('option', { value: s, children: s }, s))
+                  })),
+                  field(
+                    docModal.id ? 'Upload Document' : 'Upload Document(s) (Multiple Files Supported)',
+                    jsxs('div', {
+                      style: { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
+                      children: [
+                        jsxs('label', {
+                          className: 'btn btn--sm btn--primary',
+                          style: { cursor: 'pointer' },
+                          children: [
+                            jsxs('span', {
+                              style: { display: 'flex', alignItems: 'center', gap: 6 },
+                              children: [
+                                jsx(Icon, { name: 'upload' }),
+                                docModal.id
+                                  ? (docModal.fileName || docModal.hadData ? 'Replace File' : 'Choose File')
+                                  : (docModal.files && docModal.files.length > 0 ? '+ Add More Files' : 'Choose Files (Multiple)')
+                              ]
+                            }),
+                            jsx('input', {
+                              type: 'file',
+                              id: 'doc-file',
+                              multiple: !docModal.id,
+                              accept: '*/*',
+                              onChange: onDocFiles,
+                              style: { display: 'none' }
+                            })
+                          ]
+                        }),
+                        jsx('span', {
+                          id: 'doc-file-name',
+                          style: { fontSize: 'var(--fs-xs)', color: 'var(--muted)', wordBreak: 'break-all' },
+                          children: docModal.files && docModal.files.length > 1
+                            ? `${docModal.files.length} document files selected`
+                            : (docModal.files && docModal.files.length === 1
+                                ? docModal.files[0].fileName
+                                : (docModal.fileName || (docModal.hadData ? 'Existing file attached' : 'No file chosen')))
+                        })
+                      ]
+                    })
+                  ),
                   field('Start Date', jsx('input', { className: 'input', id: 'doc-start', type: 'date', value: docModal.startDate, onChange: (e) => setDocModal({ ...docModal, startDate: e.target.value }) })),
                   field('End Date', jsx('input', { className: 'input', id: 'doc-end', type: 'date', min: docModal.startDate || undefined, value: docModal.endDate, onChange: (e) => setDocModal({ ...docModal, endDate: e.target.value }) })),
-                  field('Notes', jsx('input', { className: 'input', id: 'doc-notes', value: docModal.notes, onChange: (e) => setDocModal({ ...docModal, notes: e.target.value }) }), true)
+                  field('Notes', jsx('input', { className: 'input', id: 'doc-notes', placeholder: 'Optional remarks or document reference', value: docModal.notes, onChange: (e) => setDocModal({ ...docModal, notes: e.target.value }) }), true),
+
+                  (docModal.files && docModal.files.length > 1)
+                    ? jsxs('div', {
+                        className: 'form-full doc-files-array-container',
+                        style: {
+                          gridColumn: '1 / -1',
+                          marginTop: 10,
+                          padding: '12px 14px',
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          borderRadius: 8,
+                          border: '1px solid var(--border)'
+                        },
+                        children: [
+                          jsxs('div', {
+                            style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+                            children: [
+                              jsx('b', { style: { fontSize: 'var(--fs-sm)', display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'note' }), `Documents Array (${docModal.files.length} Files)`] }),
+                              jsx('span', { style: { fontSize: 'var(--fs-xs)', color: 'var(--muted)' }, children: 'Specify Name for each document' })
+                            ]
+                          }),
+                          jsx('input', { type: 'hidden', id: 'doc-name', value: docModal.files[0]?.name || docModal.name || '' }),
+                          jsxs('div', {
+                            style: { display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 240, overflowY: 'auto' },
+                            children: docModal.files.map((f, idx) =>
+                              jsxs('div', {
+                                key: f.key,
+                                className: 'doc-file-item',
+                                style: {
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 10,
+                                  padding: '8px 10px',
+                                  background: 'var(--surface, rgba(255, 255, 255, 0.04))',
+                                  borderRadius: 6,
+                                  border: '1px solid var(--border)'
+                                },
+                                children: [
+                                  jsx('span', { className: 'badge badge--neutral', style: { minWidth: 26, textAlign: 'center', fontWeight: 600 }, children: `#${idx + 1}` }),
+                                  jsxs('div', {
+                                    style: { flex: 1, minWidth: 0 },
+                                    children: [
+                                      jsx('input', {
+                                        className: 'input input--sm doc-array-name-input',
+                                        id: `doc-name-${idx}`,
+                                        placeholder: `Document #${idx + 1} Name *`,
+                                        value: f.name,
+                                        onChange: (e) => updateDocFileItem(f.key, 'name', e.target.value),
+                                        style: { width: '100%', marginBottom: 3, fontWeight: 500 }
+                                      }),
+                                      jsxs('div', {
+                                        style: { fontSize: '11px', color: 'var(--muted)', display: 'flex', gap: 8, alignItems: 'center' },
+                                        children: [
+                                          jsx('span', { style: { color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }, children: f.fileName }),
+                                          jsx('span', { children: `• ${f.size}` }),
+                                          jsx('span', { className: 'badge badge--neutral', style: { fontSize: 10, padding: '1px 5px' }, children: f.type || 'FILE' })
+                                        ]
+                                      })
+                                    ]
+                                  }),
+                                  jsx('button', {
+                                    type: 'button',
+                                    className: 'ibtn ibtn--sm ibtn--bare',
+                                    title: 'Remove document from array',
+                                    onClick: () => removeDocFileItem(f.key),
+                                    children: jsx(Icon, { name: 'trash' })
+                                  })
+                                ]
+                              }, f.key)
+                            )
+                          })
+                        ]
+                      })
+                    : null
                 ]
               }),
               formErr ? jsx('div', { id: 'form-error', style: { color: 'var(--red, #ef4444)', fontSize: 'var(--fs-sm)', marginTop: 10 }, children: formErr }) : null,
-              jsxs('div', { style: { display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 18 }, children: [jsx('button', { type: 'button', className: 'btn btn--ghost', onClick: () => setDocModal(null), children: 'Cancel' }), jsx('button', { type: 'submit', id: 'doc-save', className: 'btn btn--primary', children: docModal.id ? 'Save Changes' : 'Add Contract' })] })
+              jsxs('div', { style: { display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 18 }, children: [
+                jsx('button', { type: 'button', className: 'btn btn--ghost', onClick: () => setDocModal(null), children: 'Cancel' }),
+                jsx('button', { type: 'submit', id: 'doc-save', className: 'btn btn--primary', children: docModal.id ? 'Save Changes' : ((docModal.files && docModal.files.length > 1) ? `Upload ${docModal.files.length} Documents` : 'Upload Document') })
+              ] })
             ]
           })
         }),
@@ -2821,23 +3384,28 @@ const readFileAsDataUrl = (file) =>
 
 const fmtBytes = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB');
 
-const dataUrlToBlobUrl = (dataUrl) => {
+function dataUrlToBlobUrl(dataUrl) {
   const [head, b64] = String(dataUrl).split(',');
   const mime = (head.match(/data:([^;]+)/) || [])[1] || 'application/octet-stream';
   const bin = atob(b64 || '');
   const arr = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
   return URL.createObjectURL(new Blob([arr], { type: mime }));
-};
+}
+if (typeof window !== 'undefined') window.dataUrlToBlobUrl = dataUrlToBlobUrl;
 
-const downloadDataUrl = (dataUrl, name) => {
+function downloadDataUrl(dataUrl, name) {
   const a = document.createElement('a');
   a.href = dataUrlToBlobUrl(dataUrl);
   a.download = name || 'document';
   document.body.appendChild(a);
   a.click();
-  a.remove();
-};
+  setTimeout(() => {
+    try { URL.revokeObjectURL(a.href); } catch (_) {}
+    a.remove();
+  }, 1000);
+}
+if (typeof window !== 'undefined') window.downloadDataUrl = downloadDataUrl;
 
 const utcDay = (iso) => {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
@@ -3221,7 +3789,7 @@ function ClientFormPage({ editId }) {
   });
 
   const stepDocs = jsx(Panel, {
-    label: 'Client documents (PDF, DOC or image, up to 5 MB each)', icon: 'note',
+    label: 'Client documents (PDF, image, or any format, up to 15 MB each)', icon: 'note',
     children: jsxs('div', {
       children: [
         jsx('div', { style: { display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }, children: jsx('button', { type: 'button', id: 'doc-row-add', className: 'btn btn--sm btn--primary', onClick: addDocRow, children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'plus' }), 'Add Document'] }) }) }),
@@ -3243,7 +3811,7 @@ function ClientFormPage({ editId }) {
                             children: jsxs('div', {
                               style: { display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' },
                               children: [
-                                jsxs('label', { className: 'btn btn--sm', style: { cursor: 'pointer' }, children: [jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'upload' }), d.hasFile ? 'Replace' : 'Upload'] }), jsx('input', { type: 'file', className: 'doc-file-input', accept: '.pdf,.doc,.docx,.zip,image/*', onChange: (e) => onDocFile(d.key, e), style: { display: 'none' } })] }),
+                                jsxs('label', { className: 'btn btn--sm', style: { cursor: 'pointer' }, children: [jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'upload' }), d.hasFile ? 'Replace' : 'Upload'] }), jsx('input', { type: 'file', className: 'doc-file-input', accept: '*/*', onChange: (e) => onDocFile(d.key, e), style: { display: 'none' } })] }),
                                 d.hasFile ? jsx('span', { className: 'doc-file-label', style: { fontSize: 'var(--fs-sm)' }, children: d.fileName || 'File attached' }) : jsx('span', { style: { color: 'var(--muted)', fontSize: 'var(--fs-sm)' }, children: 'No file chosen' })
                               ]
                             })
@@ -3363,12 +3931,10 @@ function ServiceTypesPage() {
         sub: `${kp.total} service types · ${kp.active} active. Only active types are offered when storing client login credentials.`
       }),
       jsx(Card, {
-        title: 'Service Types',
-        sub: 'Categories of systems and platforms a client login belongs to.',
         tools: jsxs('div', {
           style: { display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' },
           children: [
-            jsx('input', { className: 'input', id: 'svc-search', placeholder: 'Search service types…', value: q, onChange: (e) => setQ(e.target.value), style: { height: 34, width: 220 } }),
+            jsx(SearchInput, { id: 'svc-search', placeholder: 'Search service types…', value: q, onChange: setQ }),
             jsxs('select', { className: 'select', id: 'svc-filter', value: statusFilter, onChange: (e) => setStatusFilter(e.target.value), style: { height: 34, width: 150 }, children: ['All', 'Active', 'Inactive'].map((s) => jsx('option', { value: s, children: s === 'All' ? 'All statuses' : s }, s)) }),
             jsx('button', { type: 'button', id: 'svc-add', className: 'btn btn--sm btn--primary', onClick: () => open(null), children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'plus' }), 'Add Service Type'] }) })
           ]
@@ -3488,12 +4054,10 @@ function ProjectStagesPage() {
         sub: `${paged.pagination ? paged.pagination.total : 0} stages. Only active stages can be selected when setting up a project's completion timeline.`
       }),
       jsx(Card, {
-        title: 'Project Stages',
-        sub: 'The categories a project moves through — each project picks its own set of stages.',
         tools: jsxs('div', {
           style: { display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' },
           children: [
-            jsx('input', { className: 'input', id: 'stg-search', placeholder: 'Search stages…', value: q, onChange: (e) => setQ(e.target.value), style: { height: 34, width: 220 } }),
+            jsx(SearchInput, { id: 'stg-search', placeholder: 'Search stages…', value: q, onChange: setQ }),
             jsxs('select', { className: 'select', id: 'stg-filter', value: statusFilter, onChange: (e) => setStatusFilter(e.target.value), style: { height: 34, width: 150 }, children: ['All', 'Active', 'Inactive'].map((s) => jsx('option', { value: s, children: s === 'All' ? 'All statuses' : s }, s)) }),
             jsx('button', { type: 'button', id: 'stg-add', className: 'btn btn--sm btn--primary', onClick: () => open(null), children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'plus' }), 'Add Stage'] }) })
           ]
@@ -3564,7 +4128,12 @@ export default function ClientsPage({ route }) {
     if (route.sub === 'people') {
       try { history.replaceState(null, '', '/clients/companies'); } catch (e) {}
     }
+    if (route.sub === 'projects') {
+      window.__navigate ? window.__navigate('/projects') : (location.pathname = '/projects');
+    }
   }, [route.sub]);
+
+  if (route.sub === 'projects') return null;
 
   // If sub is 'c' -> render Client 360° Command Center (`me`)
   if (route.sub === 'c') {

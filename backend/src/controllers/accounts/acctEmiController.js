@@ -4,7 +4,7 @@ import { computeEmi, progressOf, validateEmiInput } from '../../utils/emiEngine.
 
 const escapeRx = (v) => new RegExp(String(v).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
 
-const FIELDS = ['productName', 'category', 'principal', 'emiCount', 'interestRate', 'startDate', 'paidCount', 'initialPayment', 'processingCharges', 'transactionFee', 'branch', 'notes', 'attachments'];
+const FIELDS = ['productName', 'category', 'principal', 'emiCount', 'interestRate', 'startDate', 'emiDate', 'paidCount', 'initialPayment', 'processingCharges', 'transactionFee', 'branch', 'notes', 'attachments'];
 
 /** Plain object with the live progress fields merged in (derived money is always recomputed, so older records without fees stay correct). */
 const decorate = (doc) => {
@@ -22,6 +22,12 @@ const clean = (body, base = {}) => {
   });
   if (typeof out.productName === 'string') out.productName = out.productName.trim();
   if (typeof out.category === 'string') out.category = out.category.trim();
+  if (out.emiDate !== undefined && typeof out.emiDate === 'string') out.emiDate = out.emiDate.trim();
+  if (body.startDate && !body.emiDate && (!base.emiDate || base.emiDate === base.startDate)) {
+    out.emiDate = out.startDate;
+  } else if (!out.emiDate && out.startDate) {
+    out.emiDate = out.startDate;
+  }
   if (!out.branch || !String(out.branch).trim()) out.branch = 'All Branches';
   return out;
 };
@@ -110,7 +116,7 @@ export const updateEmi = async (req, res, next) => {
     if (!doc) return res.status(404).json({ success: false, message: 'EMI plan not found' });
     const merged = clean(req.body, {
       productName: doc.productName, category: doc.category, principal: doc.principal, emiCount: doc.emiCount,
-      interestRate: doc.interestRate, startDate: doc.startDate, paidCount: doc.paidCount,
+      interestRate: doc.interestRate, startDate: doc.startDate, emiDate: doc.emiDate || doc.startDate, paidCount: doc.paidCount,
       initialPayment: doc.initialPayment || 0, processingCharges: doc.processingCharges || 0, transactionFee: doc.transactionFee || 0,
       branch: doc.branch, notes: doc.notes, attachments: doc.attachments || []
     });

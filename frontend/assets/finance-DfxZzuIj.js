@@ -3006,9 +3006,10 @@ function FinanceSettingsView({ activeSection = 'invoiceSender' }) {
     }
   };
 
-  const [openSec, setOpenSec] = useState({ invoiceSender: true, bankDetails: true, gstSettings: true });
+  const [openSec, setOpenSec] = useState({ invoiceSender: false, bankDetails: false, gstSettings: false });
   const [profiles, setProfiles] = useState({ invoiceSender: [], bankDetails: [] });
   const [editingProf, setEditingProf] = useState({ invoiceSender: null, bankDetails: null });
+  const [profileQ, setProfileQ] = useState('');
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
   const activeSectionRef = useRef(activeSection);
@@ -3204,11 +3205,25 @@ function FinanceSettingsView({ activeSection = 'invoiceSender' }) {
   const defaultPill = (isDef) => isDef
     ? jsx('span', { className: 'tl-default-pill', children: 'Default' })
     : jsx('span', { style: { color: 'var(--faint)' }, children: '—' });
-  const profileListCard = (type, title, sub, heads, cells) => jsxs(Card, {
+  const profileListCard = (type, title, sub, heads, cells) => {
+    const q = profileQ.trim().toLowerCase();
+    const all = profiles[type];
+    const list = q
+      ? all.filter((pr) => (cells(pr.data || {})
+          .map((c) => (c && typeof c === 'object') ? '' : String(c == null ? '' : c))
+          .join(' ')).toLowerCase().includes(q))
+      : all;
+    return jsxs(Card, {
     title, sub, flush: true,
-    tools: jsx('button', {
-      type: 'button', className: 'btn btn--sm btn--primary', onClick: () => startNewProfile(type),
-      children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'plus' }), 'New profile'] })
+    tools: jsxs('div', {
+      style: { display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' },
+      children: [
+        jsx(SearchInput, { value: profileQ, onChange: setProfileQ, placeholder: 'Search ' + title.toLowerCase().replace('saved ', '') + '\u2026', 'aria-label': 'Search saved profiles' }),
+        jsx('button', {
+          type: 'button', className: 'btn btn--sm btn--primary', onClick: () => startNewProfile(type),
+          children: jsxs('span', { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [jsx(Icon, { name: 'plus' }), 'New profile'] })
+        })
+      ]
     }),
     children: jsx('div', {
       className: 'table-wrap',
@@ -3217,8 +3232,8 @@ function FinanceSettingsView({ activeSection = 'invoiceSender' }) {
         children: [
           jsx('thead', { children: jsxs('tr', { children: [jsx('th', { children: 'S NO' }), ...heads.map((h) => jsx('th', { children: h }, h)), jsx('th', { children: 'Default' }), jsx('th', { children: 'Actions' })] }) }),
           jsx('tbody', {
-            children: profiles[type].length
-              ? profiles[type].map((pr, i) => jsxs('tr', {
+            children: list.length
+              ? list.map((pr, i) => jsxs('tr', {
                   className: editingProf[type] === pr._id ? 'is-editing-row' : '',
                   children: [
                     jsx('td', { children: jsx('span', { className: 'sno-pill ' + (i < 3 ? 'sno-pill--top' : 'sno-pill--normal'), children: i + 1 }) }),
@@ -3231,12 +3246,15 @@ function FinanceSettingsView({ activeSection = 'invoiceSender' }) {
                     ] }) })
                   ]
                 }, pr._id))
-              : [jsx('tr', { key: 'empty', children: jsx('td', { colSpan: heads.length + 3, className: 'cd-empty-td', style: { textAlign: 'center', padding: '28px 24px' }, children: 'No saved profiles yet. Fill the form above and save to create the first one - it becomes the default.' }) })]
+              : all.length
+                ? [jsx('tr', { key: 'nofound', children: jsx('td', { colSpan: heads.length + 3, className: 'cd-empty-td', style: { textAlign: 'center', padding: '28px 24px' }, children: `No saved profiles match \u201C${profileQ.trim()}\u201D.` }) })]
+                : [jsx('tr', { key: 'empty', children: jsx('td', { colSpan: heads.length + 3, className: 'cd-empty-td', style: { textAlign: 'center', padding: '28px 24px' }, children: 'No saved profiles yet. Fill the form above and save to create the first one - it becomes the default.' }) })]
           })
         ]
       })
     })
   });
+};
 
   const clearSavedRecord = async (key) => {
     const names = { invoiceSender: 'invoice sender profile', bankDetails: 'bank account' };
@@ -3326,6 +3344,7 @@ function FinanceSettingsView({ activeSection = 'invoiceSender' }) {
       // SECTION 1: INVOICE SENDER & COMPANY COORDINATES
       jsx('div', {
         id: 'sec-invoice-sender',
+        className: 'fin-sec',
         style: { display: activeSection === 'invoiceSender' ? 'block' : 'none' },
         children: [jsxs(Card, {
           title: 'Invoice Sender & Corporate Coordinates',
@@ -3542,6 +3561,7 @@ function FinanceSettingsView({ activeSection = 'invoiceSender' }) {
       // SECTION 2: BANKING & WIRE REMITTANCE DETAILS
       jsx('div', {
         id: 'sec-banking-wire',
+        className: 'fin-sec',
         style: { display: activeSection === 'bankDetails' ? 'block' : 'none' },
         children: [jsxs(Card, {
           title: 'Banking & Wire Remittance Details',
@@ -3736,6 +3756,7 @@ function FinanceSettingsView({ activeSection = 'invoiceSender' }) {
       // SECTION 3: STATUTORY GST & HSN TAX SLABS
       jsx('div', {
         id: 'sec-gst-slabs',
+        className: 'fin-sec',
         style: { display: activeSection === 'gstSettings' ? 'block' : 'none' },
         children: [jsxs(Card, {
           title: 'Statutory GST & HSN Tax Slabs',
@@ -3982,25 +4003,27 @@ const SPEC = {
 
 // PDF-style INR (2 decimals, no leading space)
 const specMoney = (v) => '\u20b9' + Number(v || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const specPan = (gst, explicit) => explicit || (gst && gst.length >= 15 ? gst.slice(2, 12) : '');
 
 // Neutral placeholders (no hard-coded company, client or bank data). Live data from
-// Settings (issuer + bank) and the latest real invoice / quotation is merged in at runtime.
+// Settings (issuer + bank) is merged in at runtime. The template preview itself stays
+// neutral: no real invoice / quotation values are pulled in.
 const SPEC_SAMPLE_INVOICE = {
-  _id: 'spec-inv', invoiceNumber: 'INV-0000', clientName: 'Client name', clientOffice: '',
+  _id: 'spec-inv', invoiceNumber: '', clientName: '', clientOffice: '',
   gstCategory: '', gstType: '', issueDate: '', dueDate: '',
   hsn: '', subtotal: 0, gstAmount: 0, paidAmount: 0, totalAmount: 0, balance: 0, status: 'Draft',
-  items: [{ sNo: 1, description: 'Item description', hsn: '', price: 0, qty: 0, total: 0 }],
+  items: [{ sNo: 1, description: '', hsn: '', price: 0, qty: 0, total: 0 }],
   companyName: '', companyAddress: '', companyGst: '', companyPan: '',
   issuerOffice: '', issuerPhone: '', issuerEmail: '', signatoryName: '', signatoryDesignation: '',
   bankDetails: {}
 };
 const SPEC_SAMPLE_QUOTATION = {
-  _id: 'spec-prp', propagationNumber: 'PRP-0000', quotationNumber: 'PRP-0000', clientName: 'Client name', clientOffice: '',
+  _id: 'spec-prp', propagationNumber: '', quotationNumber: '', clientName: '', clientOffice: '',
   title: '', issueDate: '', validUntil: '',
   subtotal: 0, tax: 0, total: 0, status: 'Draft',
-  items: [{ description: 'Item description', qty: 0, rate: 0, amount: 0 }],
+  items: [{ description: '', qty: 0, rate: 0, amount: 0 }],
   companyName: '', companyAddress: '', companyGst: '', companyPan: '',
-  signatoryName: '', signatoryDesignation: '',
+  issuerOffice: '', issuerPhone: '', issuerEmail: '', signatoryName: '', signatoryDesignation: '',
   bankDetails: {}
 };
 
@@ -4009,7 +4032,7 @@ const TMPL_VIS = {
   classic: {
     id: 'classic',
     name: 'Classic Corporate', tag: 'Invoice - A4', accent: SPEC.indigo, kind: 'invoice',
-    headerVariant: 'dark', quoteHeaderVariant: 'light',
+    headerVariant: 'dark', quoteHeaderVariant: 'dark',
     cardBg: SPEC.surface, cardBorder: SPEC.border, cardAccent: SPEC.indigo,
     thBg: SPEC.indigo, thColor: '#ffffff', thBorder: 'none',
     moneyAccent: SPEC.indigo, footerBg: SPEC.slate, wordmark: SPEC.indigo,
@@ -4043,14 +4066,16 @@ const TMPL_VIS = {
   },
 };
 
-const TEMPLATE_META = [TMPL_VIS.classic, TMPL_VIS.retail, TMPL_VIS.fintech];
+// Gallery ships two templates (Settlement Fintech removed from the picker; its sheet code
+// stays as a legacy fallback for documents that still reference it).
+const TEMPLATE_META = [TMPL_VIS.classic, TMPL_VIS.retail];
 
 // Shared fallback: any template renders both an invoice AND a quotation;
 // each uses its own visual system for the kind it was designed for, and a
 // neutral fallback otherwise. This guarantees no undefined-visual crash.
 const VIS_FALLBACK = {
   name: 'Default', accent: SPEC.indigo, kind: 'invoice',
-  headerVariant: 'dark', quoteHeaderVariant: 'light',
+  headerVariant: 'dark', quoteHeaderVariant: 'dark',
   cardBg: SPEC.surface, cardBorder: SPEC.border, cardAccent: SPEC.indigo,
   thBg: SPEC.indigo, thColor: '#ffffff', thBorder: 'none',
   moneyAccent: SPEC.indigo, footerBg: SPEC.slate, wordmark: SPEC.indigo,
@@ -4203,9 +4228,9 @@ function SpecHeader({ vis, kind, meta, pillLabel }) {
       children: isInv ? 'COMMERCIAL INVOICE (LUT)' : (pillLabel || 'COMMERCIAL QUOTATION (LUT)')
     }),
     jsxs('div', { style: { marginTop: '8px', fontSize: '11.5px', lineHeight: 1.55, color: '#64748b' }, children: [
-      jsxs('div', { children: [isInv ? 'Invoice Number: ' : 'Quotation No: ', jsx('b', { style: { color: '#0f172a', fontWeight: '800' }, children: (isInv && !meta.number.startsWith('#') ? '#' + meta.number : meta.number) })] }),
-      jsxs('div', { children: [dateLabel + ' ', jsx('b', { style: { color: '#0f172a', fontWeight: '700' }, children: meta.date })] }),
-      jsxs('div', { children: [dueLabel + ' ', jsx('b', { style: { color: '#0f172a', fontWeight: '700' }, children: jsx(Ed, { field: 'dueDate', value: meta.due, type: 'date' }) })] })
+      meta.number ? jsxs('div', { children: [isInv ? 'Invoice Number: ' : 'Quotation No: ', jsx('b', { style: { color: '#0f172a', fontWeight: '800' }, children: (isInv && !meta.number.startsWith('#') ? '#' + meta.number : meta.number) })] }) : null,
+      meta.date ? jsxs('div', { children: [dateLabel + ' ', jsx('b', { style: { color: '#0f172a', fontWeight: '700' }, children: meta.date })] }) : null,
+      meta.due ? jsxs('div', { children: [dueLabel + ' ', jsx('b', { style: { color: '#0f172a', fontWeight: '700' }, children: jsx(Ed, { field: 'dueDate', value: meta.due, type: 'date' }) })] }) : null
     ] })
   ] });
 
@@ -4317,7 +4342,7 @@ function SpecItemsTable({ vis, items, descLabel, rateLabel, noTax }) {
         jsx('td', { style: td('center', { color: '#0f172a', fontWeight: '500' }), children: jsx(Ed, { field: 'description', index: idx, value: it.description || it.item || '-', placeholder: 'Item description' }) }),
         jsx('td', { style: td('right', { fontWeight: '700', color: '#0f172a' }), children: jsx(Ed, { field: 'price', index: idx, type: 'number', value: specMoney(it.price != null ? it.price : it.rate), placeholder: '0' }) }),
         jsx('td', { style: td('center', { color: '#0f172a' }), children: jsx(Ed, { field: 'qty', index: idx, type: 'number', value: it.qty || 1, placeholder: '1' }) }),
-        noTax ? null : jsx('td', { style: td('center', { color: '#64748b' }), children: jsx(Ed, { field: 'hsn', index: idx, value: it.hsn || '998314', placeholder: 'HSN' }) }),
+        noTax ? null : jsx('td', { style: td('center', { color: '#64748b' }), children: jsx(Ed, { field: 'hsn', index: idx, value: it.hsn || '', placeholder: 'HSN' }) }),
         jsx('td', { style: td('right', { fontWeight: '700', color: '#0f172a', borderRight: 'none' }), children: specMoney(it.total != null ? it.total : it.amount || (it.price || it.rate || 0) * (it.qty || 1)) })
       ] }, idx)) })
     ]
@@ -4354,10 +4379,13 @@ function SpecSummary({ vis, invoice }) {
 function SpecSettlementRow({ vis, doc }) {
   const bank = doc.bankDetails || {};
   const mono = vis.headerVariant === 'rail';
+  const qrSource = bank.qrCode || (doc && doc.bankDetails && doc.bankDetails.qrCode);
+  const upiId = bank.upiId || (doc && doc.bankDetails && doc.bankDetails.upiId);
+  const sigSource = doc.signatorySeal || (doc && doc.signature);
   const bankRows = [
     ['Bank Name', bank.bankName || '—', mono, false, true],
     ['Account Name', bank.accountName || '—', false, false, true],
-    ['Account Type', bank.accountType || 'Current Account', false, false, true],
+    ['Account Type', bank.accountType ? (bank.accountType === 'Current' ? 'Current Account' : bank.accountType === 'Savings' ? 'Savings Account' : bank.accountType) : '—', false, false, true],
     ['Account No', bank.accountNumber || '—', true, true, true],
     ['IFSC / RTGS', bank.ifsc || '—', true, true, true, tc('#4d33b6')],
     ['Branch', bank.branch || '—', false, false, true],
@@ -4382,9 +4410,26 @@ function SpecSettlementRow({ vis, doc }) {
       style: { background: '#ffffff', border: '1.5px solid #e0e7ff', borderRadius: '12px', padding: '12px 14px 10px', textAlign: 'center', boxShadow: '0 4px 14px ' + tca(77,51,182,0.06), width: 'fit-content', margin: '0 auto' },
       children: [
         jsx('div', { style: { width: '104px', height: '104px', margin: '0 auto', display: 'grid', placeItems: 'center' }, children: [
-          jsx('img', { src: '/assets/spec-qr-code.png', alt: 'UPI QR', style: { width: '104px', height: '104px', display: 'block', borderRadius: '6px' }, 'data-spec-qr': 'true' })
+          qrSource
+            ? jsx('img', { src: qrSource, alt: 'UPI QR', style: { width: '104px', height: '104px', display: 'block', borderRadius: '6px', objectFit: 'contain' }, 'data-spec-qr': 'true' })
+            : (upiId && upiId !== '—')
+              ? jsx(SpecQr, { vpa: upiId, accent: tc('#4d33b6') })
+              : jsxs('div', {
+                  style: { width: '104px', height: '104px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1.5px dashed #cbd5e1', borderRadius: '8px', background: '#f8fafc', color: '#94a3b8', gap: '4px' },
+                  'data-spec-qr': 'true',
+                  children: [
+                    jsx('svg', { width: '28', height: '28', viewBox: '0 0 24 24', fill: 'none', stroke: '#94a3b8', strokeWidth: '1.75', strokeLinecap: 'round', strokeLinejoin: 'round', children: [
+                      jsx('rect', { x: '3', y: '3', width: '7', height: '7' }),
+                      jsx('rect', { x: '14', y: '3', width: '7', height: '7' }),
+                      jsx('rect', { x: '3', y: '14', width: '7', height: '7' }),
+                      jsx('rect', { x: '14', y: '14', width: '3', height: '3' }),
+                      jsx('rect', { x: '18', y: '18', width: '3', height: '3' })
+                    ] }),
+                    jsx('span', { style: { fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em' }, children: 'QR CODE' })
+                  ]
+                })
         ] }),
-        jsxs('div', { style: { fontSize: '10.5px', fontWeight: '800', color: tc('#4d33b6'), letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '6px' }, children: [
+        jsxs('div', { style: { fontSize: '10.5px', fontWeight: '800', color: (qrSource || (upiId && upiId !== '—')) ? tc('#4d33b6') : '#94a3b8', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '6px' }, children: [
           jsx('span', { style: { fontSize: '12px' }, children: '\ud83d\udcf1 ' }), 'SCAN TO PAY'
         ] })
       ]
@@ -4392,7 +4437,15 @@ function SpecSettlementRow({ vis, doc }) {
     // Right: Signature
     jsxs('div', { style: { textAlign: 'center' }, children: [
       jsx('div', { style: { fontSize: '12px', fontWeight: '700', color: '#475569', letterSpacing: '0.06em', textTransform: 'uppercase' }, children: 'FOR ' + String((doc && doc.companyName) || 'COMPANY').toUpperCase() }),
-      jsx('img', { src: '/assets/spec-signature.png', alt: 'Authorised Signature', style: { height: '46px', width: 'auto', margin: '4px auto', display: 'block' }, 'data-spec-signature': 'true' }),
+      sigSource
+        ? jsx('img', { src: sigSource, alt: 'Authorised Signature', style: { height: '46px', width: 'auto', maxWidth: '160px', margin: '4px auto', display: 'block', objectFit: 'contain' }, 'data-spec-signature': 'true' })
+        : jsx('div', {
+            style: { height: '46px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '4px auto' },
+            'data-spec-signature': 'true',
+            children: doc.signatoryName && doc.signatoryName !== '—'
+              ? jsx('span', { style: { fontStyle: 'italic', fontFamily: 'serif', fontSize: '18px', color: '#334155' }, children: doc.signatoryName })
+              : jsx('span', { style: { border: '1px dashed #cbd5e1', borderRadius: '4px', padding: '3px 12px', fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em', color: '#94a3b8', textTransform: 'uppercase' }, children: 'SIGNATURE' })
+          }),
       jsx('div', { style: { height: '1.5px', background: '#0f172a', width: '160px', margin: '4px auto 6px' } }),
       jsx('div', { style: { fontSize: '14px', fontWeight: '800', color: '#0f172a' }, children: doc.signatoryName || '—' }),
       jsx('div', { style: { fontSize: '11px', fontWeight: '700', color: tc('#4d33b6'), marginTop: '2px', whiteSpace: 'nowrap' }, children: doc.signatoryDesignation || 'Authorised Signatory' })
@@ -4433,26 +4486,23 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
   setTplPalette('retail');
   const isInv = kind === "invoice";
   const docNum = isInv
-    ? (invoice.invoiceNumber || "INV-0000")
-    : (invoice.propagationNumber || invoice.quotationNumber || "PRP-0000");
-  const dateStr = invoice.issueDate || invoice.date || "2026-11-05";
+    ? (invoice.invoiceNumber || "")
+    : (invoice.propagationNumber || invoice.quotationNumber || "");
+  const dateStr = invoice.issueDate || invoice.date || "";
   const dueStr = isInv
-    ? (invoice.dueDate || "2026-11-10")
-    : (invoice.validUntil || "2026-12-05");
+    ? (invoice.dueDate || "")
+    : (invoice.validUntil || "");
 
   const rawItems = (invoice.items && invoice.items.length) ? invoice.items : [
-    { description: "Business Card Design", price: 200, qty: 1, total: 200 },
-    { description: "Logo Design", price: 200, qty: 1, total: 200 },
-    { description: "Flyer Design", price: 200, qty: 1, total: 200 },
-    { description: "Brochure Design", price: 300, qty: 1, total: 300 },
-    { description: "Packaging Design", price: 500, qty: 1, total: 500 },
-    { description: "Mockup Design", price: 600, qty: 1, total: 600 }
+    { description: "Item description", price: 0, qty: 1, total: 0 }
   ];
 
   const subtotal = invoice.subtotal != null ? invoice.subtotal : rawItems.reduce((s, it) => s + (it.total || (it.price || 0) * (it.qty || 1)), 0);
   const total = invoice.totalAmount != null ? invoice.totalAmount : (invoice.total != null ? invoice.total : subtotal);
-  const clientName = invoice.clientName || "Client name";
+  const clientName = invoice.clientName || "";
   const bank = invoice.bankDetails || {};
+  const clientPan = specPan(invoice.buyerGstin, invoice.buyerPan);
+  const sellerPan = specPan(invoice.companyGst, invoice.companyPan);
 
   // Signature Black Badge + Red Underline
   const SectionBadge = (label) => jsxs("div", {
@@ -4521,9 +4571,9 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
             preserveAspectRatio: "none",
             style: { position: "absolute", left: 0, top: 0, width: "100%", height: "140px", zIndex: 1 },
             children: [
-              jsx("polygon", { points: "0,0 490,0 375,140 0,140", fill: "#111113" }),
-              jsx("polygon", { points: "470,0 500,0 425,140 375,140", fill: tca(229,37,42,0.45) }),
-              jsx("polygon", { points: "495,0 535,0 455,140 415,140", fill: tc("#e5252a") })
+              jsx("polygon", { points: "0,0 355,0 260,140 0,140", fill: "#111113" }),
+              jsx("polygon", { points: "340,0 375,0 295,140 260,140", fill: tca(229,37,42,0.45) }),
+              jsx("polygon", { points: "365,0 400,0 325,140 290,140", fill: tc("#e5252a") })
             ]
           }),
           // Header Content
@@ -4540,7 +4590,7 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
             children: [
               // Left: Logo & Company Name
               jsxs("div", {
-                style: { display: "flex", alignItems: "center", gap: "14px" },
+                style: { display: "flex", alignItems: "center", gap: "14px", maxWidth: "270px" },
                 children: [
                   jsx("svg", {
                     width: "44",
@@ -4556,8 +4606,8 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
                     style: { textAlign: "left" },
                     children: [
                       jsx("div", {
-                        style: { fontSize: "23px", fontWeight: "900", color: "#ffffff", letterSpacing: "0.06em", lineHeight: 1.1 },
-                        children: "Company name"
+                        style: { fontSize: "20px", fontWeight: "900", color: "#ffffff", letterSpacing: "0.04em", lineHeight: 1.1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
+                        children: invoice.companyName || "Company name"
                       }),
                       jsx("div", {
                         style: { fontSize: "8.5px", fontWeight: "800", color: tc("#e5252a"), letterSpacing: "0.14em", textTransform: "uppercase", marginTop: "3px" },
@@ -4572,24 +4622,24 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
                 style: { textAlign: "right" },
                 children: [
                   jsx("div", {
-                    style: { fontSize: "27px", fontWeight: "900", color: tc("#e5252a"), letterSpacing: "-0.02em", lineHeight: 1 },
+                    style: { fontSize: isInv ? "26px" : "22px", fontWeight: "900", color: tc("#e5252a"), letterSpacing: "-0.01em", lineHeight: 1.1, textTransform: "uppercase" },
                     children: isInv ? "INVOICE" : "COMMERCIAL QUOTATION"
                   }),
-                  jsxs("div", {
+                  docNum ? jsxs("div", {
                     style: { fontSize: "12px", fontWeight: "800", color: "#111113", marginTop: "6px", letterSpacing: "0.02em" },
                     children: [
                       isInv ? "ID NO : " : "REF NO : ",
                       jsx("span", { style: { color: tc("#e5252a") }, children: docNum })
                     ]
-                  }),
-                  jsxs("div", {
+                  }) : null,
+                  (dateStr || dueStr) ? jsxs("div", {
                     style: { fontSize: "11px", color: "#6b7280", marginTop: "4px", lineHeight: 1.4 },
                     children: [
-                      jsxs("span", { children: ["Date : ", jsx("b", { style: { color: "#111113" }, children: dateStr })] }),
-                      jsx("span", { style: { margin: "0 6px" }, children: "·" }),
-                      jsxs("span", { children: [isInv ? "Due : " : "Valid : ", jsx("b", { style: { color: "#111113" }, children: jsx(Ed, { field: "dueDate", value: dueStr, type: "date" }) })] })
+                      dateStr ? jsxs("span", { children: ["Date : ", jsx("b", { style: { color: "#111113" }, children: dateStr })] }) : null,
+                      (dateStr && dueStr) ? jsx("span", { style: { margin: "0 6px" }, children: "·" }) : null,
+                      dueStr ? jsxs("span", { children: [isInv ? "Due : " : "Valid : ", jsx("b", { style: { color: "#111113" }, children: jsx(Ed, { field: "dueDate", value: dueStr, type: "date" }) })] }) : null
                     ]
-                  })
+                  }) : null
                 ]
               })
             ]
@@ -4610,23 +4660,27 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
           // Left: Invoice To
           jsxs("div", {
             style: { textAlign: "left" },
+            "data-spec-card": "buyer",
             children: [
               SectionBadge(isInv ? "INVOICE TO :" : "QUOTE TO :"),
               jsx("div", {
-                style: { fontSize: "16px", fontWeight: "800", color: "#111113", marginBottom: "4px" },
+                style: { fontSize: "16px", fontWeight: "800", color: "#111113", margin: "6px 0 8px", lineHeight: 1.2 },
                 children: jsx(Ed, { field: "clientName", value: clientName, placeholder: "Client / buyer name" })
               }),
-              jsxs("div", {
-                style: { fontSize: "12px", color: "#4b5563", lineHeight: 1.6 },
+              jsxs("table", {
+                style: { width: "100%", borderCollapse: "collapse" },
                 children: [
-                  (invoice.clientOffice && invoice.clientOffice !== clientName)
-                    ? jsx("div", { children: invoice.clientOffice })
-                    : null,
-                  jsxs("div", { children: ["Phone : ", jsx("span", { style: { color: "#111113" }, children: invoice.clientPhone || "+91 94893 00587" })] }),
-                  jsxs("div", { children: ["Email : ", jsx("span", { style: { color: "#111113" }, children: invoice.clientEmail || "contact@client.com" })] }),
-                  jsx("div", { children: invoice.clientAddress || invoice.buyerAddress || "—" }),
-                  invoice.buyerGstin ? jsxs("div", { children: ["GSTIN : ", jsx("b", { children: invoice.buyerGstin })] }) : null
-                ]
+                  { label: "Office", value: invoice.clientOffice || "—" },
+                  { label: "Phone", value: invoice.clientPhone || "—" },
+                  { label: "Email", value: invoice.clientEmail || "—" },
+                  { label: "Address", value: (invoice.clientAddress || invoice.buyerAddress) || "—" },
+                  { label: "GST", value: invoice.buyerGstin || "—" },
+                  { label: "PAN", value: clientPan || "—" }
+                ].map((r, i) => jsxs("tr", { key: i, children: [
+                  jsx("td", { style: { width: "70px", fontSize: "12px", fontWeight: "600", color: "#64748b", padding: "2.5px 0", verticalAlign: "top" }, children: r.label }),
+                  jsx("td", { style: { width: "14px", color: "#64748b", fontSize: "12px", padding: "2.5px 0", textAlign: "center", verticalAlign: "top" }, children: ":" }),
+                  jsx("td", { style: { fontSize: "12px", color: "#111113", padding: "2.5px 0", verticalAlign: "top", fontWeight: r.value === "—" ? "400" : "600", fontStyle: r.value === "—" ? "italic" : "normal" }, children: r.value })
+                ]}))
               })
             ]
           }),
@@ -4634,21 +4688,27 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
           // Right: Invoice From
           jsxs("div", {
             style: { textAlign: "left" },
+            "data-spec-card": "issuer",
             children: [
               SectionBadge(isInv ? "INVOICE FROM :" : "QUOTE FROM :"),
               jsx("div", {
-                style: { fontSize: "16px", fontWeight: "800", color: "#111113", marginBottom: "4px" },
+                style: { fontSize: "16px", fontWeight: "800", color: "#111113", margin: "6px 0 8px", lineHeight: 1.2 },
                 children: invoice.companyName || "Company name"
               }),
-              jsxs("div", {
-                style: { fontSize: "12px", color: "#4b5563", lineHeight: 1.6 },
+              jsxs("table", {
+                style: { width: "100%", borderCollapse: "collapse" },
                 children: [
-                  jsx("div", { children: "Managing Director / Corporate Desk" }),
-                  jsxs("div", { children: ["Phone : ", jsx("span", { style: { color: "#111113" }, children: invoice.issuerPhone || "—" })] }),
-                  jsxs("div", { children: ["Email : ", jsx("span", { style: { color: "#111113" }, children: invoice.issuerEmail || "—" })] }),
-                  jsx("div", { children: invoice.companyAddress || "" }),
-                  jsxs("div", { children: ["GSTIN : ", jsx("b", { children: invoice.companyGst || "—" })] })
-                ]
+                  { label: "Office", value: invoice.issuerOffice || "—" },
+                  { label: "Phone", value: invoice.issuerPhone || "—" },
+                  { label: "Email", value: invoice.issuerEmail || "—" },
+                  { label: "Address", value: invoice.companyAddress || "—" },
+                  { label: "GST", value: invoice.companyGst || "—" },
+                  { label: "PAN", value: sellerPan || invoice.companyPan || "—" }
+                ].map((r, i) => jsxs("tr", { key: i, children: [
+                  jsx("td", { style: { width: "70px", fontSize: "12px", fontWeight: "600", color: "#64748b", padding: "2.5px 0", verticalAlign: "top" }, children: r.label }),
+                  jsx("td", { style: { width: "14px", color: "#64748b", fontSize: "12px", padding: "2.5px 0", textAlign: "center", verticalAlign: "top" }, children: ":" }),
+                  jsx("td", { style: { fontSize: "12px", color: "#111113", padding: "2.5px 0", verticalAlign: "top", fontWeight: r.value === "—" ? "400" : "600", fontStyle: r.value === "—" ? "italic" : "normal" }, children: r.value })
+                ]}))
               })
             ]
           })
@@ -4768,7 +4828,7 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
                         textAlign: "center",
                         border: "1px solid #e5e7eb"
                       },
-                      children: jsx(Ed, { field: "description", index: idx, value: it.description || it.item || "Service Consultation", placeholder: "Item description" })
+                      children: jsx(Ed, { field: "description", index: idx, value: it.description || it.item || "", placeholder: "Item description" })
                     }),
                     jsx("td", {
                       style: {
@@ -4825,35 +4885,60 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
         },
         "data-spec-settlement": "true",
         children: [
-          // Left: Payment Method, Contact Info, Thanks note
+          // Left: Bank & Wire Remittance Details + QR Code
           jsxs("div", {
-            style: { display: "flex", flexDirection: "column", gap: "16px" },
+            style: { display: "flex", flexDirection: "column", gap: "14px" },
             children: [
-              // Payment Method
               jsxs("div", {
                 children: [
-                  SectionBadge("Payment Method :"),
+                  SectionBadge("BANK & WIRE REMITTANCE DETAILS :"),
                   jsxs("div", {
-                    style: { fontSize: "11.5px", color: "#4b5563", lineHeight: 1.55 },
+                    style: { display: "grid", gridTemplateColumns: "1fr auto", gap: "16px", alignItems: "start", marginTop: "4px" },
                     children: [
-                      jsxs("div", { children: ["Account No : ", jsx("b", { style: { color: "#111113" }, children: bank.accountNumber || "—" })] }),
-                      jsxs("div", { children: ["Account Name : ", jsx("b", { style: { color: "#111113" }, children: bank.accountName || "—" })] }),
-                      jsxs("div", { children: ["Branch : ", jsx("span", { children: bank.branch || "—" })] }),
-                      jsxs("div", { children: ["UPI VPA : ", jsx("b", { style: { color: tc("#e5252a") }, children: bank.upiId || "—" })] })
-                    ]
-                  })
-                ]
-              }),
-              // Contact Info
-              jsxs("div", {
-                children: [
-                  SectionBadge("Contact Info :"),
-                  jsxs("div", {
-                    style: { fontSize: "11.5px", color: "#4b5563", lineHeight: 1.55 },
-                    children: [
-                      jsxs("div", { children: ["Phone : ", jsx("span", { style: { color: "#111113" }, children: "—" })] }),
-                      jsxs("div", { children: ["Email : ", jsx("span", { style: { color: "#111113" }, children: "—" })] }),
-                      jsxs("div", { children: ["Web : ", jsx("span", { style: { color: "#111113" }, children: "—" })] })
+                      jsxs("table", {
+                        style: { width: "100%", borderCollapse: "collapse" },
+                        children: [
+                          ['Bank Name', bank.bankName || '—'],
+                          ['Account Name', bank.accountName || '—'],
+                          ['Account Type', bank.accountType ? (bank.accountType === 'Current' ? 'Current Account' : bank.accountType === 'Savings' ? 'Savings Account' : bank.accountType) : '—'],
+                          ['Account No', bank.accountNumber || '—'],
+                          ['IFSC / RTGS', bank.ifsc || '—'],
+                          ['Branch', bank.branch || '—'],
+                          ['UPI ID', bank.upiId || '—'],
+                          ['Branch Address', bank.branchAddress || '—']
+                        ].map((r, i) => jsxs("tr", { key: i, children: [
+                          jsx("td", { style: { width: "115px", fontSize: "11.5px", fontWeight: "600", color: "#6b7280", padding: "2.5px 0", verticalAlign: "top" }, children: r[0] }),
+                          jsx("td", { style: { width: "14px", color: "#6b7280", fontSize: "11.5px", padding: "2.5px 0", textAlign: "center", verticalAlign: "top" }, children: ":" }),
+                          jsx("td", { style: { fontSize: "11.5px", color: (r[0] === 'IFSC / RTGS' || r[0] === 'UPI ID') ? tc("#e5252a") : "#111113", padding: "2.5px 0", verticalAlign: "top", fontWeight: r[1] === "—" ? "400" : "700", fontFamily: (r[0] === 'Account No' || r[0] === 'IFSC / RTGS' || r[0] === 'UPI ID') ? "monospace" : "inherit" }, children: r[1] })
+                        ] }))
+                      }),
+                      // QR Box
+                      jsxs("div", {
+                        style: { background: "#ffffff", border: "1.5px solid #fecdd3", borderRadius: "8px", padding: "8px 10px 6px", textAlign: "center", width: "fit-content" },
+                        children: [
+                          jsx("div", { style: { width: "76px", height: "76px", margin: "0 auto", display: "grid", placeItems: "center" }, children: [
+                            bank.qrCode
+                              ? jsx("img", { src: bank.qrCode, alt: "UPI QR", style: { width: "76px", height: "76px", display: "block", borderRadius: "4px", objectFit: "contain" }, "data-spec-qr": "true" })
+                              : (bank.upiId && bank.upiId !== "—")
+                                ? jsx(SpecQr, { vpa: bank.upiId, accent: tc("#e5252a") })
+                                : jsxs("div", {
+                                    style: { width: "76px", height: "76px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "1.5px dashed #cbd5e1", borderRadius: "6px", background: "#f8fafc", color: "#94a3b8", gap: "2px" },
+                                    "data-spec-qr": "true",
+                                    children: [
+                                      jsx("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#94a3b8", strokeWidth: "1.75", strokeLinecap: "round", strokeLinejoin: "round", children: [
+                                        jsx("rect", { x: "3", y: "3", width: "7", height: "7" }),
+                                        jsx("rect", { x: "14", y: "3", width: "7", height: "7" }),
+                                        jsx("rect", { x: "3", y: "14", width: "7", height: "7" }),
+                                        jsx("rect", { x: "14", y: "14", width: "3", height: "3" }),
+                                        jsx("rect", { x: "18", y: "18", width: "3", height: "3" })
+                                      ] }),
+                                      jsx("span", { style: { fontSize: "7.5px", fontWeight: "700", letterSpacing: "0.06em" }, children: "QR CODE" })
+                                    ]
+                                  })
+                          ] }),
+                          jsx("div", { style: { fontSize: "8px", fontWeight: "800", fontFamily: "monospace", color: (bank.qrCode || (bank.upiId && bank.upiId !== "—")) ? tc("#e5252a") : "#94a3b8", marginTop: "3px" }, children: "SCAN TO PAY" })
+                        ]
+                      })
                     ]
                   })
                 ]
@@ -4863,11 +4948,11 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
                 style: { marginTop: "2px" },
                 children: [
                   jsx("div", {
-                    style: { fontSize: "13px", fontWeight: "800", fontStyle: "italic", color: "#111113", marginBottom: "3px" },
+                    style: { fontSize: "12px", fontWeight: "800", fontStyle: "italic", color: "#111113", marginBottom: "2px" },
                     children: "Thanks for your business"
                   }),
                   jsx("div", {
-                    style: { fontSize: "10.5px", color: "#6b7280", lineHeight: 1.45, maxWidth: "360px" },
+                    style: { fontSize: "10px", color: "#6b7280", lineHeight: 1.4, maxWidth: "380px" },
                     children: "We value your business and look forward to continuing our partnership. All services rendered adhere to standard quality benchmarks."
                   })
                 ]
@@ -4934,12 +5019,20 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
                   marginTop: "6px"
                 },
                 children: [
-                  jsx("img", {
-                    src: "/assets/spec-signature.png",
-                    alt: "Authorised Signature",
-                    style: { height: "36px", width: "auto", display: "block", marginBottom: "2px" },
-                    "data-spec-signature": "true"
-                  }),
+                  (invoice.signatorySeal || invoice.signature)
+                    ? jsx("img", {
+                        src: invoice.signatorySeal || invoice.signature,
+                        alt: "Authorised Signature",
+                        style: { height: "36px", width: "auto", display: "block", marginBottom: "2px", objectFit: "contain" },
+                        "data-spec-signature": "true"
+                      })
+                    : jsx("div", {
+                        style: { height: "36px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "2px" },
+                        "data-spec-signature": "true",
+                        children: invoice.signatoryName && invoice.signatoryName !== '—'
+                          ? jsx("span", { style: { fontStyle: "italic", fontFamily: "serif", fontSize: "16px", color: "#111113" }, children: invoice.signatoryName })
+                          : jsx("span", { style: { border: "1px dashed #cbd5e1", borderRadius: "4px", padding: "2px 8px", fontSize: "9px", fontWeight: "700", color: "#9ca3af", letterSpacing: "0.08em", textTransform: "uppercase" }, children: "SIGNATURE" })
+                      }),
                   jsx("div", {
                     style: { height: "1.5px", background: "#111113", width: "100%", marginBottom: "4px" }
                   }),
@@ -4989,13 +5082,13 @@ function RetailInvoiceSheet({ invoice, template, kind }) {
 function FintechInvoiceSheet({ invoice, template, kind }) {
   setTplPalette('fintech');
   const isInv = kind === 'invoice';
-  const docNum = isInv ? (invoice.invoiceNumber || 'INV-0000') : (invoice.propagationNumber || invoice.quotationNumber || 'PRP-0000');
-  const dateStr = invoice.issueDate || '2026-11-05';
-  const dueStr = isInv ? (invoice.dueDate || '2026-11-10') : (invoice.validUntil || '2026-12-05');
+  const docNum = isInv ? (invoice.invoiceNumber || '') : (invoice.propagationNumber || invoice.quotationNumber || '');
+  const dateStr = invoice.issueDate || '';
+  const dueStr = isInv ? (invoice.dueDate || '') : (invoice.validUntil || '');
   const items = invoice.items || [];
-  const subtotal = invoice.subtotal || invoice.total || 1000;
-  const total = invoice.totalAmount || invoice.total || 1000;
-  const clientName = invoice.clientName || 'Client name';
+  const subtotal = invoice.subtotal || invoice.total || 0;
+  const total = invoice.totalAmount || invoice.total || 0;
+  const clientName = invoice.clientName || '';
   const bank = invoice.bankDetails || {};
 
   return jsxs('div', {
@@ -5033,9 +5126,9 @@ function FintechInvoiceSheet({ invoice, template, kind }) {
               children: isInv ? '🔒 VERIFIED SETTLEMENT · RTGS/NEFT' : 'COMMERCIAL QUOTATION'
             }),
             jsxs('div', { style: { marginTop: '5px', fontSize: '10.5px', fontFamily: 'monospace', lineHeight: 1.45, color: '#475569' }, children: [
-              jsxs('div', { children: ['Voucher: ', jsx('b', { style: { color: '#0f172a' }, children: (isInv && !docNum.startsWith('#') ? '#' + docNum : docNum) })] }),
-              jsxs('div', { children: ['Value Date: ', jsx('b', { style: { color: '#0f172a' }, children: dateStr })] }),
-              jsxs('div', { children: ['Maturity: ', jsx('b', { style: { color: '#0f172a' }, children: dueStr + ' (NET 5)' })] })
+              docNum ? jsxs('div', { children: ['Voucher: ', jsx('b', { style: { color: '#0f172a' }, children: (isInv && !docNum.startsWith('#') ? '#' + docNum : docNum) })] }) : null,
+              dateStr ? jsxs('div', { children: ['Value Date: ', jsx('b', { style: { color: '#0f172a' }, children: dateStr })] }) : null,
+              dueStr ? jsxs('div', { children: ['Maturity: ', jsx('b', { style: { color: '#0f172a' }, children: dueStr + ' (NET 5)' })] }) : null
             ] })
           ] })
         ]
@@ -5046,24 +5139,38 @@ function FintechInvoiceSheet({ invoice, template, kind }) {
         style: { margin: '14px 40px 0', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' },
         children: [
           // Debtor
-          jsxs('div', { style: { background: '#f8fafc', border: '1px solid #dbe3ec', borderRadius: '8px', padding: '12px 14px' }, children: [
+          jsxs('div', { style: { background: '#f8fafc', border: '1px solid #dbe3ec', borderRadius: '8px', padding: '12px 14px' }, 'data-spec-card': 'buyer', children: [
             jsx('div', { style: { fontSize: '9px', fontWeight: '800', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: '4px', background: '#e2e8f0', color: '#334155', display: 'inline-block', marginBottom: '6px' }, children: 'DEBTOR (CLIENT ENTITY)' }),
             jsx('div', { style: { fontSize: '14px', fontWeight: '800', color: '#0f172a', marginBottom: '4px' }, children: jsx(Ed, { field: 'clientName', value: clientName, placeholder: 'Client / buyer name' }) }),
-            jsxs('div', { style: { fontSize: '11px', color: '#475569', lineHeight: 1.45, fontFamily: 'monospace' }, children: [
-              jsxs('div', { children: ['Office: ', clientName] }),
-              jsxs('div', { children: ['Tax Reg: ', invoice.buyerGstin || 'Unregistered / Overseas'] }),
-              jsxs('div', { children: ['Jurisdiction: ', invoice.buyerAddress || '—'] })
-            ] })
+            jsxs('table', { style: { width: '100%', borderCollapse: 'collapse', fontSize: '11px', fontFamily: 'monospace', color: '#475569', lineHeight: 1.4 }, children: [
+              ['Office', invoice.clientOffice || '—'],
+              ['Phone', invoice.clientPhone || '—'],
+              ['Email', invoice.clientEmail || '—'],
+              ['Address', invoice.buyerAddress || invoice.clientAddress || '—'],
+              ['GST', invoice.buyerGstin || '—'],
+              ['PAN', specPan(invoice.buyerGstin, invoice.buyerPan) || '—']
+            ].map(([lbl, val], i) => jsxs('tr', { key: i, children: [
+              jsx('td', { style: { width: '58px', color: '#64748b', padding: '1.5px 0' }, children: lbl }),
+              jsx('td', { style: { width: '10px', textAlign: 'center', color: '#64748b', padding: '1.5px 0' }, children: ':' }),
+              jsx('td', { style: { color: '#0f172a', padding: '1.5px 0', fontWeight: val === '—' ? '400' : '600' }, children: val })
+            ] })) })
           ] }),
           // Beneficiary
-          jsxs('div', { style: { background: '#f8fafc', border: '1px solid #dbe3ec', borderRadius: '8px', padding: '12px 14px' }, children: [
+          jsxs('div', { style: { background: '#f8fafc', border: '1px solid #dbe3ec', borderRadius: '8px', padding: '12px 14px' }, 'data-spec-card': 'issuer', children: [
             jsx('div', { style: { fontSize: '9px', fontWeight: '800', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: '4px', background: 'rgba(77,51,182,0.12)', color: tc('#4d33b6'), display: 'inline-block', marginBottom: '6px' }, children: 'BENEFICIARY (ISSUER)' }),
-            jsx('div', { style: { fontSize: '14px', fontWeight: '800', color: '#0f172a', marginBottom: '4px' }, children: 'Company name' }),
-            jsxs('div', { style: { fontSize: '11px', color: '#475569', lineHeight: 1.45, fontFamily: 'monospace' }, children: [
-              jsxs('div', { children: ['GSTIN: ', jsx('b', { children: '—' })] }),
-              jsxs('div', { children: ['PAN: ', jsx('b', { children: '—' })] }),
-              jsx('div', { children: 'Treasury: ' + ((invoice && invoice.issuerOffice) || '—') })
-            ] })
+            jsx('div', { style: { fontSize: '14px', fontWeight: '800', color: '#0f172a', marginBottom: '4px' }, children: invoice.companyName || 'Company name' }),
+            jsxs('table', { style: { width: '100%', borderCollapse: 'collapse', fontSize: '11px', fontFamily: 'monospace', color: '#475569', lineHeight: 1.4 }, children: [
+              ['Office', invoice.issuerOffice || '—'],
+              ['Phone', invoice.issuerPhone || '—'],
+              ['Email', invoice.issuerEmail || '—'],
+              ['Address', invoice.companyAddress || '—'],
+              ['GST', invoice.companyGst || '—'],
+              ['PAN', specPan(invoice.companyGst, invoice.companyPan) || invoice.companyPan || '—']
+            ].map(([lbl, val], i) => jsxs('tr', { key: i, children: [
+              jsx('td', { style: { width: '58px', color: '#64748b', padding: '1.5px 0' }, children: lbl }),
+              jsx('td', { style: { width: '10px', textAlign: 'center', color: '#64748b', padding: '1.5px 0' }, children: ':' }),
+              jsx('td', { style: { color: '#0f172a', padding: '1.5px 0', fontWeight: val === '—' ? '400' : '600' }, children: val })
+            ] })) })
           ] }),
           // Clearing Mandate
           jsxs('div', { style: { background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '12px 14px' }, children: [
@@ -5095,8 +5202,8 @@ function FintechInvoiceSheet({ invoice, template, kind }) {
             ] }) }),
             jsx('tbody', { children: items.map((it, idx) => jsxs('tr', { key: idx, style: { borderBottom: '1px solid #e2e8f0', background: '#ffffff' }, children: [
               jsx('td', { style: { textAlign: 'center', padding: '10px 12px', fontSize: '11.5px', fontFamily: 'monospace', color: '#64748b' }, children: [`[0${idx + 1}]`, jsx(EdRemove, { index: idx })] }),
-              jsx('td', { style: { textAlign: 'center', padding: '10px 12px', fontSize: '12px', color: '#0f172a', fontWeight: '600' }, children: jsx(Ed, { field: 'description', index: idx, value: it.description || it.item || 'Service Maintenance Cost', placeholder: 'Item description' }) }),
-              jsx('td', { style: { textAlign: 'center', padding: '10px 12px', fontSize: '11.5px', fontFamily: 'monospace', color: tc('#4d33b6'), fontWeight: '600' }, children: jsx(Ed, { field: 'hsn', index: idx, value: it.hsn || '998314', placeholder: 'HSN' }) }),
+              jsx('td', { style: { textAlign: 'center', padding: '10px 12px', fontSize: '12px', color: '#0f172a', fontWeight: '600' }, children: jsx(Ed, { field: 'description', index: idx, value: it.description || it.item || '', placeholder: 'Item description' }) }),
+              jsx('td', { style: { textAlign: 'center', padding: '10px 12px', fontSize: '11.5px', fontFamily: 'monospace', color: tc('#4d33b6'), fontWeight: '600' }, children: jsx(Ed, { field: 'hsn', index: idx, value: it.hsn || '', placeholder: 'HSN' }) }),
               jsx('td', { style: { textAlign: 'right', padding: '10px 12px', fontSize: '12px', fontFamily: 'monospace', color: '#0f172a' }, children: jsx(Ed, { field: 'price', index: idx, type: 'number', value: specMoney(it.price != null ? it.price : it.rate), placeholder: '0' }) }),
               jsx('td', { style: { textAlign: 'center', padding: '10px 12px', fontSize: '12px', fontFamily: 'monospace', color: '#0f172a' }, children: jsx(Ed, { field: 'qty', index: idx, type: 'number', value: it.qty || 1, placeholder: '1' }) }),
               jsx('td', { style: { textAlign: 'right', padding: '10px 12px', fontSize: '12px', fontFamily: 'monospace', fontWeight: '700', color: '#0f172a' }, children: specMoney(it.total != null ? it.total : it.amount || (it.price || it.rate || 0) * (it.qty || 1)) })
@@ -5118,17 +5225,40 @@ function FintechInvoiceSheet({ invoice, template, kind }) {
               jsxs('div', { style: { display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '14px', alignItems: 'center' }, children: [
                 // QR
                 jsxs('div', { style: { background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', padding: '6px', textAlign: 'center' }, children: [
-                  jsx('img', { src: '/assets/spec-qr-code.png', alt: 'UPI QR', style: { width: '76px', height: '76px', display: 'block', borderRadius: '4px' }, 'data-spec-qr': 'true' }),
-                  jsx('div', { style: { fontSize: '8.5px', fontWeight: '800', fontFamily: 'monospace', color: '#0f172a', marginTop: '3px' }, children: 'SCAN TO PAY' })
+                  (bank.qrCode)
+                    ? jsx('img', { src: bank.qrCode, alt: 'UPI QR', style: { width: '76px', height: '76px', display: 'block', borderRadius: '4px', objectFit: 'contain' }, 'data-spec-qr': 'true' })
+                    : (bank.upiId && bank.upiId !== '—')
+                      ? jsx(SpecQr, { vpa: bank.upiId, accent: '#0f172a' })
+                      : jsxs('div', {
+                          style: { width: '76px', height: '76px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1.5px dashed #cbd5e1', borderRadius: '4px', background: '#f8fafc', color: '#94a3b8', gap: '2px' },
+                          'data-spec-qr': 'true',
+                          children: [
+                            jsx('svg', { width: '22', height: '22', viewBox: '0 0 24 24', fill: 'none', stroke: '#94a3b8', strokeWidth: '1.75', strokeLinecap: 'round', strokeLinejoin: 'round', children: [
+                              jsx('rect', { x: '3', y: '3', width: '7', height: '7' }),
+                              jsx('rect', { x: '14', y: '3', width: '7', height: '7' }),
+                              jsx('rect', { x: '3', y: '14', width: '7', height: '7' }),
+                              jsx('rect', { x: '14', y: '14', width: '3', height: '3' }),
+                              jsx('rect', { x: '18', y: '18', width: '3', height: '3' })
+                            ] }),
+                            jsx('span', { style: { fontSize: '8px', fontWeight: '700', letterSpacing: '0.06em' }, children: 'QR CODE' })
+                          ]
+                        }),
+                  jsx('div', { style: { fontSize: '8.5px', fontWeight: '800', fontFamily: 'monospace', color: (bank.qrCode || (bank.upiId && bank.upiId !== '—')) ? '#0f172a' : '#94a3b8', marginTop: '3px' }, children: 'SCAN TO PAY' })
                 ] }),
                 // Bank fields table
                 jsxs('div', { style: { fontSize: '11px', fontFamily: 'monospace', lineHeight: 1.45, color: '#334155' }, children: [
-                  jsxs('div', { children: ['Settlement Bank: ', jsx('b', { children: bank.bankName || '—' })] }),
-                  jsxs('div', { children: ['Account Number:  ', jsx('b', { style: { color: '#0f172a' }, children: bank.accountNumber || '—' })] }),
-                  jsxs('div', { children: ['IFSC / Routing:  ', jsx('b', { style: { color: tc('#4d33b6') }, children: bank.ifsc || '—' })] }),
-                  jsxs('div', { children: ['Account Title:   ', jsx('b', { children: bank.accountName || '—' })] }),
-                  jsxs('div', { children: ['Direct UPI VPA:  ', jsx('b', { style: { color: tc('#4d33b6') }, children: bank.upiId || '—' })] })
-                ] })
+                  ['Bank Name', bank.bankName || '—'],
+                  ['Account Name', bank.accountName || '—'],
+                  ['Account Type', bank.accountType ? (bank.accountType === 'Current' ? 'Current Account' : bank.accountType === 'Savings' ? 'Savings Account' : bank.accountType) : '—'],
+                  ['Account No', bank.accountNumber || '—'],
+                  ['IFSC / RTGS', bank.ifsc || '—'],
+                  ['Branch', bank.branch || '—'],
+                  ['UPI ID', bank.upiId || '—'],
+                  ['Branch Address', bank.branchAddress || '—']
+                ].map(([lbl, val], i) => jsxs('div', { key: i, style: { display: 'flex', gap: '4px' }, children: [
+                  jsx('span', { style: { width: '105px', color: '#64748b' }, children: lbl + ':' }),
+                  jsx('b', { style: { color: (lbl === 'IFSC / RTGS' || lbl === 'UPI ID') ? tc('#4d33b6') : '#0f172a' }, children: val })
+                ] })) })
               ] }),
               // Verified seal
               jsxs('div', { style: { marginTop: '8px', display: 'flex', alignItems: 'center', gap: '6px', background: '#ffffff', border: '1px dashed #cbd5e1', borderRadius: '4px', padding: '5px 8px', fontSize: '9.5px', fontFamily: 'monospace', color: '#059669', fontWeight: '700' }, children: [
@@ -5167,7 +5297,15 @@ function FintechInvoiceSheet({ invoice, template, kind }) {
               // Signatory
               jsxs('div', { style: { textAlign: 'center', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '6px 10px' }, children: [
                 jsx('div', { style: { fontSize: '9.5px', fontWeight: '800', fontFamily: 'monospace', color: '#475569', textTransform: 'uppercase' }, children: 'FOR ' + String((invoice && invoice.companyName) || 'COMPANY').toUpperCase() }),
-                jsx('img', { src: '/assets/spec-signature.png', alt: 'Authorised Signature', style: { height: '34px', width: 'auto', margin: '2px auto', display: 'block' }, 'data-spec-signature': 'true' }),
+                (invoice.signatorySeal || invoice.signature)
+                  ? jsx('img', { src: invoice.signatorySeal || invoice.signature, alt: 'Authorised Signature', style: { height: '34px', width: 'auto', margin: '2px auto', display: 'block', objectFit: 'contain' }, 'data-spec-signature': 'true' })
+                  : jsx('div', {
+                      style: { height: '34px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '2px auto' },
+                      'data-spec-signature': 'true',
+                      children: invoice.signatoryName && invoice.signatoryName !== '—'
+                        ? jsx('span', { style: { fontStyle: 'italic', fontFamily: 'serif', fontSize: '15px', color: '#0f172a' }, children: invoice.signatoryName })
+                        : jsx('span', { style: { border: '1px dashed #cbd5e1', borderRadius: '4px', padding: '2px 8px', fontSize: '9px', fontWeight: '700', letterSpacing: '0.08em', color: '#94a3b8', textTransform: 'uppercase' }, children: 'SIGNATURE' })
+                    }),
                 jsx('div', { style: { fontSize: '12px', fontWeight: '800', color: '#0f172a' }, children: invoice.signatoryName || '—' }),
                 jsx('div', { style: { fontSize: '9.5px', fontWeight: '700', color: tc('#4d33b6'), fontFamily: 'monospace' }, children: 'Treasury Clearing Officer · Authorised Signatory' })
               ] })
@@ -5198,12 +5336,7 @@ function FintechInvoiceSheet({ invoice, template, kind }) {
 // ---------------------------------------------------------------------------
 // SHEETS — a distinct A4 design per selected template (template id)
 // ---------------------------------------------------------------------------
-function specPill(doc) {
-  if (doc.gstCategory === 'Export LUT' || doc.gstCategory === 'Non-GST') return { text: 'Unregistered / Overseas', muted: true };
-  if (doc.gstCategory === 'B2C') return { text: 'B2C Retail (URP)', muted: false, color: SPEC.green };
-  return { text: 'B2B Registered', muted: false, color: SPEC.indigo };
-}
-const specPan = (gst, explicit) => explicit || (gst && gst.length >= 15 ? gst.slice(2, 12) : '');
+// (uses specPan helper declared above)
 
 // Invoice drawer document: renders the invoice in the EXACT template chosen as default on
 // Document Templates (Classic / Crimson / Fintech), with issuer + bank details from Settings.
@@ -5246,29 +5379,28 @@ function SpecInvoiceSheet({ invoice, template }) {
     return jsx(FintechInvoiceSheet, { invoice, template: 'fintech', kind: 'invoice' });
   }
   const vis = resolveVis('classic', 'invoice');
-  const pill = specPill(invoice);
   const buyerPan = specPan(invoice.buyerGstin, invoice.buyerPan);
   const pillLabel = invoice.gstCategory === 'Export LUT' ? 'COMMERCIAL INVOICE (LUT)' : invoice.gstCategory === 'B2B' ? 'TAX INVOICE (B2B)' : 'COMMERCIAL INVOICE (LUT)';
   return jsxs('div', {
     className: 'spec-sheet', 'data-spec-sheet': 'invoice', 'data-template': 'classic',
     children: [
-      jsx(SpecHeader, { vis, kind: 'invoice', meta: { number: invoice.invoiceNumber || 'INV-0000', date: invoice.issueDate || '2026-11-05', due: invoice.dueDate || '2026-11-10' }, pillLabel }),
+      jsx(SpecHeader, { vis, kind: 'invoice', meta: { number: invoice.invoiceNumber || '', date: invoice.issueDate || '', due: invoice.dueDate || '' }, pillLabel }),
       jsxs('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '22px', padding: '26px 40px 6px' }, children: [
         jsx(SpecCoordCard, { vis, badge: 'INVOICE TO (BILLED TO)', title: jsx(Ed, { field: 'clientName', value: invoice.clientName, placeholder: 'Client / buyer name' }), rows: [
-          { label: 'Office', value: invoice.clientOffice || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !invoice.clientOffice },
-          { label: 'Phone', value: invoice.clientPhone || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !invoice.clientPhone },
-          { label: 'Email', value: invoice.clientEmail || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !invoice.clientEmail },
-          { label: 'Address', value: (invoice.buyerAddress || invoice.clientAddress) || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), strong: !!(invoice.buyerAddress || invoice.clientAddress) },
-          { label: 'GST', value: invoice.buyerGstin || jsxs('span', { style: { fontStyle: pill.muted ? 'italic' : 'normal', color: pill.muted ? SPEC.muted : (pill.color || SPEC.indigo) }, children: [pill.muted ? 'Unregistered / Overseas' : 'Registered - ' + pill.text] }), muted: !invoice.buyerGstin },
-          { label: 'PAN', value: buyerPan || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !buyerPan }
+          { label: 'Office', value: invoice.clientOffice || '—', muted: !invoice.clientOffice },
+          { label: 'Phone', value: invoice.clientPhone || '—', muted: !invoice.clientPhone },
+          { label: 'Email', value: invoice.clientEmail || '—', muted: !invoice.clientEmail },
+          { label: 'Address', value: (invoice.buyerAddress || invoice.clientAddress) || '—', strong: !!(invoice.buyerAddress || invoice.clientAddress) },
+          { label: 'GST', value: invoice.buyerGstin || '—', muted: !invoice.buyerGstin },
+          { label: 'PAN', value: buyerPan || '—', muted: !buyerPan }
         ] }),
         jsx(SpecCoordCard, { vis, badge: 'INVOICE FROM (ISSUER)', title: invoice.companyName || 'Company name', right: true, rows: [
           { label: 'Office', value: invoice.issuerOffice || '—' },
           { label: 'Phone', value: invoice.issuerPhone || '—' },
           { label: 'Email', value: invoice.issuerEmail || '—' },
-          { label: 'Address', value: invoice.companyAddress || '', strong: true },
-          { label: 'GST', value: invoice.companyGst || '—', strong: true },
-          { label: 'PAN', value: invoice.companyPan || '—', strong: true }
+          { label: 'Address', value: invoice.companyAddress || '—', strong: !!invoice.companyAddress },
+          { label: 'GST', value: invoice.companyGst || '—', strong: !!invoice.companyGst },
+          { label: 'PAN', value: invoice.companyPan || '—', strong: !!invoice.companyPan }
         ] })
       ] }),
       jsx('div', { style: { padding: '18px 40px 0' }, children: jsx(SpecItemsTable, { vis, items: invoice.items, noTax: specNoTax(invoice) }) }),
@@ -5291,23 +5423,23 @@ function SpecQuotationSheet({ propagation, template }) {
   return jsxs('div', {
     className: 'spec-sheet', 'data-spec-sheet': 'quotation', 'data-template': 'classic',
     children: [
-      jsx(SpecHeader, { vis, kind: 'quotation', meta: { number: propagation.propagationNumber || propagation.quotationNumber || 'PRP-0000', date: propagation.issueDate || '2026-11-05', due: propagation.validUntil || 'Net 30' }, pillLabel: 'COMMERCIAL QUOTATION' }),
+      jsx(SpecHeader, { vis, kind: 'quotation', meta: { number: propagation.propagationNumber || propagation.quotationNumber || '', date: propagation.issueDate || '', due: propagation.validUntil || '' }, pillLabel: 'COMMERCIAL QUOTATION' }),
       jsxs('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '22px', padding: '26px 40px 6px' }, children: [
         jsx(SpecCoordCard, { vis, badge: 'QUOTATION TO (BILLED TO)', title: propagation.clientName, rows: [
-          { label: 'Office', value: propagation.clientOffice || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !propagation.clientOffice },
-          { label: 'Phone', value: propagation.clientPhone || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !propagation.clientPhone },
-          { label: 'Email', value: propagation.clientEmail || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !propagation.clientEmail },
-          { label: 'Address', value: propagation.clientAddress || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !propagation.clientAddress },
-          { label: 'GST', value: propagation.buyerGstin || 'Unregistered / Overseas', muted: !propagation.buyerGstin },
-          { label: 'PAN', value: propagation.buyerPan || jsx('i', { style: { color: SPEC.muted, fontStyle: 'italic' }, children: 'Not Provided' }), muted: !propagation.buyerPan }
+          { label: 'Office', value: propagation.clientOffice || '—', muted: !propagation.clientOffice },
+          { label: 'Phone', value: propagation.clientPhone || '—', muted: !propagation.clientPhone },
+          { label: 'Email', value: propagation.clientEmail || '—', muted: !propagation.clientEmail },
+          { label: 'Address', value: propagation.clientAddress || '—', muted: !propagation.clientAddress },
+          { label: 'GST', value: propagation.buyerGstin || '—', muted: !propagation.buyerGstin },
+          { label: 'PAN', value: propagation.buyerPan || '—', muted: !propagation.buyerPan }
         ] }),
         jsx(SpecCoordCard, { vis, badge: 'QUOTATION FROM (ISSUER)', title: propagation.companyName || 'Company name', right: true, rows: [
           { label: 'Office', value: propagation.issuerOffice || '—' },
-          { label: 'Phone', value: '—' },
-          { label: 'Email', value: '—' },
-          { label: 'Address', value: propagation.companyAddress || '', strong: true },
-          { label: 'GST', value: propagation.companyGst || '—', strong: true },
-          { label: 'PAN', value: sellerPan || '—', strong: true }
+          { label: 'Phone', value: propagation.issuerPhone || '—' },
+          { label: 'Email', value: propagation.issuerEmail || '—' },
+          { label: 'Address', value: propagation.companyAddress || '—', strong: !!propagation.companyAddress },
+          { label: 'GST', value: propagation.companyGst || '—', strong: !!propagation.companyGst },
+          { label: 'PAN', value: sellerPan || propagation.companyPan || '—', strong: !!(sellerPan || propagation.companyPan) }
         ] })
       ] }),
       jsx('div', { style: { padding: '18px 40px 0' }, children: jsx(SpecItemsTable, { vis, items: propagation.items, descLabel: 'DELIVERABLE DESCRIPTION', rateLabel: 'RATE (\u20b9)' }) }),
@@ -5332,32 +5464,31 @@ function TemplateSelectionView({ kind, selected, onToggleKind, onSelectTemplate,
     return ids;
   })();
   const pickColor = (id, hex) => { writeTplColor(id, hex && hex.toLowerCase() !== TPL_BASE_COLOR[id].toLowerCase() ? hex : ''); setColors(readTplColors()); };
-  const [invoices, setInvoices] = useState([]);
-  const [propagations, setPropagations] = useState([]);
   const [liveSettings, setLiveSettings] = useState(null);
 
   useEffect(() => {
     let alive = true;
     (async () => {
-      try { const r = await fetch('/api/invoices'); const j = await r.json(); if (alive && j.data) setInvoices(j.data); } catch (e) {}
-      try { const r = await fetch('/api/propagations'); const j = await r.json(); if (alive && j.data) setPropagations(j.data); } catch (e) {}
       try { const r = await fetch('/api/settings'); const j = await r.json(); if (alive && j.data) setLiveSettings(j.data); } catch (e) {}
     })();
     return () => { alive = false; };
   }, []);
 
-  // Issuer + bank come from Settings; client/items from the latest real document (if any).
+  // Live preview stays neutral: only issuer + bank details come from Settings.
+  // No real invoice / quotation data is pulled in, so the preview never shows
+  // a customer's names, numbers, dates or line items on the template page.
   const sndr = (liveSettings && liveSettings.invoiceSender) || {};
   const bnk = (liveSettings && liveSettings.bankDetails) || {};
   const issuer = {
     companyName: sndr.companyName || '', companyAddress: sndr.companyAddress || '', companyGst: sndr.companyGst || '', companyPan: sndr.companyPan || '',
     issuerOffice: sndr.signatoryDesignation || '', issuerPhone: sndr.companyPhone || '', issuerEmail: sndr.companyEmail || '',
     signatoryName: sndr.signatoryName || '', signatoryDesignation: sndr.signatoryDesignation || '',
+    signatorySeal: sndr.signatorySeal || '',
     bankDetails: { ...bnk }
   };
   if (typeof window !== 'undefined') window.__tlLogo = sndr.companyLogo || '';
-  const sampleInvoice = { ...(invoices[0] || SPEC_SAMPLE_INVOICE), ...issuer };
-  const sampleQuotation = { ...(propagations[0] || SPEC_SAMPLE_QUOTATION), ...issuer };
+  const sampleInvoice = { ...SPEC_SAMPLE_INVOICE, ...issuer };
+  const sampleQuotation = { ...SPEC_SAMPLE_QUOTATION, ...issuer };
 
   const active = TEMPLATE_META.find((t) => t.id === selected) || TEMPLATE_META[0];
   const previewSheet = kind === 'quotation'
@@ -5381,9 +5512,9 @@ function TemplateSelectionView({ kind, selected, onToggleKind, onSelectTemplate,
     ] });
     if (v.headerVariant === 'light' || v.headerVariant === 'creative') return jsxs('svg', { viewBox: '0 0 794 130', width: '100%', height: '60', preserveAspectRatio: 'none', 'aria-hidden': 'true', children: [
       jsx('rect', { x: 0, y: 0, width: 794, height: 130, fill: '#ffffff' }),
-      jsx('polygon', { points: '0,0 460,0 350,130 0,130', fill: '#111113' }),
-      jsx('polygon', { points: '440,0 485,0 395,130 350,130', fill: tc('#e5252a') }),
-      jsx('polygon', { points: '470,0 495,0 425,130 395,130', fill: tca(229,37,42,0.45) }),
+      jsx('polygon', { points: '0,0 355,0 260,130 0,130', fill: '#111113' }),
+      jsx('polygon', { points: '340,0 375,0 295,130 260,130', fill: tca(229,37,42,0.45) }),
+      jsx('polygon', { points: '365,0 400,0 325,130 290,130', fill: tc('#e5252a') }),
       jsx('circle', { cx: 58, cy: 64, r: 14, fill: tc('#e5252a') }),
       jsx('rect', { x: '82', y: '56', width: '90', height: '10', rx: '2', fill: '#ffffff' }),
       jsx('text', { x: 720, y: 56, fill: tc('#e5252a'), fontSize: 26, fontWeight: 900, textAnchor: 'end' }, { children: 'QUOTATION' }),
@@ -5403,13 +5534,13 @@ function TemplateSelectionView({ kind, selected, onToggleKind, onSelectTemplate,
     ] });
   };
 
-  return jsxs('div', { className: 'page finance-page tmpl-page', 'data-spec-page': 'templates', children: [
+  return jsxs('div', { className: 'page finance-page tmpl-page', 'data-spec-page': 'templates', 'data-tmpl-layout': 'page', children: [
     jsxs('div', { className: 'tmpl-grid', children: [
       // LEFT - gallery
       jsxs('div', { className: 'tmpl-gallery', 'data-tmpl-gallery': 'true', children: [
         jsxs('div', { className: 'tmpl-gallery__head', style: { marginBottom: '14px' }, children: [
-          jsxs('h3', { style: { fontSize: '15px', fontWeight: '700', letterSpacing: '-0.01em' }, children: ['Template Library ', jsxs('span', { style: { color: 'var(--muted)', fontWeight: '500', fontSize: '12px' }, children: ['\u00b7 ' + TEMPLATE_META.length + ' distinct A4 templates'] })] }),
-          jsx('p', { className: 'muted', style: { fontSize: '12.5px', marginTop: '4px', lineHeight: 1.45 }, children: 'Each layout is a different A4 design (header, line-items header, settlement & footer). Pick one - the preview on the right re-renders in that exact template.' })
+          jsxs('h3', { style: { fontSize: '15px', fontWeight: '700', letterSpacing: '-0.01em' }, children: ['Template Library ', jsxs('span', { style: { color: 'var(--muted)', fontWeight: '500', fontSize: '12px' } })] }),
+          // jsx('p', { className: 'muted', style: { fontSize: '12.5px', marginTop: '4px', lineHeight: 1.45 }, children: 'Each layout is a different A4 design (header, line-items header, settlement & footer). Pick one - the preview on the right re-renders in that exact template.' })
         ] }),
         TEMPLATE_META.map((t) => {
           const isSel = t.id === selected;
@@ -5493,7 +5624,10 @@ function FinancePage({ route }) {
   const handleTplToggleKind = () => {
     const next = tplKind === 'invoice' ? 'quotation' : 'invoice';
     setTplKind(next);
-    setTplSelected(next === 'quotation' ? 'retail' : 'classic');
+    const byK = (readTplDefault() && readTplDefault().byKind) || {};
+    if (byK[next] && TEMPLATE_META.some((t) => t.id === byK[next])) {
+      setTplSelected(byK[next]);
+    }
   };
   const handleSetTplDefault = () => {
     const prev = readTplDefault() || {};

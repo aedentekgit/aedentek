@@ -144,8 +144,8 @@ export const SEED_STAFF = [
  * when a collection is completely empty, so restart never overwrites real data.
  */
 export const SEED_BRANCHES = [
-  { name: 'Bandra', code: 'BA', city: 'Mumbai', address: 'Linking Road, Bandra West', manager: '', status: 'Active' },
-  { name: 'Andheri', code: 'AN', city: 'Mumbai', address: 'Veera Desai Road, Andheri West', manager: '', status: 'Active' }
+  { name: 'Bandra', code: 'BA', city: 'Mumbai', address: 'Linking Road, Bandra West', manager: '', status: 'Active', isDefault: true },
+  { name: 'Andheri', code: 'AN', city: 'Mumbai', address: 'Veera Desai Road, Andheri West', manager: '', status: 'Active', isDefault: false }
 ];
 
 export const seedHrData = async () => {
@@ -153,6 +153,11 @@ export const seedHrData = async () => {
     if ((await Branch.countDocuments()) === 0) {
       await Branch.insertMany(SEED_BRANCHES);
       console.log(`[Seed] Seeded ${SEED_BRANCHES.length} branches.`);
+    } else {
+      const hasDefault = await Branch.findOne({ isDefault: true });
+      if (!hasDefault) {
+        await Branch.updateOne({ name: 'Bandra' }, { isDefault: true });
+      }
     }
 
     if ((await Shift.countDocuments()) === 0) {

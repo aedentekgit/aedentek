@@ -2,6 +2,6 @@
   "version": "0.0.1",
   "configurations": [
     { "name": "backend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "backend:dev"], "port": 5001 },
-    { "name": "frontend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "frontend"], "port": 5173 }
+    { "name": "frontend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "frontend"], "port": 1234 }
   ]
 }

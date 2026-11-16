@@ -6,7 +6,8 @@ const documentSubSchema = new mongoose.Schema({
   type: { type: String, default: 'PDF' },
   size: { type: String, default: '1.0 MB' },
   uploadedAt: { type: String, default: '' },
-  url: { type: String, default: '#' }
+  url: { type: String, default: '#' },
+  data: { type: String, default: '' }
 }, { _id: false });
 
 const staffSchema = new mongoose.Schema({
@@ -21,6 +22,8 @@ const staffSchema = new mongoose.Schema({
   middleName: { type: String, default: '' },
   lastName: { type: String, default: '' },
   name: { type: String, default: '' },
+  email: { type: String, default: '' },
+  phone: { type: String, default: '' },
   dob: { type: String, default: '' },
   gender: { type: String, enum: ['Male', 'Female', 'Other', ''], default: '' },
   maritalStatus: { type: String, enum: ['Single', 'Married', 'Divorced', 'Widowed', ''], default: '' },

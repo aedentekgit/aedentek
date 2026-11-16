@@ -8,7 +8,8 @@ const branchSchema = new mongoose.Schema({
   phone: { type: String, trim: true, default: '' },
   email: { type: String, trim: true, lowercase: true, default: '' },
   manager: { type: String, trim: true, default: '' },
-  status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' }
+  status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
+  isDefault: { type: Boolean, default: false }
 }, { timestamps: true });
 
 export default mongoose.model('Branch', branchSchema);

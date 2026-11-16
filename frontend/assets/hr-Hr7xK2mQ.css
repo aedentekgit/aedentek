@@ -350,3 +350,194 @@
     background: var(--card);
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * Staff Full Details 360° View & Section Cards
+ * ------------------------------------------------------------------ */
+
+.cd-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 0 4px;
+}
+
+.cd-grid > div {
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.cd-grid > div.span-2 {
+  grid-column: 1 / -1;
+}
+
+.cd-label {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.cd-value {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.cd-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .02em;
+}
+
+.cd-person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  margin: 14px 0 14px;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.cd-rows {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.cd-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 16px;
+  font-size: 13.5px;
+}
+
+.cd-row + .cd-row {
+  border-top: 1px solid var(--line);
+}
+
+.cd-row__k {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.cd-row__v {
+  color: var(--text);
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .cd-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Document items in staff view */
+.sd-docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0 4px;
+}
+
+.sd-doc-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.sd-doc-item:hover {
+  border-color: var(--line-2);
+}
+
+.sd-doc-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sd-doc-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--primary) 14%, var(--card));
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.sd-doc-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sd-doc-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sd-doc-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sd-doc-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sd-stat-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.sd-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sd-stat-block--right {
+  text-align: right;
+  align-items: flex-end;
+}
+

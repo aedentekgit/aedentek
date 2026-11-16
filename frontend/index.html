@@ -217,6 +217,41 @@
     .side .side__goal-bar i {
       background: var(--citron, #d8e45a) !important;
     }
+
+    /* GLOBAL SCREEN ZOOM IN / OUT FLUID RESPONSIVE ENGINE */
+    :root {
+      --app-max: 100% !important;
+    }
+    .app {
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+    }
+    .side {
+      left: var(--side-x, 14px) !important;
+    }
+    @media (min-width: 761px) {
+      .main {
+        padding-left: calc(var(--side-w, 248px) + var(--side-x, 14px) + var(--gutter, 16px)) !important;
+        padding-right: var(--gutter, 16px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      html.rail-on .main {
+        padding-left: calc(var(--rail-w, 84px) + var(--side-x, 14px) + var(--gutter, 16px)) !important;
+        padding-right: var(--gutter, 16px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+    @media (max-width: 760px) {
+      .main {
+        padding-left: var(--gutter, 12px) !important;
+        padding-right: var(--gutter, 12px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
   </style>
 </head>
 <body>

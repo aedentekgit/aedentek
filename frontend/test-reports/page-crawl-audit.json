@@ -1,0 +1,1666 @@
+[
+  {
+    "route": "/login",
+    "name": "Login Screen",
+    "group": "Auth",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/login",
+      "pageTitle": "LET'S CONNECTWITH YOUR SALESECOSYSTEM",
+      "isRestricted": false,
+      "hasCard": false,
+      "appMounted": false,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes Okaforines@caldermoss.co",
+        "TRTomás Reyestomas@caldermoss.co",
+        "PRPriya Ramanpriya@caldermoss.co",
+        "Forgot Password?",
+        "Sign In Now"
+      ],
+      "inputsSample": [
+        "Enter your email",
+        "Enter your password"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/today",
+    "name": "Today Sales Desk",
+    "group": "Workspace",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/today",
+      "pageTitle": "Good morning, Ines",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Won",
+        "Pipeline",
+        "6M",
+        "12M",
+        "Gallery atrium terrazzoHale & Wren Architects · closes Nov 4₹88,600Negotiation",
+        "Nine-venue floor rolloutSaltgrass Kitchen Group · closes Dec 12₹126,400Proposal"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/clients/companies",
+    "name": "Clients Directory",
+    "group": "Workspace",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/clients/companies",
+      "pageTitle": "Client Directory Master",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "All",
+        "Enterprise",
+        "SMB",
+        "Startup",
+        "Export CSV",
+        "Register New Client"
+      ],
+      "inputsSample": [
+        "Search legal company name, contact, email, GSTIN...",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/clients?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/clients/new",
+    "name": "New Client Form/Modal",
+    "group": "Workspace",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/clients/new",
+      "pageTitle": "Add New ClientClient & Agreement Setup",
+      "isRestricted": false,
+      "hasCard": false,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Back",
+        "Auto-Fill Demo Data",
+        "Wizard Mode",
+        "All-In-One Form",
+        "01CURRENTCompany Identity",
+        "02STEP 02Agreement & Billing"
+      ],
+      "inputsSample": [
+        "file",
+        "e.g. Acme Technologies Private Limited",
+        "select-one",
+        "text",
+        "email",
+        "text",
+        "text",
+        "text"
+      ],
+      "hasEmptyState": true
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/clients/c/client-omni-retail",
+    "name": "Client 360 Profile",
+    "group": "Workspace",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/clients/c/client-omni-retail",
+      "pageTitle": "Omni Retail Solutions Ltd",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "General",
+        "Websites",
+        "Social",
+        "Login Credentials",
+        "Projects",
+        "Invoices"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/clients/client-omni-retail/lists/documents?page=1&limit=10",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/project-stages?status=Active",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/clients/client-omni-retail",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/service-types?status=Active",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/clients/client-omni-retail/lists/documents?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/projects",
+    "name": "Projects Overview",
+    "group": "Workspace",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/projects",
+      "pageTitle": "Projects",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "All 9",
+        "Specified 2",
+        "Samples approved 2",
+        "Ordered 2",
+        "Delivering 2",
+        "Installed 1"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/deals/board",
+    "name": "Deals Kanban Board",
+    "group": "Workspace",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/deals/board",
+      "pageTitle": "Deal board",
+      "isRestricted": false,
+      "hasCard": false,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "New deal",
+        "IO",
+        "TR",
+        "PR",
+        "CF",
+        "MT"
+      ],
+      "inputsSample": [
+        "Search deals or companies",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/deals/forecast",
+    "name": "Deals Forecast Ladder",
+    "group": "Workspace",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/deals/forecast",
+      "pageTitle": "Q4 forecast",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "New deal",
+        "Closed",
+        "Commit",
+        "Best",
+        "Osei showroom wallOsei Interiors",
+        "Second site plunge poolsMarlow Spa & Baths"
+      ],
+      "inputsSample": [
+        "select-one",
+        "select-one",
+        "select-one",
+        "select-one",
+        "select-one",
+        "select-one",
+        "select-one",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/inbox",
+    "name": "Inbox & Communications",
+    "group": "Reach",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/inbox",
+      "pageTitle": "Inbox · Tessly",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "All",
+        "Unread",
+        "Starred",
+        "Archived",
+        "Samples on the way",
+        "Happy to call"
+      ],
+      "inputsSample": [
+        "Search messages",
+        "Reply to Hector…"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/calendar",
+    "name": "Calendar & Tasks",
+    "group": "Reach",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/calendar",
+      "pageTitle": "Calendar",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Month",
+        "Agenda",
+        "New task",
+        "Today",
+        "Saltgrass bar tops delivery check",
+        "Pike courtyard photos for the case study"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/outreach/sequences",
+    "name": "Outreach Sequences",
+    "group": "Reach",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/outreach/sequences",
+      "pageTitle": "Sequences",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "New sequence",
+        "All",
+        "Active",
+        "Paused",
+        "New hotel openings",
+        "Edit"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/outreach/templates",
+    "name": "Outreach Templates",
+    "group": "Reach",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/outreach/templates",
+      "pageTitle": "Templates",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "New template",
+        "All",
+        "Intro",
+        "Follow-up",
+        "Samples",
+        "Proposal"
+      ],
+      "inputsSample": [
+        "Search templates"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/finance/invoices",
+    "name": "Tax Invoices",
+    "group": "Money",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/finance/invoices",
+      "pageTitle": "Tax Invoices",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Export CSV",
+        "Create Tax Invoice",
+        "More"
+      ],
+      "inputsSample": [
+        "Search invoice #, client...",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/invoices?page=1&limit=10",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/invoices",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/invoices?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/finance/propagations",
+    "name": "Commercial Propagations",
+    "group": "Money",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/finance/propagations",
+      "pageTitle": "Commercial Propagations",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Export CSV",
+        "Create Commercial Proposal",
+        "More"
+      ],
+      "inputsSample": [
+        "Search proposal #, client, or deliverables...",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/propagations?page=1&limit=10",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/propagations",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/propagations?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/finance/commissions",
+    "name": "Sales Commissions",
+    "group": "Money",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/finance/commissions",
+      "pageTitle": "Commissions",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Earned",
+        "Quota",
+        "More"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/finance/settings",
+    "name": "Finance Settings",
+    "group": "Money",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/finance/settings",
+      "pageTitle": "Tax, Banking & Invoice Settings",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 3,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Upload",
+        "Remove",
+        "Upload",
+        "Remove",
+        "Save profile",
+        "New profile"
+      ],
+      "inputsSample": [
+        "Registered business legal name",
+        "e.g. Enterprise Cloud & Architecture Solutions",
+        "select-one",
+        "e.g. Rahul Sen",
+        "billing@company.com",
+        "+91 (022) 6123-4567",
+        "15-character GSTIN (e.g. 27AAFCO1234F1Z8)",
+        "10-character PAN (e.g. AAFCO1234F)"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/settings",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/health",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/gst-rates",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/settings-profiles?type=invoiceSender",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/settings-profiles?type=bankDetails",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/finance/templates",
+    "name": "Invoice Templates",
+    "group": "Money",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/finance/templates",
+      "pageTitle": "Document Templates",
+      "isRestricted": false,
+      "hasCard": false,
+      "appMounted": true,
+      "tableCount": 4,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Preview Quotation",
+        "Set as Default",
+        "More"
+      ],
+      "inputsSample": [
+        "color"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/settings",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/dashboard",
+    "name": "Accounts Dashboard",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/dashboard",
+      "pageTitle": "Accounts Overview",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "More"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/dashboard",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/sales",
+    "name": "Inward Sales Ledger",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/sales",
+      "pageTitle": "Inward & Invoicing",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Create inward invoice",
+        "More"
+      ],
+      "inputsSample": [
+        "Search invoice, customer…",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/sales?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/expenses",
+    "name": "Expenses Ledger",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/expenses",
+      "pageTitle": "Expenses",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Add expense",
+        "More"
+      ],
+      "inputsSample": [
+        "Search title, description, notes…",
+        "select-one",
+        "date",
+        "date"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/expense-categories",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/accounts/expenses?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/inward-expenses",
+    "name": "Inward & Expense Reconciliation",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/inward-expenses",
+      "pageTitle": "Inward & Expenses",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 2,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "More"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/inward-expenses",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/emi",
+    "name": "EMI Installments Tracker",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/emi",
+      "pageTitle": "EMI",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "New EMI plan",
+        "More"
+      ],
+      "inputsSample": [
+        "Search product, category…",
+        "select-one",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/emi?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/credit-notes",
+    "name": "Credit Notes",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/credit-notes",
+      "pageTitle": "Credit Notes",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Create credit note",
+        "More"
+      ],
+      "inputsSample": [
+        "Search credit note, customer…",
+        "select-one"
+      ],
+      "hasEmptyState": true
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/credit-notes?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/assets",
+    "name": "Asset Records & Depreciation",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/assets",
+      "pageTitle": "Asset Records",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Add asset",
+        "More"
+      ],
+      "inputsSample": [
+        "Search asset, location…",
+        "select-one",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/asset-categories",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/accounts/assets?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/adjustment-entry",
+    "name": "Adjustment Entry (JV)",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/adjustment-entry",
+      "pageTitle": "Adjustment Entry",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Choose files",
+        "Create voucher",
+        "More"
+      ],
+      "inputsSample": [
+        "date",
+        "select-one",
+        "External reference",
+        "select-one",
+        "What is this entry for?",
+        "select-one",
+        "select-one",
+        "number"
+      ],
+      "hasEmptyState": true
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/branches/options",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/accounts/chart-of-accounts",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/accounts/adjustment-entry?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/reports",
+    "name": "Financial Reports",
+    "group": "Accounts",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/reports",
+      "pageTitle": "Financial Reports",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Balance Sheet",
+        "Profit & Loss",
+        "Trial Balance",
+        "General Ledger",
+        "More"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/reports/balance-sheet",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/expense-categories",
+    "name": "Expense Categories (Masters)",
+    "group": "Masters",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/expense-categories",
+      "pageTitle": "Expense Categories",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Add expense category",
+        "More"
+      ],
+      "inputsSample": [
+        "Search code, name, branch…"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/expense-categories?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/accounts/asset-categories",
+    "name": "Asset Categories (Masters)",
+    "group": "Masters",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/accounts/asset-categories",
+      "pageTitle": "Asset Categories",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "All Dates",
+        "IO",
+        "Add asset category",
+        "More"
+      ],
+      "inputsSample": [
+        "Search code, name, branch…"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/accounts/asset-categories?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/staff",
+    "name": "HR Employees Directory",
+    "group": "People",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/staff",
+      "pageTitle": "Employees",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Add employee",
+        "Name",
+        "Role",
+        "Department",
+        "Branch",
+        "Salary"
+      ],
+      "inputsSample": [
+        "Search name, code, role…",
+        "select-one",
+        "select-one",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/shifts",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/staff",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/hr/branches/options",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/staff?sort=name&dir=asc&page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/attendance",
+    "name": "HR Attendance Logs",
+    "group": "People",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/attendance",
+      "pageTitle": "Biometric Attendance",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Log attendance",
+        "1",
+        "2",
+        "3",
+        "4",
+        "Next"
+      ],
+      "inputsSample": [
+        "Search staff or date…",
+        "month",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/staff-attendance?page=1&limit=10",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/staff",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/leave",
+    "name": "HR Leave Requests",
+    "group": "People",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/leave",
+      "pageTitle": "Leave Requests",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Submit request",
+        "1",
+        "2",
+        "3",
+        "4",
+        "Next"
+      ],
+      "inputsSample": [
+        "select-one",
+        "select-one",
+        "date",
+        "date",
+        "Why is this leave needed?",
+        "Search requests…"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/leave?page=1&limit=10",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/staff",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/hr/leave-types",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/salary",
+    "name": "HR Salary Structures",
+    "group": "People",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/salary",
+      "pageTitle": "Salary Structures",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Create salary structure",
+        "More"
+      ],
+      "inputsSample": [
+        "select-one",
+        "date",
+        "select-one",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/staff",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/salary-structures?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/advances",
+    "name": "HR Salary Advances",
+    "group": "People",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/advances",
+      "pageTitle": "Salary Advances",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Create salary advance",
+        "More"
+      ],
+      "inputsSample": [
+        "select-one",
+        "0",
+        "0",
+        "date",
+        "Festival advance",
+        "select-one",
+        "Search…"
+      ],
+      "hasEmptyState": true
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/advances?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/adjustments",
+    "name": "HR Payroll Adjustments",
+    "group": "People",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/adjustments",
+      "pageTitle": "Payroll Adjustments",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Create payroll adjustment",
+        "More"
+      ],
+      "inputsSample": [
+        "select-one",
+        "month",
+        "select-one",
+        "Festival bonus",
+        "0",
+        "Search…"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/adjustments?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/payroll",
+    "name": "HR Payroll & Payslips",
+    "group": "People",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/payroll",
+      "pageTitle": "Payroll & Payslips",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Run payroll",
+        "More"
+      ],
+      "inputsSample": [
+        "month",
+        "select-one"
+      ],
+      "hasEmptyState": true
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/payroll",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/hr/branches/options",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/branches",
+    "name": "Company Branches (Masters)",
+    "group": "Masters",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/branches",
+      "pageTitle": "Branches",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Create branch",
+        "More"
+      ],
+      "inputsSample": [
+        "Bandra",
+        "BA",
+        "Mumbai",
+        "Full name",
+        "+91 98765 43210",
+        "branch@company.com",
+        "Street, area",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/branches?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/shifts",
+    "name": "Work Shifts (Masters)",
+    "group": "Masters",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/shifts",
+      "pageTitle": "Shifts",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Create shift",
+        "More"
+      ],
+      "inputsSample": [
+        "General Shift",
+        "time",
+        "time",
+        "time",
+        "0",
+        "0",
+        "0",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/shifts?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/hr/leave-types",
+    "name": "Leave Types (Masters)",
+    "group": "Masters",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/hr/leave-types",
+      "pageTitle": "Leave Types",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Create leave type",
+        "More"
+      ],
+      "inputsSample": [
+        "Casual Leave",
+        "CL",
+        "0",
+        "0",
+        "select-one",
+        "select-one",
+        "Search…"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/hr/branches/options",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/hr/leave-types?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/clients/service-types",
+    "name": "Service Types (Masters)",
+    "group": "Masters",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/clients/service-types",
+      "pageTitle": "Service Type Master",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Add Service Type",
+        "Active",
+        "Active",
+        "Active",
+        "Active",
+        "Active"
+      ],
+      "inputsSample": [
+        "Search service types…",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/service-types?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/clients/project-stages",
+    "name": "Project Stages (Masters)",
+    "group": "Masters",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/clients/project-stages",
+      "pageTitle": "Project Stage Master",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 1,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Add Stage",
+        "Active",
+        "Active",
+        "Active",
+        "Active",
+        "Active"
+      ],
+      "inputsSample": [
+        "Search stages…",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/project-stages?page=1&limit=10",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/profile",
+    "name": "User Profile",
+    "group": "Studio",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/profile",
+      "pageTitle": "Profile",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Change",
+        "More"
+      ],
+      "inputsSample": [
+        "name",
+        "username",
+        "email",
+        "+91 98200 00000",
+        "role",
+        "Leave blank to keep current",
+        "Re-enter the password"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/team",
+    "name": "Team Directory",
+    "group": "Studio",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/team",
+      "pageTitle": "Team",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Invite teammate",
+        "Won",
+        "Activity",
+        "Quota %",
+        "1IOInes OkaforHead of specification sales (Admin)68% of ₹1.20MWon₹812KPipeline₹171KTouches4",
+        "2TRTomás ReyesAccount executive · Hospitality (Staff)80% of ₹900KWon₹724KPipeline₹299KTouches10"
+      ],
+      "inputsSample": [],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/library",
+    "name": "Playbooks Library",
+    "group": "Studio",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/library",
+      "pageTitle": "Playbooks",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Specifying terrazzo without surprises60% · 9 min",
+        "Discovery questions that find the budget30% · 7 min",
+        "Reading an architect’s drawing set fast10% · 11 min",
+        "All",
+        "Discovery",
+        "Specification"
+      ],
+      "inputsSample": [
+        "Search playbooks"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/settings",
+    "name": "Studio Settings (16 Sections)",
+    "group": "Studio",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/settings",
+      "pageTitle": "Settings & Platform Configuration",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Upload",
+        "Remove",
+        "Discard",
+        "Save Web Appearance Changes",
+        "More"
+      ],
+      "inputsSample": [
+        "Enter site name",
+        "Enter support email",
+        "Enter phone number",
+        "select-one",
+        "select-one",
+        "select-one",
+        "select-one",
+        "select-one"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [
+      {
+        "url": "http://localhost:1234/api/settings",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/health",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:1234/api/gst-rates",
+        "method": "GET"
+      }
+    ],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "route": "/support",
+    "name": "Helpdesk & Support",
+    "group": "Studio",
+    "status": "OK",
+    "pageState": {
+      "currentUrl": "/support",
+      "pageTitle": "How can we help?",
+      "isRestricted": false,
+      "hasCard": true,
+      "appMounted": true,
+      "tableCount": 0,
+      "buttonsSample": [
+        "IOInes OkaforHead of specification sales (Admin) · Admin",
+        "IO",
+        "Getting started2 answers",
+        "Deals & pipeline3 answers",
+        "Billing2 answers",
+        "Outreach2 answers",
+        "Account & security2 answers",
+        "How do I add a new client?"
+      ],
+      "inputsSample": [
+        "Search for answers — try “invoice” or “undo”",
+        "select-one",
+        "A short summary",
+        "What happened, and what did you expect?"
+      ],
+      "hasEmptyState": false
+    },
+    "apiRequests": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  }
+]

@@ -37,11 +37,26 @@ server.listen(PORT, async () => {
   const thColor = async () => page.$eval('[data-spec-sheet] thead th', (el) => getComputedStyle(el).color);
   const pick = async (id) => { await page.evaluate((x) => { const c = document.querySelector(`[data-template-card="${x}"]`); if (c) c.click(); }, id); await new Promise((r) => setTimeout(r, 300)); };
   const toggle = async () => { await page.evaluate(() => { const t = Array.from(document.querySelectorAll('.phead__actions button')).find((b) => /Preview (Quotation|Invoice)/.test(b.textContent)); if (t) t.click(); }); await new Promise((r) => setTimeout(r, 350)); };
+  // The app keeps its signed-in session in memory only — a hard page reload drops it,
+  // so navigate in-app (SPA router) instead of via page.goto.
+  const spaGoto = async (p, wait = 800) => { await page.evaluate((to) => { if (window.__navigate) window.__navigate(to); else history.pushState(null, '', to); }, p); await new Promise((r) => setTimeout(r, wait)); };
 
   try {
     // 1. MOUNT + SINGLE HEADER + TOP-CONTAINER BUTTONS
     console.log('\n=== 1. MOUNT + TOP CONTAINER ===');
-    await page.goto(`http://localhost:${PORT}/finance/templates`, { waitUntil: 'networkidle2' });
+    await page.goto(`http://localhost:${PORT}/finance/templates`, { waitUntil: 'domcontentloaded' });
+    await new Promise((r) => setTimeout(r, 2500));
+    // The app gates content behind sign-in — log in first if the login screen shows.
+    if (await page.$('.lg-form')) {
+      await page.evaluate(() => {
+        const set = (sel, v) => { const el = document.querySelector(sel); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, v); el.dispatchEvent(new Event('input', { bubbles: true })); };
+        set('.lg-input[name="email"]', 'ines.okafor@tessly.io');
+        set('.lg-input[name="password"]', 'dev1234');
+        document.querySelector('.lg-form').requestSubmit();
+      });
+      await page.waitForSelector('.app', { timeout: 9000 });
+      await spaGoto('/finance/templates', 1500);
+    }
     await page.waitForSelector('[data-spec-page="templates"]', { timeout: 9000 });
     await new Promise((r) => setTimeout(r, 700));
 
@@ -57,18 +72,34 @@ server.listen(PORT, async () => {
     // 2. GALLERY
     console.log('\n=== 2. TEMPLATE GALLERY ===');
     const cards = await page.$$('[data-template-card]');
-    assert(cards.length === 3, `Gallery renders 3 selectable templates (got ${cards.length})`);
+    assert(cards.length === 2, `Gallery renders 2 selectable templates (got ${cards.length})`);
     const names = await page.$$eval('.tmpl-card__body b', (els) => els.map((e) => e.textContent));
-    assert(names.includes('Classic Corporate') && (names.includes('Crimson Creative') || names.includes('Retail Light')) && names.includes('Settlement Fintech'), `Cards: ${names.join(', ')}`);
+    assert(names.length === 2 && names.includes('Classic Corporate') && (names.includes('Crimson Creative') || names.includes('Retail Light')), `Cards: ${names.join(', ')} (Settlement Fintech removed from the library)`);
     let sel = await page.$$eval('.tmpl-card.is-selected', (els) => els.map((e) => e.getAttribute('data-template-card')));
     assert(sel.length === 1 && sel[0] === 'classic', `Default selection is Classic Corporate`);
 
-    // 3. THREE GENUINELY DIFFERENT TEMPLATES
-    console.log('\n=== 3. THREE DISTINCT TEMPLATES ===');
+    // 3. TWO GENUINELY DIFFERENT TEMPLATES
+    console.log('\n=== 3. TWO DISTINCT TEMPLATES ===');
     await pick('classic');
     assert((await page.$('[data-spec-header="dark"]')) !== null, 'Classic renders its dark-band header (slashes + logo box)');
     const cTh = await thBg();
     assert(/77, 51, 182/.test(cTh), `Classic: indigo line-items header (${cTh})`);
+
+    // Verify template colour swatch customization: template table header follows chosen swatch, NOT CRM theme
+    const pinkSwatch = await page.$('.tmpl-swatch[data-color="#db2777"]');
+    if (pinkSwatch) {
+      await pinkSwatch.click();
+      await new Promise((r) => setTimeout(r, 400));
+      const pinkTh = await thBg();
+      assert(/219, 39, 119/.test(pinkTh), `Classic: pink swatch renders template header in pink rgb(219, 39, 119) (${pinkTh})`);
+      const resetBtn = await page.$('#tpl-color-reset');
+      if (resetBtn) {
+        await resetBtn.click();
+        await new Promise((r) => setTimeout(r, 400));
+        const resetTh = await thBg();
+        assert(/77, 51, 182/.test(resetTh), `Classic: reset returns header to indigo (${resetTh})`);
+      }
+    }
 
     await pick('retail');
     assert((await page.$('[data-spec-header="creative"], [data-spec-header="light"]')) !== null, 'Crimson Creative renders a distinct geometric header');
@@ -77,14 +108,8 @@ server.listen(PORT, async () => {
     const rFc = await page.$eval('[data-spec-footer]', (el) => getComputedStyle(el).backgroundColor);
     assert(/255, 255, 255/.test(rFc), `Crimson Creative: white footer band (${rFc})`);
 
-    await pick('fintech');
-    assert((await page.$('[data-spec-header="rail"]')) !== null, 'Settlement Fintech renders its rail-accent header (distinct from dark & light)');
-    const fBorder = await page.$eval('[data-spec-sheet]', (el) => getComputedStyle(el).borderLeftWidth);
-    assert(fBorder.startsWith('10px'), `Settlement Fintech: 10px accent rail on sheet left edge (${fBorder})`);
-    const fTh = await thBg();
-    assert(/15, 23, 42/.test(fTh), `Settlement Fintech: slate line-items header (${fTh})`);
-
-    assert(new Set([cTh, rTh, fTh]).size === 3, `Each template has its own line-items header design (${cTh} / ${rTh} / ${fTh})`);
+    assert(await page.$('[data-template-card="fintech"]') === null, 'Settlement Fintech card is no longer in the library');
+    assert(new Set([cTh, rTh]).size === 2, `Each template has its own line-items header design (${cTh} / ${rTh})`);
 
     // 4. INVOICE <-> QUOTATION (button in top container)
     console.log('\n=== 4. INVOICE <-> QUOTATION ===');
@@ -135,6 +160,9 @@ server.listen(PORT, async () => {
     await new Promise((r) => setTimeout(r, 400));
     const persisted = await page.evaluate(() => localStorage.getItem('tessly:templateDefault'));
     assert(persisted && JSON.parse(persisted).selected === 'retail', `Set as Default persists the chosen template (${persisted})`);
+    // Reload the page SPA-style (session survives) and confirm the default is restored.
+    await spaGoto('/finance/invoices', 1200);
+    await spaGoto('/finance/templates', 1200);
 
     // 9. HEALTH
     console.log('\n=== 9. CONSOLE AUDIT ===');

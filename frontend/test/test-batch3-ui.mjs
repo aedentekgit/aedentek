@@ -324,18 +324,18 @@ const api = async (m, u, b) => (await fetch(BASE + u, { method: m, headers: { 'C
       await page.evaluate(() => [...document.querySelectorAll('button')].find((b) => /as Default/.test(b.textContent)).click()); await sleep(700);
       ok(await page.$('[data-template-card="classic"] [data-default-pill]'), 'classic not marked');
       ok((await page.$eval('[data-template-card="classic"]', (e) => e.getAttribute('data-default'))) === 'true', 'data-default');
-      ok(!(await page.$('[data-template-card="fintech"] [data-default-pill]')), 'fintech wrongly marked');
+      ok(!(await page.$('[data-template-card="retail"] [data-default-pill]')), 'retail wrongly marked');
       await shot('07-template-default');
     });
     await test('TP-07', 'Default template marker', 'default is kept per document type and survives a reload; changing it moves the marker', async () => {
-      await page.click('[data-template-card="fintech"]'); await sleep(300);
+      await page.click('[data-template-card="retail"]'); await sleep(300);
       await page.evaluate(() => [...document.querySelectorAll('button')].find((b) => /as Default/.test(b.textContent)).click()); await sleep(600);
-      ok(await page.$('[data-template-card="fintech"] [data-default-pill]') && !(await page.$('[data-template-card="classic"] [data-default-pill]')), 'marker should move to fintech');
+      ok(await page.$('[data-template-card="retail"] [data-default-pill]') && !(await page.$('[data-template-card="classic"] [data-default-pill]')), 'marker should move to retail');
       await goto('/finance/templates', 1500);
-      ok(await page.$('[data-template-card="fintech"] [data-default-pill]'), 'not persisted');
+      ok(await page.$('[data-template-card="retail"] [data-default-pill]'), 'not persisted');
     });
     await test('TP-08', 'Template colour', 'the chosen colour is used by real documents (invoice preview of the default template)', async () => {
-      await page.evaluate(() => localStorage.setItem('tessly:templateColors', JSON.stringify({ fintech: '#059669' })));
+      await page.evaluate(() => localStorage.setItem('tessly:templateColors', JSON.stringify({ classic: '#059669' })));
       await goto('/finance/invoices', 1500);
       const hasInvoices = await page.$('tbody tr[data-row]');
       if (!hasInvoices) return;

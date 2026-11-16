@@ -4,8 +4,9 @@
 /* ==========================================================================
    TEMPLATE SELECTION PAGE (finance/templates) — spec UI/UX, theme-aware
    ========================================================================== */
-.tmpl-grid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:var(--gap);align-items:start}
-.tmpl-gallery{display:grid;gap:14px}
+.tmpl-grid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:var(--gap);align-items:stretch;overflow:hidden}
+.tmpl-gallery{display:grid;gap:14px;min-height:0;overflow:visible}
+.tmpl-grid>*{min-height:0}
 .tmpl-card{position:relative;overflow:hidden;cursor:pointer;border-radius:18px !important;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);display:grid;grid-template-columns:1fr;transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease}
 .tmpl-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-pop)}
 .tmpl-card.is-selected{border-color:var(--primary) !important;border-radius:18px !important;box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent), var(--shadow-pop) !important}
@@ -15,14 +16,23 @@
 .tmpl-card__tag{font-size:11px;font-weight:700;letter-spacing:.04em}
 .tmpl-card__pick{position:absolute;right:12px;bottom:12px;gap:4px;font-size:11px;font-weight:700;display:flex}
 .tmpl-badge{border-radius:999px;background:var(--card-2);color:var(--muted);font-size:10.5px;font-weight:600;padding:2px 9px;border:1px solid var(--line)}
-.tmpl-preview{position:sticky;top:calc(var(--top-h,68px) + 14px)}
+.tmpl-preview{min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.tmpl-preview__bar{flex:none}
 .tmpl-preview__bar{border-radius:var(--r-card) var(--r-card) 0 0;border:1px solid var(--line);background:var(--card);justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;display:flex;box-shadow:var(--shadow)}
 .tmpl-kpi{border:1px solid var(--line);border-radius:999px;background:var(--card-2);color:var(--muted);font-size:11px;font-weight:600;padding:3px 10px;display:inline-flex;gap:5px;align-items:center}
 .tmpl-kpi b{color:var(--text);font-weight:700}
-.tmpl-preview__stage{border-radius:0 0 var(--r-card) var(--r-card);border:1px solid var(--line);border-top:none;background:color-mix(in srgb, var(--primary) 4%, var(--card));padding:18px;overflow:auto}
+.tmpl-preview__stage{border-radius:0 0 var(--r-card) var(--r-card);border:1px solid var(--line);border-top:none;background:color-mix(in srgb, var(--primary) 4%, var(--card));padding:18px;flex:1 1 auto;min-height:0;overflow-y:auto}
 .tmpl-preview__stage .spec-sheet{box-shadow:0 12px 34px rgba(15,23,42,.18)}
 /* Spec sheets stay print-crisp in both light & dark app themes */
 .spec-sheet{width:100%;max-width:794px;margin:0 auto;background:#ffffff;color:#1e293b;min-height:1050px;display:flex;flex-direction:column;justify-content:space-between;position:relative;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.25);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 .spec-sheet table{width:100%;border-collapse:collapse}
-@media (width<=1150px){.tmpl-grid{grid-template-columns:1fr}.tmpl-preview{position:static}}
+/* Templates page: header + left gallery stay put; the grid frame is locked to the viewport
+   height and ONLY the right-side live-preview stage scrolls internally.
+   (64px = .main pad-bottom; #main pad-top is pinned to 0 globally) */
+.commissions-page:has(> .tmpl-page[data-tmpl-layout]){height:calc(100dvh - var(--top-h,68px) - 64px);min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.commissions-page:has(> .tmpl-page[data-tmpl-layout]) > .phead{flex:none}
+.commissions-page:has(> .tmpl-page[data-tmpl-layout]) .tmpl-page{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.commissions-page:has(> .tmpl-page[data-tmpl-layout]) .tmpl-grid{flex:1 1 auto;min-height:0}
+/* Small screens: fall back to a normally-scrolling stacked layout */
+@media (width<=1150px){.commissions-page:has(> .tmpl-page[data-tmpl-layout]){height:auto;min-height:0;overflow:visible;display:block}.commissions-page:has(> .tmpl-page[data-tmpl-layout]) .tmpl-page{flex:none;overflow:visible;display:block}.commissions-page:has(> .tmpl-page[data-tmpl-layout]) .tmpl-grid{flex:none;height:auto;overflow:visible}.tmpl-grid{grid-template-columns:1fr;grid-template-rows:auto;overflow:visible}.tmpl-gallery{overflow:visible}.tmpl-preview{display:block}.tmpl-preview__stage{flex:none;overflow:visible}}
 @media (width<=760px){.tmpl-preview__stage{padding:10px}}

@@ -5,7 +5,7 @@ export default defineConfig({
   root: '.',
   base: '/',
   server: {
-    port: 3000,
+    port: 1234,
     host: true,
     watch: {
       ignored: [
