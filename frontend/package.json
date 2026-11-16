@@ -30,7 +30,8 @@
     "test:client-doc-upload": "node test/test-client-document-upload.mjs",
     "test:client-doc-array": "node test/test-client-document-array-upload.mjs",
     "test:rbac": "node test/test-role-based-restrictions.mjs",
-    "test:auth-refresh": "node test/test-token-refresh-and-auto-logout.mjs"
+    "test:auth-refresh": "node test/test-token-refresh-and-auto-logout.mjs",
+    "test:e2e-crud": "node test/test-comprehensive-e2e-crud-all-flows.mjs"
   },
   "keywords": [
     "crm",

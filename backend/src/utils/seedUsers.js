@@ -21,6 +21,15 @@ export const SEED_USERS = [
     active: true
   },
   {
+    username: 'ines.okafor.aedentek',
+    email: 'ines.okafor@aedentek.com',
+    name: 'Ines Okafor',
+    role: 'Admin',
+    accessLevel: 'Admin',
+    password: hashBcrypt('password123'),
+    active: true
+  },
+  {
     username: 'manager',
     email: 'manager@tessly.local',
     name: 'Branch Manager',
