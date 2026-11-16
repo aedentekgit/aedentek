@@ -1,35 +1,61 @@
-# AEDENTEK CRM — HR OFFER LETTERS & MASTERS TEMPLATES VERIFICATION REPORT
+# AEDENTEK CRM — OFFER LETTER TEMPLATES STUDIO & HR WORKSPACE VERIFICATION REPORT
 
-**Feature:** Human Resources Offer Letters & Masters Offer Letter Templates  
+**Feature:** Interactive Offer Letter Templates Studio & Human Resources Offer Letters  
 **Execution Date:** November 16, 2026  
-**Environment:** Staging / Local Dev & Remote Docker Production  
-**Overall Status:** **PASSED (100% Success Rate — 41/41 Assertions Verified, 0 Failures)**
+**Environment:** Staging / Local Dev (`http://localhost:1234`) & Remote Docker Production (`https://crm.aedentek.in`)  
+**Overall Status:** **PASSED (100% Success Rate — 49/49 Assertions Verified, 0 Failures)**
 
 ---
 
-## 1. Feature Overview & Architecture
+## 1. Feature Architecture & Specification Compliance
 
-Per user requirements, the platform was enhanced with an End-to-End recruitment-to-onboarding offer letter subsystem:
-1. **Masters Template Engine (`/hr/offer-letter-templates`):**
-   - Enables HR administrators to create and manage reusable, standardized offer letter templates (e.g. Standard Corporate, Executive Leadership, Technical & Engineering).
-   - Configurable salary structure allocation rules (Basic %, HRA %, Special Allowance %).
-   - Dynamic replacement tokens: `{candidateName}`, `{position}`, `{department}`, `{branch}`, `{joiningDate}`, `{ctc}`, `{expiryDate}`, `{companyName}`, `{signatoryName}`.
-   - Customizable appointment clauses and terms (Probation, Notice, Working Hours, Confidentiality).
-   - "Set as System Default" capability.
-2. **HR Offer Letters Workspace (`/hr/offer-letters`):**
-   - High-level KPI stat cards (Total Offers, Sent / In Review, Accepted, Total CTC Committed).
-   - Candidate offer register table with search by candidate name/email/position/number, status chips (`All`, `Draft`, `Sent`, `Accepted`, `Declined`), and branch filter.
-   - Drawer for generating / editing offer letters:
-     - Selecting a template automatically populates salary percentages, terms, and subject.
-     - Live calculation banner showing Monthly Gross, Basic, HRA, and Special Allowance derived from the Annual CTC.
-     - Branch selection linked to the centralized Branch master.
-   - Executive View & Print Modal:
-     - Branded letterhead (Aedentek CRM · Calder & Moss Surfaces).
-     - Addressed candidate block and formal appointment text.
-     - **Annexure A**: Structured Compensation Schedule table (Component, Monthly ₹, Annual ₹).
-     - Terms & Conditions list.
-     - Bilateral execution block (Company Signatory on left, Candidate Acceptance on right).
-     - Single-click native "Print / Save PDF" functionality.
+In accordance with the visual specification from **Invoice > Document Templates**, the **Masters > Offer Letter Templates** page has been elevated into an interactive two-column document design studio:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  Workspace > Masters > Offer Letter Templates                                                              │
+│  Offer Letter Templates                               Candidate: [Aditya Singhania v]  [+ New] [✓ Default] │
+├──────────────────────────────────────┬─────────────────────────────────────────────────────────────────────┤
+│  TEMPLATE LIBRARY                    │  LIVE PREVIEW · Classic Corporate · Offer Letter   Colour: ●●●●●●●● │
+│                                      │                                                                     │
+│  ┌────────────────────────────────┐  │  ┌───────────────────────────────────────────────────────────────┐  │
+│  │ [SVG Mini Slashes Header]      │  │  │ [Dark Angled Header + Cyan/Primary Slashes + YOUR LOGO Box]   │  │
+│  │ Classic Corporate  Corporate-A4│  │  ├───────────────────────────────┬───────────────────────────────┤  │
+│  │ Flagship statutory layout...   │  │  │ OFFER EXTENDED TO             │ ISSUED BY (AEDENTEK GROUP)    │  │
+│  │ [Basic 50%] [HRA 20%] [Spl 30%]│  │  │ Candidate: Aditya Singhania   │ Company: Aedentek CRM         │  │
+│  │ [Edit] [Delete]    ✓ Selected  │  │  │ Role: Senior Ceramic Designer │ Branch: Bandra (Mumbai)       │  │
+│  └────────────────────────────────┘  │  ├───────────────────────────────┴───────────────────────────────┤  │
+│  ┌────────────────────────────────┐  │  │ Formal appointment letter body with dynamic variables...      │  │
+│  │ [SVG Executive Slashes Header] │  │  ├───────────────────────────────────────────────────────────────┤  │
+│  │ Executive Leadership  Exec-A4  │  │  │ ANNEXURE A: STRUCTURED COMPENSATION SCHEDULE                  │  │
+│  │ High-contrast dynamic slashes..│  │  │ [Theme Colored Header: Component | Allocation | Monthly | Yrs]│  │
+│  │ [Basic 50%] [HRA 20%] [Spl 30%]│  │  ├───────────────────────────────────────────────────────────────┤  │
+│  └────────────────────────────────┘  │  │ Terms & Conditions (Probation, Notice, Working Hours, IP)     │  │
+│  ┌────────────────────────────────┐  │  ├───────────────────────────────┬───────────────────────────────┤  │
+│  │ [SVG Technical Rail Header]    │  │  │ Signatory (Ines Okafor)       │ Acceptance (Candidate)        │  │
+│  │ Technical Offer     Tech-A4    │  │  ├───────────────────────────────┴───────────────────────────────┤  │
+│  └────────────────────────────────┘  │  │ [Corporate Footer: Phone | Email | Address | Thank You]       │  │
+│                                      │  └───────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────┴─────────────────────────────────────────────────────────────────────┘
+```
+
+### Key Architectural Capabilities
+1. **Two-Column Studio (`.tmpl-grid`)**:
+   - **Left Column (`.tmpl-gallery`)**: Template cards with visual SVG letterhead previews, status tags, salary allocation percentages, and quick edit/delete drawer triggers.
+   - **Right Column (`.tmpl-preview`)**: Live preview stage featuring an 8-color preset palette (`#4d33b6`, `#2563eb`, `#0891b2`, `#059669`, `#d97706`, `#e5252a`, `#db2777`, `#0f172a`), custom HTML color input, and `Reset` button.
+2. **A4 Spec Sheet Canvas (`.spec-sheet`)**:
+   - Locked to `794 × 1050` dimensions.
+   - Dynamic letterhead matching template style (Classic angled slashes with logo card, Executive crimson slashes, or Technical accent rail).
+   - Dual Information Cards (`OFFER EXTENDED TO` and `ISSUED BY`) with vertical color accent border lines.
+   - **Annexure A Compensation Table**: Themed header bar matching the selected colour, with monthly and annual breakdowns computed dynamically from the candidate's CTC.
+   - Terms & Conditions and bilateral execution signature blocks.
+3. **Interactive Candidate Profile Switcher**:
+   - Dropdown in the header enables live testing against multiple sample roles:
+     - *Aditya Singhania* — Senior Ceramic Designer (Design, ₹9,60,000 CTC)
+     - *Meera Nambiar* — Lead Solution Architect (Engineering, ₹18,00,000 CTC)
+     - *Kunal Deshmukh* — Accounts Executive (Finance, ₹5,40,000 CTC)
+4. **System Default Synchronization**:
+   - Top `Set as Default` button triggers backend updates (`PUT /api/hr/offer-letter-templates/:id/default`) and provides immediate `✓ Saved as Default` feedback.
 
 ---
 
@@ -49,12 +75,16 @@ Per user requirements, the platform was enhanced with an End-to-End recruitment-
 | **Offer Letters CRUD** | `GET /api/hr/offer-letters/:id` | Read single offer document with breakdown | 2 / 2 | **PASS** |
 | **Offer Letters CRUD** | `PUT /api/hr/offer-letters/:id` | Update status to Sent, recompute CTC & salary | 3 / 3 | **PASS** |
 | **Offer Letters CRUD** | `DELETE /api/hr/offer-letters/:id` | Remove candidate offer letter cleanly | 1 / 1 | **PASS** |
-| **UI Walkthrough** | `/hr/offer-letter-templates` | Masters breadcrumbs, page title, card gallery | 3 / 3 | **PASS** |
-| **UI Walkthrough** | `/hr/offer-letters` | HR breadcrumbs, page title, 4 KPI cards, table register | 4 / 4 | **PASS** |
-| **UI Walkthrough** | Drawer Creation | Modal drawer opens, template selector pre-fills data | 2 / 2 | **PASS** |
-| **UI Walkthrough** | Executive Letterhead | Letterhead, Annexure A salary table, terms, signature block | 5 / 5 | **PASS** |
-| **UI Health** | Browser Console | Zero uncaught page/runtime errors | Audit | **CLEAN (0 Errors)** |
-| **TOTAL** | | | **41 / 41** | **100% PASS** |
+| **Studio Layout** | `/hr/offer-letter-templates` | Two-column grid `.tmpl-grid` & gallery `.tmpl-gallery` | 2 / 2 | **PASS** |
+| **Studio Layout** | Preview Panel | `.tmpl-preview` with `.spec-sheet` canvas | 2 / 2 | **PASS** |
+| **Color Studio** | Palette Swatches | 8 color swatches rendered & interactive | 2 / 2 | **PASS** |
+| **Dynamic Switching** | Template Cards | Clicking card updates selection & preview geometry | 2 / 2 | **PASS** |
+| **Dynamic Switching** | Candidate Dropdown | Switching candidate updates live document content | 2 / 2 | **PASS** |
+| **HR Offer Letters** | `/hr/offer-letters` | HR breadcrumbs, 4 KPI cards, candidate table register | 4 / 4 | **PASS** |
+| **HR Drawer** | New Offer Drawer | Drawer opens, template picker auto-populates terms & CTC | 2 / 2 | **PASS** |
+| **Printable Modal** | Executive Letterhead | Modal letterhead, Annexure A salary table, signatures | 5 / 5 | **PASS** |
+| **Runtime Health** | Console Logs | Zero uncaught frontend runtime errors during entire walkthrough | Audit | **CLEAN (0 Errors)** |
+| **TOTAL** | | | **49 / 49** | **100% PASS** |
 
 ---
 
@@ -62,19 +92,22 @@ Per user requirements, the platform was enhanced with an End-to-End recruitment-
 
 1. **`masters_offer_letter_templates_gallery.png`**:
    - Location: [frontend/test-reports/masters_offer_letter_templates_gallery.png](file:///Users/aedenteka/Downloads/Projects/CRM/Aedentek%20CRM/Aedentek%20CRM/frontend/test-reports/masters_offer_letter_templates_gallery.png)
-   - Displays the Masters Offer Letter Templates gallery cards, code badges, default indicators, and salary breakdown pills.
+   - Shows the two-column Offer Letter Templates Studio matching Document Templates specification.
 2. **`hr_offer_letters_register.png`**:
    - Location: [frontend/test-reports/hr_offer_letters_register.png](file:///Users/aedenteka/Downloads/Projects/CRM/Aedentek%20CRM/Aedentek%20CRM/frontend/test-reports/hr_offer_letters_register.png)
-   - Displays the Offer Letters dashboard, 4 KPI metric cards, status filter tabs, and the candidate table register.
+   - Displays the candidate offer register, KPI cards, and status filter chips.
 3. **`hr_offer_letter_executive_preview.png`**:
    - Location: [frontend/test-reports/hr_offer_letter_executive_preview.png](file:///Users/aedenteka/Downloads/Projects/CRM/Aedentek%20CRM/Aedentek%20CRM/frontend/test-reports/hr_offer_letter_executive_preview.png)
-   - Displays the high-fidelity printable letterhead appointment letter, Annexure A structured salary table, terms, and bilateral signature blocks.
+   - Displays the printable executive letterhead with Annexure A salary breakdown and signature blocks.
 
 ---
 
-## 4. How to Run the Automated Suite
+## 4. Local Execution Commands
 
 ```bash
-# Run the Offer Letters & Templates E2E verification suite
+# Run Offer Letters and Templates verification suite
 npm --prefix frontend run test:offer-letters
+
+# Run complete platform E2E sweep
+npm --prefix frontend run test:e2e-crud
 ```

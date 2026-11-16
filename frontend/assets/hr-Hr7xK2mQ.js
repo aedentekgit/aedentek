@@ -3554,25 +3554,657 @@ function OfferLettersPage() {
   });
 }
 
-function OfferLetterTemplatesPage() {
-  const { rows: templates, loading, reload } = useCollection('/api/hr/offer-letter-templates');
+// ==========================================================================
+// OFFER LETTER TEMPLATES STUDIO (Interactive A4 Two-Column Layout)
+// ==========================================================================
+
+const SAMPLE_OFFER_CANDIDATES = [
+  {
+    name: "Aditya Singhania",
+    role: "Senior Ceramic Designer",
+    department: "Design",
+    branch: "Bandra Branch (Mumbai)",
+    email: "aditya.singhania@example.com",
+    phone: "+91 98210 55432",
+    address: "Flat 402, Sea Green Apts, Worli, Mumbai - 400018",
+    joiningDate: "December 01, 2026",
+    expiryDate: "November 25, 2026",
+    ctc: 960000,
+    offerNumber: "OL-2026-0001"
+  },
+  {
+    name: "Meera Nambiar",
+    role: "Lead Solution Architect",
+    department: "Engineering",
+    branch: "Andheri Branch (Mumbai)",
+    email: "meera.nambiar@example.com",
+    phone: "+91 98450 12345",
+    address: "12th Cross, Indiranagar, Bengaluru - 560038",
+    joiningDate: "December 15, 2026",
+    expiryDate: "November 28, 2026",
+    ctc: 1800000,
+    offerNumber: "OL-2026-0002"
+  },
+  {
+    name: "Kunal Deshmukh",
+    role: "Accounts Executive",
+    department: "Finance",
+    branch: "Bandra Branch (Mumbai)",
+    email: "kunal.deshmukh@example.com",
+    phone: "+91 98700 98765",
+    address: "A-203, Palm Grove, Thane West - 400602",
+    joiningDate: "January 05, 2027",
+    expiryDate: "December 10, 2026",
+    ctc: 540000,
+    offerNumber: "OL-2026-0003"
+  }
+];
+
+const OL_COLOR_PRESETS = ["#4d33b6", "#2563eb", "#0891b2", "#059669", "#d97706", "#e5252a", "#db2777", "#0f172a"];
+
+const readOlColors = () => {
+  try {
+    return JSON.parse(localStorage.getItem("tessly:offerLetterTemplateColors") || "{}") || {};
+  } catch (e) {
+    return {};
+  }
+};
+
+const writeOlColor = (id, hex) => {
+  try {
+    const all = readOlColors();
+    if (hex) all[id] = hex;
+    else delete all[id];
+    localStorage.setItem("tessly:offerLetterTemplateColors", JSON.stringify(all));
+  } catch (e) {}
+};
+
+function renderOlSwatch(tpl, activeColor) {
+  const code = tpl.code || "";
+  if (code === "OLT-EXEC") {
+    return jsxs("svg", {
+      viewBox: "0 0 794 130",
+      width: "100%",
+      height: "60",
+      preserveAspectRatio: "none",
+      "aria-hidden": "true",
+      children: [
+        jsx("rect", { x: 0, y: 0, width: 794, height: 130, fill: "#ffffff" }),
+        jsx("polygon", { points: "0,0 355,0 260,130 0,130", fill: "#111113" }),
+        jsx("polygon", { points: "340,0 375,0 295,130 260,130", fill: "rgba(229,37,42,0.45)" }),
+        jsx("polygon", { points: "365,0 400,0 325,130 290,130", fill: activeColor }),
+        jsx("circle", { cx: 58, cy: 64, r: 14, fill: activeColor }),
+        jsx("rect", { x: "82", y: "56", width: "90", height: "10", rx: "2", fill: "#ffffff" }),
+        jsx("text", { x: 720, y: 56, fill: activeColor, fontSize: 26, fontWeight: 900, textAnchor: "end", children: "EXECUTIVE" }),
+        jsx("rect", { x: 580, y: 70, width: 140, height: 18, rx: 9, fill: "rgba(229,37,42,0.15)" }),
+        jsx("rect", { x: 0, y: 124, width: 794, height: 6, fill: activeColor })
+      ]
+    });
+  }
+  if (code === "OLT-TECH") {
+    return jsxs("svg", {
+      viewBox: "0 0 794 130",
+      width: "100%",
+      height: "60",
+      preserveAspectRatio: "none",
+      "aria-hidden": "true",
+      children: [
+        jsx("rect", { x: 0, y: 0, width: 794, height: 130, fill: "#ffffff" }),
+        jsx("rect", { x: 0, y: 0, width: 14, height: 130, fill: "#0f172a" }),
+        jsx("rect", { x: 14, y: 0, width: 780, height: 4, fill: "#0f172a" }),
+        jsx("rect", { x: 36, y: 36, width: 44, height: 44, rx: 8, fill: activeColor }),
+        jsx("rect", { x: 92, y: 44, width: 160, height: 12, rx: 2, fill: "#0f172a" }),
+        jsx("rect", { x: 92, y: 62, width: 110, height: 8, rx: 2, fill: "#475569" }),
+        jsx("text", { x: 720, y: 56, fill: "#0f172a", fontSize: 24, fontWeight: 900, textAnchor: "end", children: "TECH OFFER" }),
+        jsx("rect", { x: 560, y: 68, width: 160, height: 18, rx: 4, fill: "rgba(15,23,42,0.08)" })
+      ]
+    });
+  }
+  return jsxs("svg", {
+    viewBox: "0 0 794 130",
+    width: "100%",
+    height: "60",
+    preserveAspectRatio: "none",
+    "aria-hidden": "true",
+    children: [
+      jsx("rect", { x: 0, y: 0, width: 794, height: 130, fill: "#ffffff" }),
+      jsx("polygon", { points: "0,0 435,0 345,130 0,130", fill: "#0b1120" }),
+      jsx("polygon", { points: "435,0 460,0 370,130 345,130", fill: "#00d2ff" }),
+      jsx("polygon", { points: "460,0 498,0 408,130 370,130", fill: activeColor }),
+      jsx("rect", { x: "34", y: "36", width: "150", height: "56", rx: "8", fill: "#ffffff" }),
+      jsx("circle", { cx: 58, cy: 64, r: 14, fill: "#0b1120" }),
+      jsx("rect", { x: "82", y: "56", width: "80", height: "10", rx: "2", fill: "#0b1120" }),
+      jsx("text", { x: 700, y: 56, fill: activeColor, fontSize: 28, fontWeight: 900, textAnchor: "end", children: "OFFER LETTER" })
+    ]
+  });
+}
+
+function renderOlSheetHeader(tpl, activeColor) {
+  const code = tpl?.code || "";
+  if (code === "OLT-EXEC") {
+    return jsxs("div", {
+      style: {
+        position: "relative",
+        background: "#111113",
+        color: "#ffffff",
+        padding: "30px 40px 24px",
+        overflow: "hidden"
+      },
+      children: [
+        jsx("div", {
+          style: {
+            position: "absolute",
+            top: 0,
+            right: "180px",
+            width: "36px",
+            height: "100%",
+            background: "rgba(229,37,42,0.35)",
+            transform: "skewX(-28deg)",
+            transformOrigin: "top left"
+          }
+        }),
+        jsx("div", {
+          style: {
+            position: "absolute",
+            top: 0,
+            right: "140px",
+            width: "28px",
+            height: "100%",
+            background: activeColor,
+            transform: "skewX(-28deg)",
+            transformOrigin: "top left"
+          }
+        }),
+        jsxs("div", {
+          style: { display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 2 },
+          children: [
+            jsxs("div", {
+              children: [
+                jsx("div", { style: { fontSize: "20px", fontWeight: "900", letterSpacing: "-0.02em", textTransform: "uppercase" }, children: "AEDENTEK CRM" }),
+                jsx("div", { style: { fontSize: "11px", color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: "2px" }, children: "CALDER & MOSS SURFACES · EXECUTIVE SUITE" })
+              ]
+            }),
+            jsxs("div", {
+              style: { textAlign: "right" },
+              children: [
+                jsx("div", { style: { fontSize: "24px", fontWeight: "900", color: activeColor, letterSpacing: "-0.02em" }, children: "EXECUTIVE APPOINTMENT" }),
+                jsx("div", {
+                  style: {
+                    display: "inline-block",
+                    background: "rgba(229,37,42,0.18)",
+                    color: "#ff6b6b",
+                    fontSize: "10px",
+                    fontWeight: "800",
+                    letterSpacing: "0.08em",
+                    padding: "3px 10px",
+                    borderRadius: "999px",
+                    marginTop: "4px",
+                    textTransform: "uppercase"
+                  },
+                  children: "DIRECTOR / HEAD LEVEL AGREEMENT"
+                })
+              ]
+            })
+          ]
+        })
+      ]
+    });
+  }
+  if (code === "OLT-TECH") {
+    return jsxs("div", {
+      style: {
+        position: "relative",
+        background: "#0f172a",
+        color: "#ffffff",
+        padding: "28px 40px 24px",
+        borderLeft: "8px solid " + activeColor
+      },
+      children: [
+        jsxs("div", {
+          style: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+          children: [
+            jsxs("div", {
+              children: [
+                jsx("div", { style: { fontSize: "20px", fontWeight: "900", letterSpacing: "-0.02em", textTransform: "uppercase" }, children: "AEDENTEK CRM" }),
+                jsx("div", { style: { fontSize: "11px", color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: "2px" }, children: "ENGINEERING & ARCHITECTURE DIVISION" })
+              ]
+            }),
+            jsxs("div", {
+              style: { textAlign: "right" },
+              children: [
+                jsx("div", { style: { fontSize: "24px", fontWeight: "900", color: "#ffffff", letterSpacing: "-0.02em" }, children: "ENGINEERING OFFER" }),
+                jsx("div", {
+                  style: {
+                    display: "inline-block",
+                    background: "rgba(8,145,178,0.22)",
+                    color: "#38bdf8",
+                    fontSize: "10px",
+                    fontWeight: "800",
+                    letterSpacing: "0.08em",
+                    padding: "3px 10px",
+                    borderRadius: "999px",
+                    marginTop: "4px",
+                    textTransform: "uppercase"
+                  },
+                  children: "TECHNICAL TALENT AGREEMENT"
+                })
+              ]
+            })
+          ]
+        })
+      ]
+    });
+  }
+  // Default Classic Corporate (with dual angled slashes and logo box)
+  return jsxs("div", {
+    style: {
+      position: "relative",
+      background: "#0b1120",
+      color: "#ffffff",
+      padding: "28px 40px 24px",
+      overflow: "hidden"
+    },
+    children: [
+      jsx("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          right: "230px",
+          width: "32px",
+          height: "100%",
+          background: "#00d2ff",
+          transform: "skewX(-28deg)",
+          transformOrigin: "top left"
+        }
+      }),
+      jsx("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          right: "185px",
+          width: "38px",
+          height: "100%",
+          background: activeColor,
+          transform: "skewX(-28deg)",
+          transformOrigin: "top left"
+        }
+      }),
+      jsxs("div", {
+        style: { display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 2 },
+        children: [
+          jsxs("div", {
+            style: { display: "flex", alignItems: "center", gap: "14px" },
+            children: [
+              jsxs("div", {
+                style: {
+                  background: "#ffffff",
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px"
+                },
+                children: [
+                  jsx("div", { style: { width: "14px", height: "14px", borderRadius: "50%", background: "#0b1120" } }),
+                  jsx("span", { style: { color: "#0b1120", fontWeight: "900", fontSize: "13px", letterSpacing: "0.04em" }, children: "YOUR LOGO" })
+                ]
+              }),
+              jsxs("div", {
+                children: [
+                  jsx("div", { style: { fontSize: "16px", fontWeight: "800", letterSpacing: "-0.01em" }, children: "AEDENTEK CRM" }),
+                  jsx("div", { style: { fontSize: "10.5px", color: "#94a3b8", letterSpacing: "0.06em" }, children: "CALDER & MOSS SURFACES" })
+                ]
+              })
+            ]
+          }),
+          jsxs("div", {
+            style: { textAlign: "right" },
+            children: [
+              jsx("div", { style: { fontSize: "26px", fontWeight: "900", color: activeColor, letterSpacing: "-0.02em" }, children: "OFFER LETTER" }),
+              jsx("div", {
+                style: {
+                  display: "inline-block",
+                  background: "rgba(245,158,11,0.15)",
+                  color: "#f59e0b",
+                  fontSize: "10px",
+                  fontWeight: "800",
+                  letterSpacing: "0.08em",
+                  padding: "3px 10px",
+                  borderRadius: "999px",
+                  marginTop: "4px",
+                  textTransform: "uppercase"
+                },
+                children: "CONFIDENTIAL EMPLOYMENT OFFER"
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+function renderOlDualCards(sample, activeColor) {
+  return jsxs("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "20px",
+      margin: "24px 40px 18px"
+    },
+    children: [
+      // Left: Candidate Box
+      jsxs("div", {
+        style: {
+          background: "#f8fafc",
+          border: "1px solid #e2e8f0",
+          borderRadius: "10px",
+          padding: "16px 18px"
+        },
+        children: [
+          jsx("div", {
+            style: {
+              borderLeft: "3.5px solid " + activeColor,
+              paddingLeft: "8px",
+              fontSize: "11.5px",
+              fontWeight: "800",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: activeColor,
+              marginBottom: "10px"
+            },
+            children: "OFFER EXTENDED TO (CANDIDATE)"
+          }),
+          jsxs("table", {
+            style: { width: "100%", borderCollapse: "collapse", fontSize: "12px" },
+            children: [
+              jsxs("tbody", {
+                children: [
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0", width: "90px" }, children: "Candidate" }), jsx("td", { style: { width: "12px" }, children: ":" }), jsx("td", { style: { fontWeight: "700", color: "#0f172a" }, children: sample.name })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Position" }), jsx("td", {}, ":"), jsx("td", { style: { fontWeight: "700", color: activeColor }, children: sample.role })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Department" }), jsx("td", {}, ":"), jsx("td", { style: { color: "#334155" }, children: sample.department })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Email" }), jsx("td", {}, ":"), jsx("td", { style: { color: "#334155" }, children: sample.email })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Phone" }), jsx("td", {}, ":"), jsx("td", { style: { color: "#334155" }, children: sample.phone })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0", verticalAlign: "top" }, children: "Address" }), jsx("td", { style: { verticalAlign: "top" } }, ":"), jsx("td", { style: { color: "#334155" }, children: sample.address })] })
+                ]
+              })
+            ]
+          })
+        ]
+      }),
+      // Right: Issuer Box
+      jsxs("div", {
+        style: {
+          background: "#f8fafc",
+          border: "1px solid #e2e8f0",
+          borderRadius: "10px",
+          padding: "16px 18px"
+        },
+        children: [
+          jsx("div", {
+            style: {
+              borderLeft: "3.5px solid #0f172a",
+              paddingLeft: "8px",
+              fontSize: "11.5px",
+              fontWeight: "800",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: "#0f172a",
+              marginBottom: "10px"
+            },
+            children: "ISSUED BY (AEDENTEK GROUP)"
+          }),
+          jsxs("table", {
+            style: { width: "100%", borderCollapse: "collapse", fontSize: "12px" },
+            children: [
+              jsxs("tbody", {
+                children: [
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0", width: "90px" }, children: "Company" }), jsx("td", { style: { width: "12px" }, children: ":" }), jsx("td", { style: { fontWeight: "700", color: "#0f172a" }, children: "Aedentek CRM · Calder & Moss" })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Branch" }), jsx("td", {}, ":"), jsx("td", { style: { color: "#334155" }, children: sample.branch })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Offer Ref" }), jsx("td", {}, ":"), jsx("td", { style: { fontWeight: "700", fontFamily: "monospace", color: activeColor }, children: sample.offerNumber })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Issue Date" }), jsx("td", {}, ":"), jsx("td", { style: { color: "#334155" }, children: "November 16, 2026" })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Joining Date" }), jsx("td", {}, ":"), jsx("td", { style: { fontWeight: "700", color: "#0f172a" }, children: sample.joiningDate })] }),
+                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3px 0" }, children: "Valid Until" }), jsx("td", {}, ":"), jsx("td", { style: { color: "#dc2626", fontWeight: "600" }, children: sample.expiryDate })] })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+function renderOlSalaryTable(sample, tpl, activeColor) {
+  const ctc = sample.ctc || 960000;
+  const basicPct = tpl?.salaryStructure?.basicPercent ?? 50;
+  const hraPct = tpl?.salaryStructure?.hraPercent ?? 20;
+  const splPct = tpl?.salaryStructure?.specialAllowancePercent ?? 30;
+
+  const monthlyGross = Math.round(ctc / 12);
+  const basicMonthly = Math.round((monthlyGross * basicPct) / 100);
+  const hraMonthly = Math.round((monthlyGross * hraPct) / 100);
+  const splMonthly = monthlyGross - basicMonthly - hraMonthly;
+
+  const basicAnnual = basicMonthly * 12;
+  const hraAnnual = hraMonthly * 12;
+  const splAnnual = splMonthly * 12;
+
+  const fmt = (v) => "₹" + Number(v).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  return jsxs("div", {
+    style: { margin: "20px 40px 14px" },
+    children: [
+      jsx("div", {
+        style: {
+          fontSize: "13px",
+          fontWeight: "800",
+          letterSpacing: "0.04em",
+          textTransform: "uppercase",
+          color: activeColor,
+          marginBottom: "8px"
+        },
+        children: "ANNEXURE A — STRUCTURED COMPENSATION SCHEDULE"
+      }),
+      jsxs("table", {
+        style: { width: "100%", borderCollapse: "collapse", fontSize: "12.5px" },
+        children: [
+          jsx("thead", {
+            children: jsxs("tr", {
+              style: { background: activeColor, color: "#ffffff" },
+              children: [
+                jsx("th", { style: { padding: "9px 14px", textAlign: "left", fontWeight: "700", borderRadius: "6px 0 0 0" }, children: "SALARY COMPONENT" }),
+                jsx("th", { style: { padding: "9px 14px", textAlign: "center", fontWeight: "700" }, children: "ALLOCATION %" }),
+                jsx("th", { style: { padding: "9px 14px", textAlign: "right", fontWeight: "700" }, children: "MONTHLY (₹)" }),
+                jsx("th", { style: { padding: "9px 14px", textAlign: "right", fontWeight: "700", borderRadius: "0 6px 0 0" }, children: "ANNUAL (₹)" })
+              ]
+            })
+          }),
+          jsxs("tbody", {
+            children: [
+              jsxs("tr", {
+                style: { borderBottom: "1px solid #e2e8f0" },
+                children: [
+                  jsx("td", { style: { padding: "9px 14px", fontWeight: "600", color: "#0f172a" }, children: "Basic Salary" }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "center", color: "#64748b" }, children: basicPct + "%" }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmt(basicMonthly) }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmt(basicAnnual) })
+                ]
+              }),
+              jsxs("tr", {
+                style: { borderBottom: "1px solid #e2e8f0" },
+                children: [
+                  jsx("td", { style: { padding: "9px 14px", fontWeight: "600", color: "#0f172a" }, children: "House Rent Allowance (HRA)" }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "center", color: "#64748b" }, children: hraPct + "%" }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmt(hraMonthly) }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmt(hraAnnual) })
+                ]
+              }),
+              jsxs("tr", {
+                style: { borderBottom: "1px solid #e2e8f0" },
+                children: [
+                  jsx("td", { style: { padding: "9px 14px", fontWeight: "600", color: "#0f172a" }, children: "Special / Executive Allowance" }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "center", color: "#64748b" }, children: splPct + "%" }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmt(splMonthly) }),
+                  jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmt(splAnnual) })
+                ]
+              }),
+              jsxs("tr", {
+                style: { background: "#f8fafc", fontWeight: "800", borderTop: "2px solid #cbd5e1" },
+                children: [
+                  jsx("td", { style: { padding: "10px 14px", color: "#0f172a" }, children: "TOTAL COST TO COMPANY (CTC)" }),
+                  jsx("td", { style: { padding: "10px 14px", textAlign: "center", color: activeColor }, children: "100%" }),
+                  jsx("td", { style: { padding: "10px 14px", textAlign: "right", fontFamily: "monospace", color: activeColor }, children: fmt(monthlyGross) }),
+                  jsx("td", { style: { padding: "10px 14px", textAlign: "right", fontFamily: "monospace", color: activeColor }, children: fmt(ctc) })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+function renderOlTermsAndSignatures(sample, tpl, activeColor) {
+  const terms = Array.isArray(tpl?.terms) && tpl.terms.length ? tpl.terms : [
+    "Probation Period: Initial 3 months from the effective joining date.",
+    "Notice Period: 30 days written notice or gross salary in lieu thereof post confirmation.",
+    "Working Hours: 09:30 to 18:30 IST, Monday through Friday.",
+    "Confidentiality: Proprietary designs, formulations and business records remain strictly confidential."
+  ];
+
+  return jsxs("div", {
+    style: { margin: "14px 40px 24px" },
+    children: [
+      jsx("div", {
+        style: { fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.04em", color: "#475569", marginBottom: "6px" },
+        children: "KEY APPOINTMENT TERMS & CONDITIONS"
+      }),
+      jsx("ol", {
+        style: { paddingLeft: "18px", margin: "0 0 24px", fontSize: "11.5px", color: "#475569", lineHeight: 1.6 },
+        children: terms.map((t, i) => jsx("li", { key: i, children: t }))
+      }),
+      jsxs("div", {
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "40px",
+          paddingTop: "20px",
+          borderTop: "1px dashed #cbd5e1"
+        },
+        children: [
+          // Left: Company Signatory
+          jsxs("div", {
+            children: [
+              jsx("div", { style: { fontSize: "12px", fontWeight: "700", color: "#475569" }, children: "For Aedentek CRM · Calder & Moss Surfaces" }),
+              jsx("div", { style: { height: "1.5px", background: "#0f172a", width: "180px", margin: "42px 0 6px" } }),
+              jsx("div", { style: { fontSize: "13.5px", fontWeight: "800", color: "#0f172a" }, children: tpl?.signatoryName || "Ines Okafor" }),
+              jsx("div", { style: { fontSize: "11px", color: activeColor, fontWeight: "700" }, children: tpl?.signatoryDesignation || "Head of Specification & Human Resources" })
+            ]
+          }),
+          // Right: Candidate Acceptance
+          jsxs("div", {
+            style: { textAlign: "right" },
+            children: [
+              jsx("div", { style: { fontSize: "12px", fontWeight: "700", color: "#475569" }, children: "Accepted & Agreed by Candidate" }),
+              jsx("div", { style: { height: "1.5px", background: "#0f172a", width: "180px", margin: "42px 0 6px auto" } }),
+              jsx("div", { style: { fontSize: "13.5px", fontWeight: "800", color: "#0f172a" }, children: sample.name }),
+              jsx("div", { style: { fontSize: "11px", color: "#64748b" }, children: "Signature & Date" })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+function renderOlFooter(activeColor) {
+  return jsxs("div", {
+    style: {
+      background: "#0b1120",
+      color: "#ffffff",
+      padding: "14px 40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      fontSize: "11.5px",
+      marginTop: "auto"
+    },
+    children: [
+      jsxs("div", {
+        style: { display: "flex", gap: "20px", color: "#cbd5e1" },
+        children: [
+          jsx("span", { children: "+91 22 6890 4100" }),
+          jsx("span", { children: "careers@aedentek.com" }),
+          jsx("span", { children: "Worli & Bandra, Mumbai" })
+        ]
+      }),
+      jsx("div", { style: { fontWeight: "700", color: "#ffffff" }, children: "Thank You For Choosing Aedentek Group" })
+    ]
+  });
+}
+
+function OfferLetterTemplatesStudioPage() {
+  const { rows: templates, loading, reload } = useCollection("/api/hr/offer-letter-templates");
+  const [selectedId, setSelectedId] = useState("");
+  const [colors, setColors] = useState(() => readOlColors());
+  const [sampleIdx, setSampleIdx] = useState(0);
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    if (templates && templates.length && !selectedId) {
+      const def = templates.find((t) => t.isDefault);
+      setSelectedId((def && def._id) || templates[0]._id);
+    }
+  }, [templates, selectedId]);
+
+  const activeTemplate = (templates && templates.find((t) => t._id === selectedId)) || (templates && templates[0]) || {
+    name: "Classic Corporate",
+    code: "OLT-CORP",
+    description: "Flagship statutory layout: dark header with logo box & diagonal slashes, dual Candidate / Issuer cards, compensation breakdown, and bilateral execution signatures.",
+    salaryStructure: { basicPercent: 50, hraPercent: 20, specialAllowancePercent: 30 }
+  };
+
+  const activeColor = colors[activeTemplate?._id] || colors[activeTemplate?.code] || (activeTemplate?.code === "OLT-EXEC" ? "#e5252a" : activeTemplate?.code === "OLT-TECH" ? "#0891b2" : "#4d33b6");
+  const curSample = SAMPLE_OFFER_CANDIDATES[sampleIdx] || SAMPLE_OFFER_CANDIDATES[0];
+
+  const handleColorChange = (hex) => {
+    const next = { ...colors };
+    const key = activeTemplate?._id || activeTemplate?.code || "custom";
+    if (hex) next[key] = hex;
+    else delete next[key];
+    setColors(next);
+    writeOlColor(key, hex);
+  };
+
+  const handleSetDefault = async () => {
+    if (!activeTemplate?._id) return;
+    const res = await apiFetch("/api/hr/offer-letter-templates/" + activeTemplate._id + "/default", { method: "PUT" });
+    if (res.ok && res.data && res.data.success) {
+      toast(res.data.message || "Template set as default", { icon: "check" });
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 1800);
+      reload();
+    }
+  };
 
   const openTemplateDrawer = (existing = null) => {
     const isEdit = Boolean(existing && existing._id);
     let state = {
-      name: existing?.name || '',
-      code: existing?.code || '',
-      description: existing?.description || '',
-      headerTitle: existing?.headerTitle || 'EMPLOYMENT OFFER & APPOINTMENT LETTER',
-      subject: existing?.subject || 'Offer of Employment: {position} at {companyName}',
-      basicPercent: existing?.salaryStructure?.basicPercent !== undefined ? String(existing.salaryStructure.basicPercent) : '50',
-      hraPercent: existing?.salaryStructure?.hraPercent !== undefined ? String(existing.salaryStructure.hraPercent) : '20',
-      specialAllowancePercent: existing?.salaryStructure?.specialAllowancePercent !== undefined ? String(existing.salaryStructure.specialAllowancePercent) : '30',
-      bodyTemplate: existing?.bodyTemplate || 'Dear {candidateName},\n\nWe are pleased to offer you the position of {position} in {department} at {companyName} ({branch} branch).\n\nYour joining date is {joiningDate} with an annual CTC of {ctc}.',
-      termsText: Array.isArray(existing?.terms) ? existing.terms.join('\n') : 'Probation: 3 months from joining date.\nNotice Period: 30 days post-confirmation.\nWorking Hours: 09:30 to 18:30 IST, Monday to Friday.',
+      name: existing?.name || "",
+      code: existing?.code || "",
+      description: existing?.description || "",
+      headerTitle: existing?.headerTitle || "EMPLOYMENT OFFER & APPOINTMENT LETTER",
+      subject: existing?.subject || "Offer of Employment: {position} at {companyName}",
+      basicPercent: existing?.salaryStructure?.basicPercent !== undefined ? String(existing.salaryStructure.basicPercent) : "50",
+      hraPercent: existing?.salaryStructure?.hraPercent !== undefined ? String(existing.salaryStructure.hraPercent) : "20",
+      specialAllowancePercent: existing?.salaryStructure?.specialAllowancePercent !== undefined ? String(existing.salaryStructure.specialAllowancePercent) : "30",
+      bodyTemplate: existing?.bodyTemplate || "Dear {candidateName},\n\nWe are pleased to offer you the position of {position} in {department} at {companyName} ({branch} branch).\n\nYour joining date is {joiningDate} with an annual CTC of {ctc}.",
+      termsText: Array.isArray(existing?.terms) ? existing.terms.join("\n") : "Probation: 3 months from joining date.\nNotice Period: 30 days post-confirmation.\nWorking Hours: 09:30 to 18:30 IST, Monday to Friday.",
       isDefault: existing ? Boolean(existing.isDefault) : false,
-      signatoryName: existing?.signatoryName || 'Ines Okafor',
-      signatoryDesignation: existing?.signatoryDesignation || 'Head of Specification & Human Resources'
+      signatoryName: existing?.signatoryName || "Ines Okafor",
+      signatoryDesignation: existing?.signatoryDesignation || "Head of Specification & Human Resources"
     };
 
     const update = (k, v) => {
@@ -3582,11 +4214,11 @@ function OfferLetterTemplatesPage() {
 
     const submit = async () => {
       if (!state.name || !state.code) {
-        toast('Template Name and Code are required', { icon: 'x' });
+        toast("Template Name and Code are required", { icon: "x" });
         return;
       }
 
-      const terms = state.termsText.split('\n').map((t) => t.trim()).filter(Boolean);
+      const terms = state.termsText.split("\n").map((t) => t.trim()).filter(Boolean);
       const payload = {
         name: state.name,
         code: state.code.toUpperCase(),
@@ -3605,147 +4237,138 @@ function OfferLetterTemplatesPage() {
         signatoryDesignation: state.signatoryDesignation
       };
 
-      const url = isEdit ? `/api/hr/offer-letter-templates/${existing._id}` : '/api/hr/offer-letter-templates';
-      const method = isEdit ? 'PUT' : 'POST';
+      const url = isEdit ? "/api/hr/offer-letter-templates/" + existing._id : "/api/hr/offer-letter-templates";
+      const method = isEdit ? "PUT" : "POST";
 
       const res = await apiFetch(url, { method, body: JSON.stringify(payload) });
       if (res.ok && res.data && res.data.success) {
-        toast(res.data.message || (isEdit ? 'Template updated' : 'Template created'), { icon: 'check' });
+        toast(res.data.message || (isEdit ? "Template updated" : "Template created"), { icon: "check" });
         closeDrawer();
         reload();
       } else {
-        toast((res.data && res.data.message) || res.error || 'Failed to save template', { icon: 'x' });
+        toast((res.data && res.data.message) || res.error || "Failed to save template", { icon: "x" });
       }
     };
 
     const render = () => {
       openDrawer(
         jsxs(ModalDrawer, {
-          title: isEdit ? `Edit Template · ${existing.name}` : 'New Offer Letter Template',
-          sub: 'Define default contract clauses, dynamic replacement tokens and salary allocation percentages.',
+          title: isEdit ? "Edit Template · " + existing.name : "New Offer Letter Template",
+          sub: "Define default contract clauses, dynamic replacement tokens and salary allocation percentages.",
           foot: jsxs(Fragment, {
             children: [
-              jsx('button', { type: 'button', className: 'btn btn--ghost', onClick: closeDrawer, children: 'Cancel' }),
-              jsx('button', {
-                type: 'button',
-                className: 'btn btn--primary',
+              jsx("button", { type: "button", className: "btn btn--ghost", onClick: closeDrawer, children: "Cancel" }),
+              jsx("button", {
+                type: "button",
+                className: "btn btn--primary",
                 onClick: submit,
-                children: [jsx(Icon, { name: isEdit ? 'check' : 'plus' }), isEdit ? 'Save Template' : 'Create Template']
+                children: [jsx(Icon, { name: isEdit ? "check" : "plus" }), isEdit ? "Save Template" : "Create Template"]
               })
             ]
           }),
-          children: jsxs('div', {
-            className: 'form-grid',
+          children: jsxs("div", {
+            className: "form-grid",
             children: [
-              // Template Name
               jsx(
                 HrField,
-                { label: 'Template Name', required: true },
-                jsx('input', {
-                  className: 'input',
-                  placeholder: 'e.g. Standard Corporate Offer',
+                { label: "Template Name", required: true },
+                jsx("input", {
+                  className: "input",
+                  placeholder: "e.g. Standard Corporate Offer",
                   value: state.name,
-                  onChange: (e) => update('name', e.target.value)
+                  onChange: (e) => update("name", e.target.value)
                 })
               ),
-              // Template Code
               jsx(
                 HrField,
-                { label: 'Template Code (Uppercase)', required: true },
-                jsx('input', {
-                  className: 'input',
-                  placeholder: 'e.g. OLT-CORP',
+                { label: "Template Code (Uppercase)", required: true },
+                jsx("input", {
+                  className: "input",
+                  placeholder: "e.g. OLT-CORP",
                   value: state.code,
-                  onChange: (e) => update('code', e.target.value)
+                  onChange: (e) => update("code", e.target.value)
                 })
               ),
-              // Description
               jsx(
                 HrField,
-                { label: 'Description', className: 'field--full' },
-                jsx('input', {
-                  className: 'input',
-                  placeholder: 'Brief purpose or role target for this template...',
+                { label: "Description", className: "field--full" },
+                jsx("input", {
+                  className: "input",
+                  placeholder: "Brief purpose or role target for this template...",
                   value: state.description,
-                  onChange: (e) => update('description', e.target.value)
+                  onChange: (e) => update("description", e.target.value)
                 })
               ),
-              // Salary percentages
               jsx(
                 HrField,
-                { label: 'Basic Salary %' },
-                jsx('input', {
-                  className: 'input',
-                  type: 'number',
+                { label: "Basic Salary %" },
+                jsx("input", {
+                  className: "input",
+                  type: "number",
                   value: state.basicPercent,
-                  onChange: (e) => update('basicPercent', e.target.value)
+                  onChange: (e) => update("basicPercent", e.target.value)
                 })
               ),
               jsx(
                 HrField,
-                { label: 'HRA %' },
-                jsx('input', {
-                  className: 'input',
-                  type: 'number',
+                { label: "HRA %" },
+                jsx("input", {
+                  className: "input",
+                  type: "number",
                   value: state.hraPercent,
-                  onChange: (e) => update('hraPercent', e.target.value)
+                  onChange: (e) => update("hraPercent", e.target.value)
                 })
               ),
               jsx(
                 HrField,
-                { label: 'Special Allowance %' },
-                jsx('input', {
-                  className: 'input',
-                  type: 'number',
+                { label: "Special Allowance %" },
+                jsx("input", {
+                  className: "input",
+                  type: "number",
                   value: state.specialAllowancePercent,
-                  onChange: (e) => update('specialAllowancePercent', e.target.value)
+                  onChange: (e) => update("specialAllowancePercent", e.target.value)
                 })
               ),
-              // Subject Line
               jsx(
                 HrField,
-                { label: 'Email / Document Subject Line', className: 'field--full' },
-                jsx('input', {
-                  className: 'input',
+                { label: "Email / Document Subject Line", className: "field--full" },
+                jsx("input", {
+                  className: "input",
                   value: state.subject,
-                  onChange: (e) => update('subject', e.target.value)
+                  onChange: (e) => update("subject", e.target.value)
                 })
               ),
-              // Body Template
               jsx(
                 HrField,
-                { label: 'Appointment Letter Body Template', className: 'field--full' },
-                jsx('textarea', {
-                  className: 'input',
+                { label: "Appointment Letter Body Template", className: "field--full" },
+                jsx("textarea", {
+                  className: "input",
                   rows: 5,
                   value: state.bodyTemplate,
-                  onChange: (e) => update('bodyTemplate', e.target.value)
+                  onChange: (e) => update("bodyTemplate", e.target.value)
                 })
               ),
-              // Token guidance note
-              jsx('div', {
-                style: { gridColumn: '1 / -1', fontSize: '11px', color: 'var(--muted)', background: 'var(--well)', padding: '8px 12px', borderRadius: '8px' },
-                children: 'Available tokens: {candidateName}, {position}, {department}, {branch}, {joiningDate}, {ctc}, {expiryDate}, {companyName}'
+              jsx("div", {
+                style: { gridColumn: "1 / -1", fontSize: "11px", color: "var(--muted)", background: "var(--well)", padding: "8px 12px", borderRadius: "8px" },
+                children: "Available tokens: {candidateName}, {position}, {department}, {branch}, {joiningDate}, {ctc}, {expiryDate}, {companyName}"
               }),
-              // Terms & Conditions
               jsx(
                 HrField,
-                { label: 'Key Contractual Terms (One per line)', className: 'field--full' },
-                jsx('textarea', {
-                  className: 'input',
+                { label: "Key Contractual Terms (One per line)", className: "field--full" },
+                jsx("textarea", {
+                  className: "input",
                   rows: 4,
                   value: state.termsText,
-                  onChange: (e) => update('termsText', e.target.value)
+                  onChange: (e) => update("termsText", e.target.value)
                 })
               ),
-              // Default Toggle
               jsx(
                 HrField,
-                { label: 'System Default' },
+                { label: "System Default" },
                 jsx(CheckboxToggle, {
                   on: state.isDefault,
-                  label: 'Set as Default Template',
-                  onChange: () => update('isDefault', !state.isDefault)
+                  label: "Set as Default Template",
+                  onChange: () => update("isDefault", !state.isDefault)
                 })
               )
             ]
@@ -3757,163 +4380,320 @@ function OfferLetterTemplatesPage() {
     render();
   };
 
-  const setDefault = async (tpl) => {
-    const res = await apiFetch(`/api/hr/offer-letter-templates/${tpl._id}/default`, { method: 'PUT' });
-    if (res.ok && res.data && res.data.success) {
-      toast(res.data.message || 'Template set as default', { icon: 'check' });
-      reload();
-    }
-  };
-
   const removeTemplate = async (tpl, anchor) => {
     const ok = await confirmModal(
       {
-        title: `Delete template ${tpl.name}?`,
-        text: 'This template will be permanently removed. Existing offer letters will preserve their text.',
-        ok: 'Delete template',
+        title: "Delete template " + tpl.name + "?",
+        text: "This template will be permanently removed. Existing offer letters will preserve their text.",
+        ok: "Delete template",
         danger: true
       },
       anchor
     );
     if (!ok) return;
 
-    const res = await apiFetch(`/api/hr/offer-letter-templates/${tpl._id}`, { method: 'DELETE' });
+    const res = await apiFetch("/api/hr/offer-letter-templates/" + tpl._id, { method: "DELETE" });
     if (res.ok && res.data && res.data.success) {
-      toast(res.data.message || 'Template deleted', { icon: 'trash' });
+      toast(res.data.message || "Template deleted", { icon: "trash" });
       reload();
     } else {
-      toast((res.data && res.data.message) || res.error || 'Failed to delete template', { icon: 'x' });
+      toast((res.data && res.data.message) || res.error || "Failed to delete template", { icon: "x" });
     }
   };
 
-  const defaultTpl = templates.find((t) => t.isDefault);
-
-  return jsxs('div', {
-    className: 'hr-stack',
+  return jsxs("div", {
+    className: "page hr commissions-page tmpl-studio-wrapper",
     children: [
-      jsx(KpiRow, {
-        items: [
-          { label: 'Total Templates', value: templates.length, tone: 'slate', icon: 'library' },
-          { label: 'Active Templates', value: templates.filter((t) => t.status === 'Active').length, tone: 'good', icon: 'check' },
-          { label: 'System Default', value: defaultTpl ? defaultTpl.name : 'None', tone: 'sky', icon: 'tag' }
-        ]
-      }),
-      jsx(Card, {
-        title: 'Offer Letter Templates Gallery',
-        sub: 'Manage standardized corporate appointment letter templates, compensation ratios and contractual terms.',
-        actions: jsx('button', {
-          type: 'button',
-          className: 'btn btn--primary',
-          onClick: () => openTemplateDrawer(),
-          children: [jsx(Icon, { name: 'plus' }), 'New Template']
-        }),
-        children: jsxs('div', {
-          className: 'ol-tpl-grid',
-          children: templates.map((tpl) =>
-            jsxs('div', {
-              className: `ol-tpl-card${tpl.isDefault ? ' is-default' : ''}`,
-              key: tpl._id,
+      jsx(PageHeader, {
+        crumbs: [
+          { label: "Workspace" },
+          { label: "Masters", href: "/clients/service-types" },
+          { label: "Offer Letter Templates" }
+        ],
+        title: "Offer Letter Templates",
+        sub: "Spec-faithful A4 layout picker for employment contracts & executive appointment documents.",
+        actions: jsxs("div", {
+          className: "row",
+          style: { gap: "8px", alignItems: "center" },
+          children: [
+            jsxs("div", {
+              style: { display: "flex", alignItems: "center", gap: "6px" },
               children: [
-                jsxs('div', {
-                  className: 'ol-tpl-card__head',
-                  children: [
-                    jsxs('div', {
-                      children: [
-                        jsx('div', { className: 'ol-tpl-card__title', children: tpl.name }),
-                        jsx('span', { className: 'ol-tpl-card__code', children: tpl.code })
-                      ]
-                    }),
-                    tpl.isDefault ? jsx('span', { className: 'badge badge--primary', children: 'Default' }) : null
-                  ]
-                }),
-                jsx('div', { className: 'ol-tpl-card__desc', children: tpl.description || 'Standard employment agreement template.' }),
-                jsxs('div', {
-                  className: 'ol-tpl-card__ratios',
-                  children: [
-                    jsx('span', { children: `Basic: ${tpl.salaryStructure?.basicPercent || 50}%` }),
-                    jsx('span', { children: `HRA: ${tpl.salaryStructure?.hraPercent || 20}%` }),
-                    jsx('span', { children: `Special: ${tpl.salaryStructure?.specialAllowancePercent || 30}%` })
-                  ]
-                }),
-                jsxs('div', {
-                  className: 'ol-tpl-card__actions',
-                  children: [
-                    !tpl.isDefault
-                      ? jsx('button', {
-                          type: 'button',
-                          className: 'btn btn--xs btn--ghost',
-                          onClick: () => setDefault(tpl),
-                          children: 'Set Default'
-                        })
-                      : jsx('span', { style: { fontSize: '11px', color: 'var(--primary)', fontWeight: 600 }, children: 'Active Default' }),
-                    jsxs('div', {
-                      className: 'hr-row-actions',
-                      children: [
-                        jsx(ActionButton, {
-                          icon: 'edit',
-                          label: 'Edit Template',
-                          variant: 'edit',
-                          onClick: () => openTemplateDrawer(tpl)
-                        }),
-                        !tpl.isDefault
-                          ? jsx(ActionButton, {
-                              icon: 'trash',
-                              label: 'Delete Template',
-                              variant: 'delete',
-                              danger: true,
-                              onClick: (e) => removeTemplate(tpl, e.currentTarget)
-                            })
-                          : null
-                      ].filter(Boolean)
-                    })
-                  ]
+                jsx("span", { style: { fontSize: "12px", fontWeight: "600", color: "var(--muted)" }, children: "Candidate:" }),
+                jsx("select", {
+                  className: "select",
+                  style: { height: "34px", fontSize: "12px", minWidth: "170px" },
+                  value: sampleIdx,
+                  onChange: (e) => setSampleIdx(Number(e.target.value)),
+                  children: SAMPLE_OFFER_CANDIDATES.map((c, i) =>
+                    jsx("option", { key: i, value: i, children: c.name + " (" + c.role + ")" })
+                  )
                 })
               ]
+            }),
+            jsx("button", {
+              type: "button",
+              className: "btn btn--outline magnetic",
+              onClick: () => openTemplateDrawer(),
+              children: [jsx(Icon, { name: "plus" }), "New Template"]
+            }),
+            jsx("button", {
+              type: "button",
+              className: "btn btn--primary magnetic",
+              onClick: handleSetDefault,
+              children: [jsx(Icon, { name: "check" }), isSaved ? "Saved as Default" : "Set as Default"]
             })
-          )
+          ]
         })
+      }),
+      jsxs("div", {
+        className: "tmpl-page",
+        "data-tmpl-layout": "page",
+        "data-spec-page": "offer-letter-templates",
+        children: [
+          jsxs("div", {
+            className: "tmpl-grid",
+            children: [
+              // LEFT: Template Library
+              jsxs("div", {
+                className: "tmpl-gallery",
+                "data-tmpl-gallery": "true",
+                children: [
+                  jsxs("div", {
+                    className: "tmpl-gallery__head",
+                    children: [
+                      jsxs("h3", {
+                        children: [
+                          "Template Library ",
+                          jsx("span", {
+                            style: { color: "var(--muted)", fontWeight: "500", fontSize: "12px" },
+                            children: "(" + templates.length + " templates)"
+                          })
+                        ]
+                      }),
+                      jsx("button", {
+                        type: "button",
+                        className: "btn btn--xs btn--ghost",
+                        onClick: () => openTemplateDrawer(),
+                        children: [jsx(Icon, { name: "plus" }), "Add"]
+                      })
+                    ]
+                  }),
+                  templates.map((tpl) => {
+                    const isSel = tpl._id === selectedId;
+                    const isDef = Boolean(tpl.isDefault);
+                    const tplColor = colors[tpl._id] || colors[tpl.code] || (tpl.code === "OLT-EXEC" ? "#e5252a" : tpl.code === "OLT-TECH" ? "#0891b2" : "#4d33b6");
+                    const tag = tpl.code === "OLT-CORP" ? "Corporate - A4" : tpl.code === "OLT-EXEC" ? "Executive - A4" : tpl.code === "OLT-TECH" ? "Engineering - A4" : "Custom - A4";
+
+                    return jsxs("div", {
+                      key: tpl._id,
+                      className: "tmpl-card ol-tpl-card" + (isSel ? " is-selected" : "") + (isDef ? " is-default" : ""),
+                      "data-template-card": tpl.code || tpl._id,
+                      "data-default": isDef ? "true" : "false",
+                      onClick: () => setSelectedId(tpl._id),
+                      children: [
+                        jsx("div", {
+                          className: "tmpl-card__swatch",
+                          children: renderOlSwatch(tpl, tplColor)
+                        }),
+                        jsxs("div", {
+                          className: "tmpl-card__body",
+                          children: [
+                            jsxs("div", {
+                              style: { display: "flex", alignItems: "center", gap: "8px", justifyContent: "space-between" },
+                              children: [
+                                jsxs("b", {
+                                  style: { fontSize: "14px", letterSpacing: "-0.01em", display: "inline-flex", alignItems: "center", gap: "8px" },
+                                  children: [
+                                    tpl.name,
+                                    isDef ? jsxs("span", { className: "tmpl-default-pill", children: [jsx(Icon, { name: "check" }), "Default"] }) : null
+                                  ]
+                                }),
+                                jsx("span", { className: "tmpl-card__tag", style: { color: tplColor }, children: tag })
+                              ]
+                            }),
+                            jsx("p", {
+                              className: "muted",
+                              style: { fontSize: "12.5px", lineHeight: 1.5, margin: "6px 0 10px" },
+                              children: tpl.description || "Standard appointment letter template."
+                            }),
+                            jsxs("div", {
+                              style: { display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "8px" },
+                              children: [
+                                jsx("span", { className: "tmpl-badge", children: "Basic " + (tpl.salaryStructure?.basicPercent ?? 50) + "%" }),
+                                jsx("span", { className: "tmpl-badge", children: "HRA " + (tpl.salaryStructure?.hraPercent ?? 20) + "%" }),
+                                jsx("span", { className: "tmpl-badge", children: "Special " + (tpl.salaryStructure?.specialAllowancePercent ?? 30) + "%" }),
+                                jsx("span", { className: "tmpl-badge", children: "A4 Contract" })
+                              ]
+                            }),
+                            jsxs("div", {
+                              style: { display: "flex", alignItems: "center", gap: "6px", marginTop: "6px" },
+                              children: [
+                                jsx("button", {
+                                  type: "button",
+                                  className: "btn btn--xs btn--ghost",
+                                  onClick: (e) => { e.stopPropagation(); openTemplateDrawer(tpl); },
+                                  children: [jsx(Icon, { name: "edit" }), "Edit"]
+                                }),
+                                !isDef ? jsx("button", {
+                                  type: "button",
+                                  className: "btn btn--xs btn--ghost",
+                                  style: { color: "var(--bad)" },
+                                  onClick: (e) => { e.stopPropagation(); removeTemplate(tpl, e.currentTarget); },
+                                  children: [jsx(Icon, { name: "trash" }), "Delete"]
+                                }) : null
+                              ]
+                            })
+                          ]
+                        }),
+                        isSel ? jsxs("div", {
+                          className: "tmpl-card__pick",
+                          style: { color: tplColor },
+                          children: [jsx(Icon, { name: "check" }), "Selected"]
+                        }) : null
+                      ]
+                    });
+                  })
+                ]
+              }),
+              // RIGHT: Live Preview Studio
+              jsxs("div", {
+                className: "tmpl-preview",
+                "data-spec-preview": activeTemplate?.code || "custom",
+                children: [
+                  jsxs("div", {
+                    className: "tmpl-preview__bar",
+                    children: [
+                      jsxs("span", {
+                        style: { fontSize: "12px", fontWeight: "700", letterSpacing: "0.03em" },
+                        children: [
+                          "LIVE PREVIEW ",
+                          jsxs("i", {
+                            className: "muted",
+                            style: { fontWeight: "500" },
+                            children: ["· " + (activeTemplate?.name || "Offer Letter") + " · Appointment Letter"]
+                          })
+                        ]
+                      }),
+                      jsxs("div", {
+                        className: "tmpl-color",
+                        children: [
+                          jsx("span", { className: "tmpl-color__label", children: "Colour" }),
+                          ...OL_COLOR_PRESETS.map((hex) =>
+                            jsx("button", {
+                              key: hex,
+                              type: "button",
+                              className: "tmpl-swatch" + (activeColor.toLowerCase() === hex.toLowerCase() ? " is-on" : ""),
+                              style: { background: hex },
+                              onClick: () => handleColorChange(hex)
+                            })
+                          ),
+                          jsx("input", {
+                            type: "color",
+                            className: "tmpl-color__input",
+                            "aria-label": "Custom colour",
+                            value: activeColor,
+                            onChange: (e) => handleColorChange(e.target.value)
+                          }),
+                          jsx("button", {
+                            type: "button",
+                            className: "btn btn--sm btn--ghost",
+                            disabled: !colors[activeTemplate?._id] && !colors[activeTemplate?.code],
+                            onClick: () => handleColorChange(""),
+                            children: "Reset"
+                          })
+                        ]
+                      }),
+                      jsxs("div", {
+                        className: "row",
+                        style: { gap: "6px" },
+                        children: [
+                          jsxs("span", { className: "tmpl-kpi", children: ["Sheet ", jsx("b", { children: "794 × 1050" })] }),
+                          jsxs("span", { className: "tmpl-kpi", children: ["Page ", jsx("b", { children: "A4" })] })
+                        ]
+                      })
+                    ]
+                  }),
+                  jsx("div", {
+                    className: "tmpl-preview__stage",
+                    children: jsxs("div", {
+                      className: "spec-sheet",
+                      children: [
+                        renderOlSheetHeader(activeTemplate, activeColor),
+                        renderOlDualCards(curSample, activeColor),
+                        jsxs("div", {
+                          style: { padding: "0 40px 10px", fontSize: "13.5px", color: "#334155", lineHeight: 1.6 },
+                          children: [
+                            jsx("p", {
+                              style: { fontWeight: "700", color: "#0f172a", marginBottom: "8px" },
+                              children: "Dear " + curSample.name + ","
+                            }),
+                            jsx("p", {
+                              style: { whiteSpace: "pre-wrap", margin: 0 },
+                              children: (activeTemplate?.bodyTemplate || "We are pleased to offer you the position of {position} in {department} at {companyName}.")
+                                .replace(/{candidateName}/g, curSample.name)
+                                .replace(/{position}/g, curSample.role)
+                                .replace(/{department}/g, curSample.department)
+                                .replace(/{branch}/g, curSample.branch)
+                                .replace(/{joiningDate}/g, curSample.joiningDate)
+                                .replace(/{expiryDate}/g, curSample.expiryDate)
+                                .replace(/{ctc}/g, "₹" + Number(curSample.ctc).toLocaleString("en-IN"))
+                                .replace(/{companyName}/g, "Aedentek CRM · Calder & Moss Surfaces")
+                            })
+                          ]
+                        }),
+                        renderOlSalaryTable(curSample, activeTemplate, activeColor),
+                        renderOlTermsAndSignatures(curSample, activeTemplate, activeColor),
+                        renderOlFooter(activeColor)
+                      ]
+                    })
+                  })
+                ]
+              })
+            ]
+          })
+        ]
       })
     ]
   });
 }
 
-/* ------------------------------------------------------------------ *
- * Page shell
- * ------------------------------------------------------------------ */
-
 function HrPage({ route }) {
-  const rawSub = route && route.sub ? String(route.sub) : '';
+  const rawSub = route && route.sub ? String(route.sub) : "";
   const sub = HR_PAGES[rawSub] ? rawSub : DEFAULT_SUB;
   const meta = HR_PAGES[sub];
 
-  if (sub === 'staff' && route && route.param) {
-    return jsx(StaffFormPage, { editId: route.param === 'new' ? null : route.param }, `sf-${route.param}`);
+  if (sub === "staff" && route && route.param) {
+    return jsx(StaffFormPage, { editId: route.param === "new" ? null : route.param }, "sf-" + route.param);
+  }
+
+  if (sub === "offer-letter-templates") {
+    return jsx(OfferLetterTemplatesStudioPage, {});
   }
 
   let content = null;
-  if (sub === 'staff') content = jsx(StaffEmployeesPage, {});
-  else if (sub === 'offer-letters') content = jsx(OfferLettersPage, {});
-  else if (sub === 'offer-letter-templates') content = jsx(OfferLetterTemplatesPage, {});
-  else if (sub === 'attendance') content = jsx(AttendancePage, {});
-  else if (sub === 'leave') content = jsx(LeavePage, {});
-  else if (sub === 'payroll') content = jsx(PayrollPage, {});
+  if (sub === "staff") content = jsx(StaffEmployeesPage, {});
+  else if (sub === "offer-letters") content = jsx(OfferLettersPage, {});
+  else if (sub === "attendance") content = jsx(AttendancePage, {});
+  else if (sub === "leave") content = jsx(LeavePage, {});
+  else if (sub === "payroll") content = jsx(PayrollPage, {});
   else content = jsx(GenericHrModule, { config: HR_MODULE_CONFIG[sub] });
 
-  return jsxs('div', {
-    className: 'page hr',
+  return jsxs("div", {
+    className: "page hr",
     children: [
       jsx(PageHeader, {
         crumbs: [
-          { label: 'Workspace' },
-          (sub === 'branches' || sub === 'leave-types' || sub === 'shifts' || sub === 'offer-letter-templates')
-            ? { label: 'Masters', href: '/clients/service-types' }
-            : { label: 'Human Resources', href: '/hr/staff' },
+          { label: "Workspace" },
+          (sub === "branches" || sub === "leave-types" || sub === "shifts")
+            ? { label: "Masters", href: "/clients/service-types" }
+            : { label: "Human Resources", href: "/hr/staff" },
           { label: meta.title }
         ],
         title: meta.title,
         sub: meta.sub
       }),
-      jsx('div', { className: 'hr-stack', children: content })
+      jsx("div", { className: "hr-stack", children: content })
     ]
   });
 }

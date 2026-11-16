@@ -220,6 +220,46 @@ async function runOfferLettersModuleSuite() {
     const tplCardCount = await page.evaluate(() => document.querySelectorAll('.ol-tpl-card').length);
     assert('Template gallery cards rendered (>= 3)', tplCardCount >= 3, `Count: ${tplCardCount}`);
 
+    // Two-column interactive studio assertions (matching Document Templates specification)
+    const hasGrid = await page.$('.tmpl-grid') !== null;
+    assert('Two-column studio layout rendered (.tmpl-grid)', hasGrid);
+
+    const hasGallery = await page.$('.tmpl-gallery') !== null;
+    assert('Template Library gallery rendered (.tmpl-gallery)', hasGallery);
+
+    const hasPreview = await page.$('.tmpl-preview') !== null;
+    assert('Live preview panel rendered (.tmpl-preview)', hasPreview);
+
+    const hasSpecSheet = await page.$('.spec-sheet') !== null;
+    assert('Live A4 printable sheet rendered (.spec-sheet)', hasSpecSheet);
+
+    const swatchCount = (await page.$$('.tmpl-swatch')).length;
+    assert('Color palette swatches rendered (8 swatches)', swatchCount === 8, `Found ${swatchCount}`);
+
+    const hasSelected = await page.$('.tmpl-card.is-selected') !== null;
+    assert('Active template card has is-selected state', hasSelected);
+
+    // Interactive switch: Click Executive Leadership template
+    await page.evaluate(() => {
+      const card = document.querySelector('[data-template-card="OLT-EXEC"]');
+      if (card) card.click();
+    });
+    await sleep(400);
+    const isExecSelected = await page.evaluate(() => document.querySelector('[data-template-card="OLT-EXEC"]')?.classList.contains('is-selected'));
+    assert('Clicking card dynamically updates active studio selection', isExecSelected);
+
+    // Interactive switch: Change Candidate
+    await page.evaluate(() => {
+      const sel = document.querySelector('.phead select');
+      if (sel) {
+        sel.value = '1';
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+    await sleep(400);
+    const hasMeera = await page.evaluate(() => document.querySelector('.spec-sheet')?.textContent.includes('Meera Nambiar'));
+    assert('Candidate selector dynamically updates live offer letter document', hasMeera);
+
     const shotTpl = path.join(REPORT_DIR, 'masters_offer_letter_templates_gallery.png');
     await page.screenshot({ path: shotTpl });
     console.log(`  ✓ Screenshot captured: ${shotTpl}`);
