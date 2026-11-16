@@ -3234,6 +3234,31 @@ function OfferLetterDoc({ offer }) {
   });
 }
 
+const fmtDate = (d) => {
+  if (!d) return "—";
+  try {
+    const s = String(d).includes("T") ? d.split("T")[0] : String(d);
+    const parts = s.split("-");
+    if (parts.length === 3) {
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const yr = parts[0];
+      const mo = months[parseInt(parts[1], 10) - 1] || parts[1];
+      const day = parts[2];
+      return `${day} ${mo} ${yr}`;
+    }
+    return s;
+  } catch {
+    return String(d);
+  }
+};
+
+const getInitials = (name) => {
+  if (!name) return "OL";
+  const parts = String(name).trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
+
 function OfferLettersPage() {
   const branchList = useBranches();
   const [query, setQuery] = useState("");
@@ -3701,75 +3726,143 @@ function OfferLettersPage() {
             }),
             // Table
             jsx(HrTable, {
-              head: ["Offer No", "Candidate", "Position & Dept", "Branch", "Joining Date", "Annual CTC", "Status", "Actions"],
+              head: [],
+              headNode: jsx("tr", {
+                children: [
+                  jsx("th", { key: "sno", style: { width: 44, minWidth: 44, maxWidth: 44, textAlign: "center", paddingLeft: 4, paddingRight: 4 }, children: "S No" }),
+                  jsx("th", { key: "offerNo", style: { width: 120, minWidth: 120, textAlign: "center" }, children: "Offer No" }),
+                  jsx("th", { key: "candidate", className: "ol-candidate-head", style: { minWidth: 180, textAlign: "left", paddingLeft: "14px" }, children: "Candidate" }),
+                  jsx("th", { key: "position", style: { minWidth: 145, textAlign: "center" }, children: "Position & Dept" }),
+                  jsx("th", { key: "branch", style: { width: 100, textAlign: "center" }, children: "Branch" }),
+                  jsx("th", { key: "joiningDate", style: { width: 110, textAlign: "center" }, children: "Joining Date" }),
+                  jsx("th", { key: "ctc", style: { width: 115, textAlign: "center" }, children: "Annual CTC" }),
+                  jsx("th", { key: "status", style: { width: 100, textAlign: "center" }, children: "Status" }),
+                  jsx("th", { key: "actions", style: { width: 115, textAlign: "center" }, children: "Actions" })
+                ]
+              }),
               rows: offers,
               emptyIcon: "receipt",
               emptyTitle: "No offer letters found",
               emptyText: "Generate your first candidate offer letter using the button above.",
-              renderRow: (offer) => {
+              renderRow: (offer, i) => {
                 const mGross = offer.salaryBreakdown?.monthlyGross || Math.round((offer.ctc || 0) / 12);
                 return jsx("tr", {
                   "data-row": "",
+                  className: "is-click",
                   key: offer._id,
+                  style: { cursor: "pointer" },
+                  onClick: (e) => {
+                    if (e.target.closest("button, a, input, select")) return;
+                    openPreview(offer);
+                  },
                   children: [
-                    jsx("td", { children: jsx("span", { className: "ol-offer-no-pill", children: offer.offerNumber }) }),
                     jsx("td", {
-                      children: jsxs("div", {
-                        children: [
-                          jsx("b", { children: offer.candidateName }),
-                          jsx("div", { style: { fontSize: "12px", color: "var(--muted)" }, children: offer.candidateEmail })
-                        ]
-                      })
-                    }),
-                    jsx("td", {
-                      children: jsxs("div", {
-                        children: [
-                          jsx("b", { children: offer.position }),
-                          jsx("div", { style: { fontSize: "12px", color: "var(--muted)" }, children: offer.department })
-                        ]
-                      })
-                    }),
-                    jsx("td", { children: jsx("span", { className: "branch-pill", children: offer.branch }) }),
-                    jsx("td", { children: offer.joiningDate ? offer.joiningDate.split("T")[0] : "—" }),
-                    jsx("td", {
-                      children: jsxs("div", {
-                        children: [
-                          jsx("b", { children: fmtINR(offer.ctc || 0) }),
-                          jsx("div", { style: { fontSize: "11px", color: "var(--muted)" }, children: fmtINR(mGross) + "/mo" })
-                        ]
-                      })
-                    }),
-                    jsx("td", {
+                      style: { width: 56, minWidth: 56, maxWidth: 56, textAlign: "center", paddingLeft: 8, paddingRight: 8, verticalAlign: "middle" },
                       children: jsx("span", {
-                        className: "badge " + (offer.status === "Accepted" ? "badge--good" : offer.status === "Declined" ? "badge--bad" : offer.status === "Sent" ? "badge--warn" : "badge--neutral"),
-                        children: offer.status
+                        className: `sno-pill ${i < 3 ? "sno-pill--top" : "sno-pill--normal"}`,
+                        children: (i ?? 0) + 1
+                      })
+                    }),
+                    jsx("td", {
+                      style: { textAlign: "center" },
+                      children: jsx("span", { className: "ol-offer-no-pill", children: offer.offerNumber })
+                    }),
+                    jsx("td", {
+                      className: "ol-candidate-cell",
+                      style: { textAlign: "left", paddingLeft: "20px" },
+                      children: jsxs("div", {
+                        style: { display: "flex", alignItems: "center", gap: "10px", textAlign: "left" },
+                        children: [
+                          jsx("div", {
+                            className: "ol-avatar",
+                            children: getInitials(offer.candidateName)
+                          }),
+                          jsxs("div", {
+                            style: { display: "flex", flexDirection: "column", gap: "2px", minWidth: 0 },
+                            children: [
+                              jsx("b", { style: { fontSize: "13.5px", color: "var(--text)", fontWeight: "700" }, children: offer.candidateName }),
+                              jsx("span", { style: { fontSize: "12px", color: "var(--muted)" }, children: offer.candidateEmail })
+                            ]
+                          })
+                        ]
+                      })
+                    }),
+                    jsx("td", {
+                      style: { textAlign: "center" },
+                      children: jsxs("div", {
+                        style: { display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" },
+                        children: [
+                          jsx("b", { style: { fontSize: "13px", fontWeight: "600", color: "var(--text)" }, children: offer.position }),
+                          jsx("span", { className: "ol-dept-pill", children: offer.department })
+                        ]
+                      })
+                    }),
+                    jsx("td", {
+                      style: { textAlign: "center" },
+                      children: jsxs("span", {
+                        className: "branch-pill",
+                        children: [
+                          jsx(Icon, { name: "globe" }),
+                          offer.branch
+                        ]
+                      })
+                    }),
+                    jsx("td", {
+                      style: { textAlign: "center" },
+                      children: jsxs("div", {
+                        style: { display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "12.5px", fontWeight: "600", color: "var(--text)" },
+                        children: [
+                          jsx(Icon, { name: "calendar" }),
+                          fmtDate(offer.joiningDate)
+                        ]
+                      })
+                    }),
+                    jsx("td", {
+                      style: { textAlign: "center" },
+                      children: jsxs("div", {
+                        style: { display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" },
+                        children: [
+                          jsx("b", { style: { fontSize: "13.5px", fontWeight: "800", color: "var(--text)", fontFamily: "monospace" }, children: fmtINR(offer.ctc || 0) }),
+                          jsx("span", { style: { fontSize: "11px", color: "var(--muted)", fontFamily: "monospace" }, children: fmtINR(mGross) + "/mo" })
+                        ]
+                      })
+                    }),
+                    jsx("td", {
+                      style: { textAlign: "center" },
+                      children: jsx(StatusPill, {
+                        kind: offer.status === "Accepted" ? "good" : offer.status === "Declined" ? "bad" : offer.status === "Sent" ? "info" : "slate",
+                        children: offer.status || "Draft"
                       })
                     }),
                     jsx("td", {
                       className: "hr-actions-cell",
+                      style: { textAlign: "center" },
                       children: jsxs("div", {
-                        className: "row",
-                        style: { gap: "6px" },
+                        className: "hr-row-actions",
+                        style: { display: "inline-flex", alignItems: "center", gap: "6px", justifyContent: "center" },
                         children: [
                           jsx("button", {
                             type: "button",
-                            className: "btn-icon",
+                            className: "action-btn action-btn--view action-btn--print",
                             title: "View & Print Offer Letter",
-                            onClick: () => openPreview(offer),
+                            "aria-label": "View & Print Offer Letter",
+                            onClick: (e) => { e.stopPropagation(); openPreview(offer); },
                             children: jsx(Icon, { name: "receipt" })
                           }),
                           jsx("button", {
                             type: "button",
-                            className: "btn-icon",
+                            className: "action-btn action-btn--edit",
                             title: "Edit Offer Letter",
-                            onClick: () => openDrawerForm(offer),
+                            "aria-label": "Edit Offer Letter",
+                            onClick: (e) => { e.stopPropagation(); openDrawerForm(offer); },
                             children: jsx(Icon, { name: "edit" })
                           }),
                           jsx("button", {
                             type: "button",
-                            className: "btn-icon btn-icon--danger",
+                            className: "action-btn action-btn--delete",
                             title: "Delete Offer Letter",
-                            onClick: (e) => removeOffer(offer, e.currentTarget),
+                            "aria-label": "Delete Offer Letter",
+                            onClick: (e) => { e.stopPropagation(); removeOffer(offer, e.currentTarget); },
                             children: jsx(Icon, { name: "trash" })
                           })
                         ]

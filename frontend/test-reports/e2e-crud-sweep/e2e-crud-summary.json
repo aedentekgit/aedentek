@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-16T12:59:03.578Z",
+  "timestamp": "2026-11-16T13:25:20.266Z",
   "totalTests": 50,
   "passed": 50,
   "failed": 0,
@@ -62,7 +62,7 @@
     {
       "title": "Client ID returned",
       "status": "PASS",
-      "details": "ID: 6afafe0bcd347168f2045210"
+      "details": "ID: 6afb0433359323a2f5f0cb90"
     },
     {
       "title": "GET /api/clients/:id retrieves created client",

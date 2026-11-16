@@ -4175,6 +4175,23 @@ html body .table.table.table.table.table.table td .li__main {
 html body .table.table.table.table.table.table td .li__main { display: flex; flex-direction: column; align-items: center !important; }
 html body .table.table.table.table.table.table td > div[style*="flex"] { justify-content: center !important; }
 
+/* Offer letters candidate column left-alignment override */
+html body .table.table.table.table.table.table th.ol-candidate-head,
+html body .table.table.table.table.table.table td.ol-candidate-cell {
+  text-align: left !important;
+  padding-left: 20px !important;
+}
+html body .table.table.table.table.table.table td.ol-candidate-cell > div,
+html body .table.table.table.table.table.table td.ol-candidate-cell .row {
+  justify-content: flex-start !important;
+  align-items: center !important;
+  text-align: left !important;
+}
+html body .table.table.table.table.table.table td.ol-candidate-cell > div > div {
+  text-align: left !important;
+  align-items: flex-start !important;
+}
+
 /* Cards with empty states: clean header divider + tidy empty panel (global) */
 .card:not(:has(.table)):not(:has(.toolbar)) > .card__head{padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--line);align-items:center}
 .card .empty{padding:44px 24px 48px;margin-top:4px;gap:6px;border:1.5px dashed var(--line-2);border-radius:16px;background:var(--card-2);max-width:none}

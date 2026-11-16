@@ -1154,5 +1154,112 @@
   }
 }
 
+/* =====================================================================
+   Offer Letters Table Layout & Column UX
+   ===================================================================== */
+.ol-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 12%, var(--card));
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent);
+}
+
+.ol-offer-no-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 10px !important;
+  border-radius: 8px !important;
+  font-family: var(--font-mono, "SF Mono", monospace) !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.03em !important;
+  color: var(--primary) !important;
+  background: color-mix(in srgb, var(--primary) 10%, var(--card)) !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.ol-dept-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 1px 9px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--muted) !important;
+  background: var(--card-2) !important;
+  border: 1px solid var(--line) !important;
+  letter-spacing: 0.02em !important;
+}
+
+.branch-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+  background: var(--card-2) !important;
+  border: 1px solid var(--line) !important;
+}
+
+.branch-pill .ico {
+  width: 13px !important;
+  height: 13px !important;
+  color: var(--muted) !important;
+}
+
+html body .table.table.table.table.table.table td.ol-candidate-cell,
+html body .table.table.table.table.table.table th.ol-candidate-head,
+html body .table td.ol-candidate-cell,
+html body .table th.ol-candidate-head {
+  text-align: left !important;
+  padding-left: 20px !important;
+}
+html body .table.table.table.table.table.table td.ol-candidate-cell > div,
+html body .table td.ol-candidate-cell > div {
+  justify-content: flex-start !important;
+  align-items: center !important;
+  text-align: left !important;
+}
+html body .table.table.table.table.table.table td.ol-candidate-cell > div > div,
+html body .table td.ol-candidate-cell > div > div {
+  text-align: left !important;
+  align-items: flex-start !important;
+}
+
+/* Compact padding for offer letters table to fit all columns on desktop without scroll */
+html body .card:has(.ol-offer-no-pill) .table th,
+html body .card:has(.ol-offer-no-pill) .table td {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+html body .card:has(.ol-offer-no-pill) .table th.ol-candidate-head,
+html body .card:has(.ol-offer-no-pill) .table td.ol-candidate-cell {
+  padding-left: 14px !important;
+  padding-right: 10px !important;
+}
+html body .card:has(.ol-offer-no-pill) .table th:first-child,
+html body .card:has(.ol-offer-no-pill) .table td:first-child {
+  padding-left: 12px !important;
+  padding-right: 6px !important;
+}
+html body .card:has(.ol-offer-no-pill) .table th:last-child,
+html body .card:has(.ol-offer-no-pill) .table td:last-child {
+  padding-right: 14px !important;
+}
+
+
 
 
