@@ -1393,11 +1393,12 @@ header.top .search:focus-within,
     visibility: hidden;
   }
   #printable-invoice-doc, #printable-invoice-doc *,
+  #printable-offer-letter-doc, #printable-offer-letter-doc *,
   #printable-propagation-doc, #printable-propagation-doc *,
   .spec-sheet, .spec-sheet * {
     visibility: visible;
   }
-  #printable-invoice-doc, #printable-propagation-doc, .spec-sheet {
+  #printable-invoice-doc, #printable-offer-letter-doc, #printable-propagation-doc, .spec-sheet {
     position: absolute;
     left: 0;
     top: 0;
@@ -4533,11 +4534,34 @@ html body .acct-group-table{border:1px solid var(--line);border-radius:14px;over
 html body .acct-group-table .table td{white-space:nowrap!important}
 html body .acct-group-table .table td:nth-child(3){white-space:normal!important;min-width:160px}
 
-/* Invoice drawer: wide enough to show the A4 template (794px sheet) at full size */
-html body .drawer:has(#printable-invoice-doc){width:min(880px,calc(100vw - 20px))}
-html body .drawer:has(#printable-invoice-doc) .drawer__body{padding:16px 20px}
-html body .drawer #printable-invoice-doc{overflow-x:auto}
-html body .drawer #printable-invoice-doc .spec-sheet{margin:0 auto;flex:none}
+/* Invoice & Offer Letter drawer: wide enough to show the A4 template (794px sheet) at full size */
+html body .drawer:has(#printable-invoice-doc),
+html body .drawer:has(#printable-offer-letter-doc),
+html body .drawer:has([data-spec-sheet="offer-letter"]),
+html body .drawer:has(.ol-paper) {
+  width: min(880px, calc(100vw - 20px)) !important;
+  max-width: calc(100vw - 20px) !important;
+}
+html body .drawer:has(#printable-invoice-doc) .drawer__body,
+html body .drawer:has(#printable-offer-letter-doc) .drawer__body,
+html body .drawer:has([data-spec-sheet="offer-letter"]) .drawer__body,
+html body .drawer:has(.ol-paper) .drawer__body {
+  padding: 16px 20px !important;
+  background: var(--card-2, #eef1f5) !important;
+}
+html body .drawer #printable-invoice-doc,
+html body .drawer #printable-offer-letter-doc {
+  overflow-x: auto !important;
+}
+html body .drawer #printable-invoice-doc .spec-sheet,
+html body .drawer #printable-offer-letter-doc .spec-sheet,
+html body .drawer .spec-sheet.ol-paper {
+  margin: 0 auto !important;
+  flex: none !important;
+  box-shadow: 0 2px 4px rgba(20, 28, 45, 0.06), 0 18px 40px -16px rgba(20, 28, 45, 0.28) !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--line-2, #cbd5e1) !important;
+}
 
 /* Template line-item tables: proper grid lines on every template */
 .spec-sheet table[data-spec-items]{border-collapse:collapse}

@@ -2879,11 +2879,11 @@ function PayrollPage() {
 function OfferLetterDoc({ offer }) {
   const o = offer || {};
   const salary = o.salaryBreakdown || {};
-  const basic = salary.basic || 0;
-  const hra = salary.hra || 0;
-  const special = salary.specialAllowance || 0;
-  const monthlyGross = salary.monthlyGross || Math.round((o.ctc || 0) / 12);
-  const annualCtc = o.ctc || 0;
+  const basic = salary.basic || Math.round(((o.ctc || 720000) * 0.5) / 12);
+  const hra = salary.hra || Math.round(((o.ctc || 720000) * 0.2) / 12);
+  const special = salary.specialAllowance || Math.round(((o.ctc || 720000) * 0.3) / 12);
+  const monthlyGross = salary.monthlyGross || Math.round((o.ctc || 720000) / 12);
+  const annualCtc = o.ctc || (monthlyGross * 12);
   const termsList = Array.isArray(o.terms) && o.terms.length ? o.terms : [
     "Probation: 3 months probation period from official start date.",
     "Notice Period: 15 days during probation; 30 days post confirmation.",
@@ -2892,78 +2892,91 @@ function OfferLetterDoc({ offer }) {
   ];
 
   const candidateSample = {
-    name: o.candidateName || "Candidate",
-    role: o.position || "Position",
-    department: o.department || "Operations",
+    name: o.candidateName || "Aditya Singhania",
+    role: o.position || "Senior Ceramic Designer",
+    department: o.department || "Design",
     email: o.candidateEmail || "aditya.singhania@example.com",
     phone: o.candidatePhone || "+91 98210 55432",
-    address: o.candidateAddress || "Flat 402, Sea Green Apts, Worli, Mumbai - 400018",
+    address: o.candidateAddress || "Flat 402, Sea Green Apts, Worli, Mumbai 400018",
     branch: o.branch || "Bandra Branch (Mumbai)",
-    joiningDate: o.joiningDate || "December 01, 2026",
-    expiryDate: o.expiryDate || "November 25, 2026"
+    joiningDate: o.joiningDate ? (String(o.joiningDate).includes("T") ? o.joiningDate.split("T")[0] : o.joiningDate) : "2026-12-01",
+    expiryDate: o.expiryDate ? (String(o.expiryDate).includes("T") ? o.expiryDate.split("T")[0] : o.expiryDate) : "2026-11-25",
+    offerNumber: o.offerNumber || "OL-2026-0001",
+    issueDate: o.issueDate ? (String(o.issueDate).includes("T") ? o.issueDate.split("T")[0] : o.issueDate) : "2026-11-15"
   };
 
-  let body = (o.bodyText || ("We are pleased to offer you the position of " + candidateSample.role + " in the " + candidateSample.department + " Department at Aedentek CRM - Calder & Moss Surfaces (" + candidateSample.branch + ").\n\nYour joining date is scheduled for " + candidateSample.joiningDate + ". Your total annual Cost to Company (CTC) will be " + fmtINR(annualCtc) + ", as itemized in the compensation schedule below."));
+  let body = o.bodyText || (
+    "We are pleased to extend an offer of employment for the position of " + candidateSample.role +
+    " within the " + candidateSample.department + " Department at Aedentek CRM - Calder & Moss Surfaces (" + candidateSample.branch + ").\n\n" +
+    "Your scheduled commencement date is " + candidateSample.joiningDate + ". You will receive a total Cost to Company (CTC) of " +
+    fmtINR(annualCtc) + " per annum, structured into standard statutory components and allowances as outlined in Annexure A."
+  );
   if (!body.trim().startsWith("Dear")) {
     body = "Dear " + candidateSample.name + ",\n\n" + body;
   }
 
+  const tdLabel = { width: "80px", fontSize: "12px", fontWeight: "500", color: "#64748b", verticalAlign: "top", padding: "3.5px 0" };
+  const tdColon = { width: "14px", color: "#64748b", fontSize: "12px", padding: "3.5px 0", textAlign: "center", verticalAlign: "top" };
+  const tdVal = { fontSize: "12.5px", padding: "3.5px 0", lineHeight: 1.4, verticalAlign: "top", color: "#0f172a", fontWeight: "500" };
+  const tdValStrong = { fontSize: "12.5px", padding: "3.5px 0", lineHeight: 1.4, verticalAlign: "top", color: "#0f172a", fontWeight: "700" };
+
   return jsxs("div", {
-    className: "ol-paper",
-    style: { background: "#ffffff", color: "#0f172a", padding: "0", fontSize: "13px", lineHeight: 1.55 },
+    className: "spec-sheet ol-paper",
+    "data-spec-sheet": "offer-letter",
+    "data-template": "classic",
     children: [
-      // 1. Executive Letterhead with SVG diagonal slashes
+      // 1. Classic Header (Matching SpecHeader in Invoice)
       jsxs("div", {
-        style: { position: "relative", width: "100%", minHeight: "125px", background: "#ffffff", borderBottom: "1px solid #e2e8f0" },
+        style: { position: "relative", background: "#ffffff", minHeight: "130px", overflow: "hidden" },
+        "data-spec-header": "dark",
         children: [
           jsxs("svg", {
-            viewBox: "0 0 794 125",
             width: "100%",
-            height: "125",
-            style: { display: "block" },
+            height: "130",
+            viewBox: "0 0 794 130",
             preserveAspectRatio: "none",
+            style: { position: "absolute", left: 0, top: 0, width: "100%", height: "130px", zIndex: 1 },
             children: [
-              jsx("rect", { x: 0, y: 0, width: 794, height: 125, fill: "#ffffff" }),
-              jsx("polygon", { points: "0,0 435,0 345,125 0,125", fill: "#0b1120" }),
-              jsx("polygon", { points: "435,0 460,0 370,125 345,125", fill: "#00d2ff" }),
-              jsx("polygon", { points: "460,0 498,0 408,125 370,125", fill: "#4d33b6" })
+              jsx("polygon", { points: "0,0 435,0 345,130 0,130", fill: "#0b1120" }),
+              jsx("polygon", { points: "435,0 460,0 370,130 345,130", fill: "#00d2ff" }),
+              jsx("polygon", { points: "460,0 498,0 408,130 370,130", fill: "#4d33b6" })
             ]
           }),
           jsxs("div", {
-            style: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 32px", pointerEvents: "none" },
+            style: { position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: "130px", padding: "0 40px" },
             children: [
-              jsxs("div", {
-                style: {
-                  background: "#ffffff",
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px"
-                },
-                children: [
-                  jsx("div", { style: { width: "22px", height: "22px", borderRadius: "50%", background: "#0b1120", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontSize: "11px", fontWeight: "900" }, children: "A" }),
-                  jsxs("div", {
-                    children: [
-                      jsx("div", { style: { fontSize: "13px", fontWeight: "900", color: "#0b1120", letterSpacing: "0.04em" }, children: "AEDENTEK CRM" }),
-                      jsx("div", { style: { fontSize: "9px", color: "#64748b", fontWeight: "600", letterSpacing: "0.06em" }, children: "CALDER & MOSS SURFACES · HUMAN RESOURCES" })
-                    ]
-                  })
-                ]
+              // Logo
+              jsx("div", {
+                style: { display: "flex", alignItems: "center", justifyContent: "center", background: "#ffffff", padding: "6px 14px", borderRadius: "8px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", minWidth: "100px", height: "54px" },
+                children: jsx("span", { style: { fontSize: "11px", fontWeight: "800", letterSpacing: "0.06em", color: "#0f172a" }, children: "YOUR LOGO" })
               }),
+              // Right Header Meta
               jsxs("div", {
                 style: { textAlign: "right" },
                 children: [
-                  jsx("div", { style: { fontSize: "24px", fontWeight: "900", color: "#4d33b6", letterSpacing: "-0.02em" }, children: "OFFER LETTER" }),
+                  jsx("div", { style: { fontSize: "32px", fontWeight: "900", color: "#4d33b6", letterSpacing: "-0.01em", lineHeight: 1 }, children: "OFFER LETTER" }),
+                  jsx("div", {
+                    style: {
+                      display: "inline-block",
+                      marginTop: "6px",
+                      padding: "4px 14px",
+                      borderRadius: "999px",
+                      background: "#fef3c7",
+                      color: "#b45309",
+                      fontSize: "10.5px",
+                      fontWeight: "800",
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      border: "1px solid rgba(217,119,6,0.35)"
+                    },
+                    children: "FORMAL APPOINTMENT LETTER"
+                  }),
                   jsxs("div", {
-                    style: { display: "flex", gap: "8px", justifyContent: "flex-end", marginTop: "4px", fontSize: "11px", color: "#64748b" },
+                    style: { marginTop: "8px", fontSize: "11.5px", lineHeight: 1.55, color: "#64748b" },
                     children: [
-                      jsxs("span", { children: ["Ref: ", jsx("b", { style: { fontFamily: "monospace", color: "#0f172a" }, children: o.offerNumber || "OL-DRAFT" })] }),
-                      jsx("span", { children: "·" }),
-                      jsxs("span", { children: ["Date: ", jsx("b", { style: { color: "#0f172a" }, children: o.issueDate || new Date().toISOString().split("T")[0] })] }),
-                      jsx("span", { children: "·" }),
-                      jsx("span", { style: { color: o.status === "Accepted" ? "#10b981" : o.status === "Declined" ? "#ef4444" : "#6366f1", fontWeight: 700 }, children: o.status || "Draft" })
+                      jsxs("div", { children: ["Offer Number: ", jsx("b", { style: { color: "#0f172a", fontWeight: "800" }, children: "#" + candidateSample.offerNumber })] }),
+                      jsxs("div", { children: ["Issue Date: ", jsx("b", { style: { color: "#0f172a", fontWeight: "700" }, children: candidateSample.issueDate })] }),
+                      jsxs("div", { children: ["Joining Date: ", jsx("b", { style: { color: "#0f172a", fontWeight: "700" }, children: candidateSample.joiningDate })] })
                     ]
                   })
                 ]
@@ -2972,83 +2985,160 @@ function OfferLetterDoc({ offer }) {
           })
         ]
       }),
-      // 2. Dual Coordinate Cards (Candidate & Issuer)
-      renderOlDualCards(candidateSample, "#4d33b6"),
-      // 3. Subject and Body
+
+      // 2. Dual Coordinate Cards (Candidate & Issuer) - Matching SpecCoordCard in Invoice
       jsxs("div", {
-        style: { padding: "0 40px 14px" },
+        style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "22px", padding: "26px 40px 6px" },
+        children: [
+          // Candidate Card
+          jsxs("div", {
+            style: {
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: "10px",
+              padding: "16px 20px",
+              borderLeft: "5px solid #4d33b6",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+              position: "relative"
+            },
+            children: [
+              jsx("div", {
+                style: { display: "inline-block", fontSize: "10px", fontWeight: "800", letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 10px", borderRadius: "6px", background: "#eef2ff", color: "#4d33b6" },
+                children: "OFFER EXTENDED TO (CANDIDATE)"
+              }),
+              jsx("div", {
+                style: { fontSize: "18px", fontWeight: "800", color: "#0f172a", letterSpacing: "-0.01em", margin: "8px 0 2px", lineHeight: 1.2 },
+                children: candidateSample.name
+              }),
+              jsx("div", { style: { height: "1px", background: "#e2e8f0", margin: "8px 0 10px" } }),
+              jsxs("table", {
+                style: { width: "100%", borderCollapse: "collapse" },
+                children: [
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Position" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdValStrong, children: candidateSample.role })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Department" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: candidateSample.department })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Email" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: candidateSample.email })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Phone" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: candidateSample.phone })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Address" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: candidateSample.address })] })
+                ]
+              })
+            ]
+          }),
+
+          // Issuer Card
+          jsxs("div", {
+            style: {
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: "10px",
+              padding: "16px 20px",
+              borderLeft: "5px solid #0f172a",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+              position: "relative"
+            },
+            children: [
+              jsx("div", {
+                style: { display: "inline-block", fontSize: "10px", fontWeight: "800", letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 10px", borderRadius: "6px", background: "#f1f5f9", color: "#0f172a" },
+                children: "ISSUED BY (AEDENTEK GROUP)"
+              }),
+              jsx("div", {
+                style: { fontSize: "18px", fontWeight: "800", color: "#0f172a", letterSpacing: "-0.01em", margin: "8px 0 2px", lineHeight: 1.2 },
+                children: "Aedentek CRM — Calder & Moss"
+              }),
+              jsx("div", { style: { height: "1px", background: "#e2e8f0", margin: "8px 0 10px" } }),
+              jsxs("table", {
+                style: { width: "100%", borderCollapse: "collapse" },
+                children: [
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Branch" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdValStrong, children: candidateSample.branch })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Offer Ref" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: "#" + candidateSample.offerNumber })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Issue Date" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: candidateSample.issueDate })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Joining Date" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: candidateSample.joiningDate })] }),
+                  jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Valid Until" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: candidateSample.expiryDate })] })
+                ]
+              })
+            ]
+          })
+        ]
+      }),
+
+      // 3. Subject and Salutation / Offer Narrative
+      jsxs("div", {
+        style: { padding: "16px 40px 10px" },
         children: [
           jsx("div", {
-            style: { fontWeight: "700", fontSize: "14px", color: "#0f172a", marginBottom: "10px" },
+            style: { fontWeight: "700", fontSize: "14px", color: "#0f172a", marginBottom: "8px" },
             children: o.subject || ("Offer of Employment: " + candidateSample.role + " at Aedentek CRM")
           }),
           jsx("p", {
-            style: { whiteSpace: "pre-wrap", margin: 0, color: "#334155", lineHeight: 1.6 },
+            style: { whiteSpace: "pre-wrap", margin: 0, color: "#334155", fontSize: "12.5px", lineHeight: 1.6 },
             children: body
           })
         ]
       }),
-      // 4. Annexure A Compensation Schedule
+
+      // 4. Compensation Table (Annexure A) - Matching SpecItemsTable in Invoice
       jsxs("div", {
-        style: { margin: "14px 40px 16px" },
+        style: { padding: "14px 40px 0" },
         children: [
-          jsx("div", {
+          jsxs("div", {
             style: {
-              fontSize: "12.5px",
+              fontSize: "11px",
               fontWeight: "800",
-              letterSpacing: "0.04em",
+              letterSpacing: "0.05em",
               textTransform: "uppercase",
               color: "#4d33b6",
-              marginBottom: "8px"
+              marginBottom: "8px",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px"
             },
-            children: "Annexure A — Structured Compensation Schedule"
+            children: [
+              jsx("span", { style: { width: "8px", height: "8px", borderRadius: "50%", background: "#4d33b6" } }),
+              "Annexure A — Structured Compensation Schedule"
+            ]
           }),
           jsxs("table", {
-            className: "ol-paper__table",
-            style: { width: "100%", borderCollapse: "collapse", fontSize: "12.5px" },
+            style: { width: "100%", borderCollapse: "separate", borderSpacing: "0", border: "1px solid #cbd5e1", borderRadius: "8px", overflow: "hidden" },
+            "data-spec-items": "true",
             children: [
               jsx("thead", {
                 children: jsxs("tr", {
                   style: { background: "#4d33b6", color: "#ffffff" },
                   children: [
-                    jsx("th", { style: { padding: "9px 14px", textAlign: "left", fontWeight: "700", borderRadius: "6px 0 0 0" }, children: "Component" }),
-                    jsx("th", { style: { padding: "9px 14px", textAlign: "right", fontWeight: "700" }, children: "Monthly (₹)" }),
-                    jsx("th", { style: { padding: "9px 14px", textAlign: "right", fontWeight: "700", borderRadius: "0 6px 0 0" }, children: "Annual (₹)" })
+                    jsx("th", { style: { width: "50px", padding: "11px 12px", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", textAlign: "center", borderRight: "1px solid rgba(255,255,255,0.18)" }, children: "NO." }),
+                    jsx("th", { style: { padding: "11px 14px", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", textAlign: "left", borderRight: "1px solid rgba(255,255,255,0.18)" }, children: "COMPENSATION COMPONENT" }),
+                    jsx("th", { style: { width: "140px", padding: "11px 14px", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", textAlign: "right", borderRight: "1px solid rgba(255,255,255,0.18)" }, children: "MONTHLY (₹)" }),
+                    jsx("th", { style: { width: "140px", padding: "11px 14px", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", textAlign: "right", borderRight: "1px solid rgba(255,255,255,0.18)" }, children: "ANNUAL (₹)" }),
+                    jsx("th", { style: { width: "80px", padding: "11px 12px", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", textAlign: "center" }, children: "% OF CTC" })
                   ]
                 })
               }),
               jsxs("tbody", {
                 children: [
                   jsxs("tr", {
-                    style: { borderBottom: "1px solid #e2e8f0" },
                     children: [
-                      jsx("td", { style: { padding: "9px 14px", fontWeight: "600", color: "#0f172a" }, children: "Basic Salary" }),
-                      jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmtINR(basic) }),
-                      jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmtINR(basic * 12) })
+                      jsx("td", { style: { padding: "10px 12px", fontSize: "12.5px", textAlign: "center", color: "#64748b", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: "01" }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", fontWeight: "600", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: "Basic Salary" }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", textAlign: "right", fontFamily: "monospace", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: fmtINR(basic) }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", textAlign: "right", fontFamily: "monospace", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: fmtINR(basic * 12) }),
+                      jsx("td", { style: { padding: "10px 12px", fontSize: "12.5px", textAlign: "center", color: "#64748b", borderBottom: "1px solid #e2e8f0" }, children: "50%" })
                     ]
                   }),
                   jsxs("tr", {
-                    style: { borderBottom: "1px solid #e2e8f0" },
                     children: [
-                      jsx("td", { style: { padding: "9px 14px", fontWeight: "600", color: "#0f172a" }, children: "House Rent Allowance (HRA)" }),
-                      jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmtINR(hra) }),
-                      jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmtINR(hra * 12) })
+                      jsx("td", { style: { padding: "10px 12px", fontSize: "12.5px", textAlign: "center", color: "#64748b", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: "02" }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", fontWeight: "600", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: "House Rent Allowance (HRA)" }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", textAlign: "right", fontFamily: "monospace", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: fmtINR(hra) }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", textAlign: "right", fontFamily: "monospace", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: fmtINR(hra * 12) }),
+                      jsx("td", { style: { padding: "10px 12px", fontSize: "12.5px", textAlign: "center", color: "#64748b", borderBottom: "1px solid #e2e8f0" }, children: "20%" })
                     ]
                   }),
                   jsxs("tr", {
-                    style: { borderBottom: "1px solid #e2e8f0" },
                     children: [
-                      jsx("td", { style: { padding: "9px 14px", fontWeight: "600", color: "#0f172a" }, children: "Special Allowance" }),
-                      jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmtINR(special) }),
-                      jsx("td", { style: { padding: "9px 14px", textAlign: "right", fontFamily: "monospace" }, children: fmtINR(special * 12) })
-                    ]
-                  }),
-                  jsxs("tr", {
-                    style: { background: "#f8fafc", fontWeight: "700", borderTop: "2px solid #cbd5e1" },
-                    children: [
-                      jsx("td", { style: { padding: "10px 14px", color: "#0f172a" }, children: "Total Cost to Company (CTC)" }),
-                      jsx("td", { style: { padding: "10px 14px", textAlign: "right", fontFamily: "monospace", color: "#4d33b6" }, children: fmtINR(monthlyGross) }),
-                      jsx("td", { style: { padding: "10px 14px", textAlign: "right", fontFamily: "monospace", color: "#4d33b6" }, children: fmtINR(annualCtc) })
+                      jsx("td", { style: { padding: "10px 12px", fontSize: "12.5px", textAlign: "center", color: "#64748b", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: "03" }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", fontWeight: "600", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: "Special Allowance" }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", textAlign: "right", fontFamily: "monospace", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: fmtINR(special) }),
+                      jsx("td", { style: { padding: "10px 14px", fontSize: "12.5px", textAlign: "right", fontFamily: "monospace", color: "#0f172a", borderRight: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0" }, children: fmtINR(special * 12) }),
+                      jsx("td", { style: { padding: "10px 12px", fontSize: "12.5px", textAlign: "center", color: "#64748b", borderBottom: "1px solid #e2e8f0" }, children: "30%" })
                     ]
                   })
                 ]
@@ -3057,34 +3147,74 @@ function OfferLetterDoc({ offer }) {
           })
         ]
       }),
-      // 5. Terms
+
+      // 5. Total CTC Summary Block (Matching SpecSummary in Invoice)
       jsxs("div", {
-        className: "ol-paper__terms",
-        style: { margin: "14px 40px 18px" },
+        style: { padding: "16px 40px 12px", display: "flex", justifyContent: "flex-end" },
         children: [
-          jsx("div", { style: { fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.04em", color: "#475569", marginBottom: "6px" }, children: "Key Employment Terms & Policies" }),
-          jsx("ol", {
-            style: { paddingLeft: "18px", margin: "0", fontSize: "11.5px", color: "#475569", lineHeight: 1.6 },
-            children: termsList.map((t, idx) => jsx("li", { key: idx, children: t }))
+          jsxs("div", {
+            style: { width: "340px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "14px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" },
+            children: [
+              jsxs("div", {
+                style: { display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: "6px" },
+                children: [
+                  jsx("span", { children: "Monthly Gross Compensation:" }),
+                  jsx("span", { style: { fontFamily: "monospace", fontWeight: "600", color: "#0f172a" }, children: fmtINR(monthlyGross) })
+                ]
+              }),
+              jsxs("div", {
+                style: { display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: "6px" },
+                children: [
+                  jsx("span", { children: "Total Annual Allowances:" }),
+                  jsx("span", { style: { fontFamily: "monospace", fontWeight: "600", color: "#0f172a" }, children: fmtINR(special * 12) })
+                ]
+              }),
+              jsx("div", { style: { height: "1.5px", background: "#cbd5e1", margin: "8px 0" } }),
+              jsxs("div", {
+                style: { display: "flex", justifyContent: "space-between", alignItems: "baseline" },
+                children: [
+                  jsx("span", { style: { fontSize: "12.5px", fontWeight: "800", color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.02em" }, children: "Total Cost to Company (CTC):" }),
+                  jsx("span", { style: { fontSize: "18px", fontWeight: "900", color: "#4d33b6", fontFamily: "monospace" }, children: fmtINR(annualCtc) })
+                ]
+              })
+            ]
           })
         ]
       }),
-      // 6. Signatures
+
+      // 6. Key Employment Terms & Policies (Matching Bank & Wire Remittance Details in Invoice)
       jsxs("div", {
-        className: "ol-paper__signatures",
+        style: { padding: "10px 40px 14px" },
+        children: [
+          jsx("div", {
+            style: { borderLeft: "4px solid #4d33b6", paddingLeft: "10px", fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#4d33b6", marginBottom: "8px" },
+            children: "Key Employment Terms & Policies"
+          }),
+          jsx("div", {
+            style: { background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "12px 16px" },
+            children: jsx("ol", {
+              style: { margin: 0, paddingLeft: "18px", fontSize: "11.5px", color: "#475569", lineHeight: 1.6 },
+              children: termsList.map((t, idx) => jsx("li", { key: idx, children: t }))
+            })
+          })
+        ]
+      }),
+
+      // 7. Formal Signatory & Acceptance Block
+      jsxs("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "40px",
-          margin: "20px 40px 32px",
-          paddingTop: "20px",
+          margin: "12px 40px 28px",
+          paddingTop: "18px",
           borderTop: "1px dashed #cbd5e1"
         },
         children: [
           jsxs("div", {
             children: [
-              jsx("div", { style: { fontSize: "12px", fontWeight: "700", color: "#475569" }, children: "For Aedentek CRM · Calder & Moss Surfaces" }),
-              jsx("div", { style: { height: "1.5px", background: "#0f172a", width: "180px", margin: "36px 0 6px" } }),
+              jsx("div", { style: { fontSize: "11.5px", fontWeight: "700", color: "#475569" }, children: "For Aedentek CRM · Calder & Moss Surfaces" }),
+              jsx("div", { style: { height: "1.5px", background: "#0f172a", width: "180px", margin: "32px 0 6px" } }),
               jsx("div", { style: { fontSize: "13px", fontWeight: "800", color: "#0f172a" }, children: o.signatoryName || "Ines Okafor" }),
               jsx("div", { style: { fontSize: "11px", color: "#4d33b6", fontWeight: "700" }, children: o.signatoryDesignation || "Head of Specification & Human Resources" })
             ]
@@ -3092,8 +3222,8 @@ function OfferLetterDoc({ offer }) {
           jsxs("div", {
             style: { textAlign: "right" },
             children: [
-              jsx("div", { style: { fontSize: "12px", fontWeight: "700", color: "#475569" }, children: "Candidate Acceptance" }),
-              jsx("div", { style: { height: "1.5px", background: "#0f172a", width: "180px", margin: "36px 0 6px auto" } }),
+              jsx("div", { style: { fontSize: "11.5px", fontWeight: "700", color: "#475569" }, children: "Candidate Acceptance & Acknowledgment" }),
+              jsx("div", { style: { height: "1.5px", background: "#0f172a", width: "180px", margin: "32px 0 6px auto" } }),
               jsx("div", { style: { fontSize: "13px", fontWeight: "800", color: "#0f172a" }, children: candidateSample.name }),
               jsx("div", { style: { fontSize: "11px", color: "#64748b" }, children: "Signature & Acceptance (Due: " + candidateSample.expiryDate + ")" })
             ]
@@ -3114,7 +3244,6 @@ function OfferLettersPage() {
   const [templates, setTemplates] = useState([]);
   const [kpis, setKpis] = useState({ totalOffers: 0, sentCount: 0, acceptedCount: 0, totalCtcCommitted: 0 });
   const [tick, setTick] = useState(0);
-  const [viewingOffer, setViewingOffer] = useState(null);
 
   const reload = () => setTick((n) => n + 1);
 
@@ -3153,7 +3282,52 @@ function OfferLettersPage() {
   }, []);
 
   const openPreview = (offer) => {
-    setViewingOffer(offer);
+    const stBadge = offer.status === "Accepted"
+      ? "paid"
+      : offer.status === "Declined"
+      ? "overdue"
+      : offer.status === "Sent"
+      ? "sent"
+      : "draft";
+
+    openDrawer(
+      jsxs(ModalDrawer, {
+        title: offer.offerNumber || "OL-2026-0001",
+        sub: `${offer.candidateName} — ${offer.position} (${offer.branch})`,
+        tools: jsx("span", {
+          className: `fi-badge-pill ${stBadge}`,
+          children: offer.status || "Draft"
+        }),
+        foot: jsxs(Fragment, {
+          children: [
+            jsxs("button", {
+              className: "btn btn--ghost",
+              type: "button",
+              onClick: () => {
+                document.body.classList.add("hr-printing");
+                window.print();
+                document.body.classList.remove("hr-printing");
+              },
+              children: [jsx(Icon, { name: "download" }), "Print / Save PDF"]
+            }),
+            jsx("button", {
+              className: "btn btn--primary",
+              type: "button",
+              onClick: () => openDrawer(null),
+              children: "Close"
+            })
+          ]
+        }),
+        children: [
+          jsx("div", {
+            id: "printable-offer-letter-doc",
+            "data-wide-drawer": "true",
+            style: { overflowX: "auto", padding: "10px 0" },
+            children: jsx(OfferLetterDoc, { offer })
+          })
+        ]
+      })
+    );
   };
 
   const openDrawerForm = (existing = null) => {
@@ -3607,68 +3781,6 @@ function OfferLettersPage() {
             })
           ]
         })
-      }),
-      // Centered Executive View & Print Dialog Modal
-      viewingOffer && jsx("div", {
-        className: "tl-dialog-scrim",
-        onClick: (e) => {
-          if (e.target === e.currentTarget) setViewingOffer(null);
-        },
-        children: jsxs("div", {
-          className: "ol-modal-dialog drawer",
-          role: "dialog",
-          "aria-modal": true,
-          children: [
-            jsxs("div", {
-              className: "tl-dialog-head",
-              style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: "1px solid var(--line)" },
-              children: [
-                jsxs("div", {
-                  children: [
-                    jsx("h3", { style: { margin: 0, fontSize: "18px", fontWeight: 700, color: "var(--text)" }, children: "Offer Letter · " + (viewingOffer.offerNumber || "") }),
-                    jsx("p", { style: { margin: "4px 0 0", fontSize: "12.5px", color: "var(--muted)" }, children: viewingOffer.candidateName + " — " + viewingOffer.position + " (" + viewingOffer.branch + ")" })
-                  ]
-                }),
-                jsx("button", {
-                  type: "button",
-                  className: "btn-icon",
-                  onClick: () => setViewingOffer(null),
-                  children: jsx(Icon, { name: "x" })
-                })
-              ]
-            }),
-            jsx("div", {
-              className: "ol-modal-body",
-              style: { padding: "24px 20px", overflowY: "auto", flex: "1 1 auto", background: "var(--card-2, #f8fafc)" },
-              children: jsx("div", {
-                style: { maxWidth: "780px", margin: "0 auto", background: "#ffffff", borderRadius: "12px", boxShadow: "0 4px 24px rgba(0,0,0,0.08)", overflow: "hidden" },
-                children: jsx(OfferLetterDoc, { offer: viewingOffer })
-              })
-            }),
-            jsxs("div", {
-              className: "tl-dialog-foot",
-              style: { display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "12px", padding: "14px 24px", borderTop: "1px solid var(--line)", background: "var(--card)" },
-              children: [
-                jsx("button", {
-                  type: "button",
-                  className: "btn btn--ghost",
-                  onClick: () => setViewingOffer(null),
-                  children: "Close"
-                }),
-                jsxs("button", {
-                  type: "button",
-                  className: "btn btn--primary",
-                  onClick: () => {
-                    document.body.classList.add("hr-printing");
-                    window.print();
-                    document.body.classList.remove("hr-printing");
-                  },
-                  children: [jsx(Icon, { name: "download" }), " Print / Save PDF"]
-                })
-              ]
-            })
-          ]
-        })
       })
     ]
   });
@@ -3911,62 +4023,68 @@ function renderOlSheetHeader(tpl, activeColor) {
 
   // Classic Corporate Default (matching Document Templates invoice style exactly)
   return jsxs("div", {
-    style: { position: "relative", width: "100%", minHeight: "130px", background: "#ffffff" },
+    style: { position: "relative", width: "100%", minHeight: "130px", background: "#ffffff", overflow: "hidden" },
+    "data-spec-header": "dark",
     children: [
       jsxs("svg", {
         viewBox: "0 0 794 130",
         width: "100%",
         height: "130",
-        style: { display: "block" },
+        style: { position: "absolute", left: 0, top: 0, width: "100%", height: "130px", zIndex: 1 },
         preserveAspectRatio: "none",
         children: [
-          jsx("rect", { x: 0, y: 0, width: 794, height: 130, fill: "#ffffff" }),
           jsx("polygon", { points: "0,0 435,0 345,130 0,130", fill: "#0b1120" }),
           jsx("polygon", { points: "435,0 460,0 370,130 345,130", fill: "#00d2ff" }),
-          jsx("polygon", { points: "460,0 498,0 408,130 370,130", fill: activeColor })
+          jsx("polygon", { points: "460,0 498,0 408,130 370,130", fill: activeColor || "#4d33b6" })
         ]
       }),
       jsxs("div", {
-        style: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 40px", pointerEvents: "none" },
+        style: { position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: "130px", padding: "0 40px" },
         children: [
-          jsxs("div", {
+          jsx("div", {
             style: {
-              background: "#ffffff",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
               display: "flex",
               alignItems: "center",
-              gap: "10px"
+              justifyContent: "center",
+              background: "#ffffff",
+              padding: "6px 14px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+              minWidth: "100px",
+              height: "54px"
             },
-            children: [
-              jsx("div", { style: { width: "24px", height: "24px", borderRadius: "50%", background: "#0b1120", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontSize: "11px", fontWeight: "900" }, children: "A" }),
-              jsxs("div", {
-                children: [
-                  jsx("div", { style: { fontSize: "13px", fontWeight: "900", color: "#0b1120", letterSpacing: "0.04em" }, children: "AEDENTEK CRM" }),
-                  jsx("div", { style: { fontSize: "9.5px", color: "#64748b", fontWeight: "600", letterSpacing: "0.06em" }, children: "CALDER & MOSS SURFACES" })
-                ]
-              })
-            ]
+            children: jsx("span", {
+              style: { fontSize: "11px", fontWeight: "800", letterSpacing: "0.06em", color: "#0f172a" },
+              children: "YOUR LOGO"
+            })
           }),
           jsxs("div", {
             style: { textAlign: "right" },
             children: [
-              jsx("div", { style: { fontSize: "28px", fontWeight: "900", color: activeColor, letterSpacing: "-0.02em" }, children: "OFFER LETTER" }),
+              jsx("div", { style: { fontSize: "32px", fontWeight: "900", color: activeColor || "#4d33b6", letterSpacing: "-0.01em", lineHeight: 1 }, children: "OFFER LETTER" }),
               jsx("div", {
                 style: {
                   display: "inline-block",
-                  background: "rgba(77,51,182,0.08)",
-                  color: activeColor,
-                  fontSize: "10px",
+                  marginTop: "6px",
+                  padding: "4px 14px",
+                  borderRadius: "999px",
+                  background: "#fef3c7",
+                  color: "#b45309",
+                  fontSize: "10.5px",
                   fontWeight: "800",
                   letterSpacing: "0.08em",
-                  padding: "3px 12px",
-                  borderRadius: "999px",
-                  marginTop: "4px",
-                  border: "1px solid color-mix(in srgb, " + activeColor + " 30%, transparent)"
+                  textTransform: "uppercase",
+                  border: "1px solid rgba(217,119,6,0.35)"
                 },
                 children: "FORMAL APPOINTMENT LETTER"
+              }),
+              jsxs("div", {
+                style: { marginTop: "8px", fontSize: "11.5px", lineHeight: 1.55, color: "#64748b" },
+                children: [
+                  jsxs("div", { children: ["Offer Number: ", jsx("b", { style: { color: "#0f172a", fontWeight: "800" }, children: "#OL-2026-0001" })] }),
+                  jsxs("div", { children: ["Issue Date: ", jsx("b", { style: { color: "#0f172a", fontWeight: "700" }, children: "November 16, 2026" })] }),
+                  jsxs("div", { children: ["Joining Date: ", jsx("b", { style: { color: "#0f172a", fontWeight: "700" }, children: "December 01, 2026" })] })
+                ]
               })
             ]
           })
@@ -3977,50 +4095,58 @@ function renderOlSheetHeader(tpl, activeColor) {
 }
 
 function renderOlDualCards(sample, activeColor) {
+  const tdLabel = { width: "80px", fontSize: "12px", fontWeight: "500", color: "#64748b", verticalAlign: "top", padding: "3.5px 0" };
+  const tdColon = { width: "14px", color: "#64748b", fontSize: "12px", padding: "3.5px 0", textAlign: "center", verticalAlign: "top" };
+  const tdVal = { fontSize: "12.5px", padding: "3.5px 0", lineHeight: 1.4, verticalAlign: "top", color: "#0f172a", fontWeight: "500" };
+  const tdValStrong = { fontSize: "12.5px", padding: "3.5px 0", lineHeight: 1.4, verticalAlign: "top", color: "#0f172a", fontWeight: "700" };
+
   return jsxs("div", {
     style: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      gap: "20px",
-      margin: "24px 40px 18px"
+      gap: "22px",
+      padding: "26px 40px 6px"
     },
     children: [
       // Left: Candidate Box
       jsxs("div", {
         style: {
-          background: "#f8fafc",
+          background: "#ffffff",
           border: "1px solid #e2e8f0",
           borderRadius: "10px",
-          padding: "16px 18px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
+          padding: "16px 20px",
+          borderLeft: "5px solid " + (activeColor || "#4d33b6"),
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          position: "relative"
         },
         children: [
           jsx("div", {
             style: {
-              borderLeft: "3.5px solid " + activeColor,
-              paddingLeft: "8px",
-              fontSize: "11.5px",
+              display: "inline-block",
+              fontSize: "10px",
               fontWeight: "800",
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              color: activeColor,
-              marginBottom: "12px"
+              padding: "3px 10px",
+              borderRadius: "6px",
+              background: "#eef2ff",
+              color: activeColor || "#4d33b6"
             },
             children: "OFFER EXTENDED TO (CANDIDATE)"
           }),
+          jsx("div", {
+            style: { fontSize: "18px", fontWeight: "800", color: "#0f172a", letterSpacing: "-0.01em", margin: "8px 0 2px", lineHeight: 1.2 },
+            children: sample.name || "Aditya Singhania"
+          }),
+          jsx("div", { style: { height: "1px", background: "#e2e8f0", margin: "8px 0 10px" } }),
           jsxs("table", {
-            style: { width: "100%", borderCollapse: "collapse", fontSize: "12px" },
+            style: { width: "100%", borderCollapse: "collapse" },
             children: [
-              jsxs("tbody", {
-                children: [
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", width: "92px", fontWeight: "500" }, children: "Candidate" }), jsx("td", { style: { width: "14px", color: "#94a3b8" }, children: ":" }), jsx("td", { style: { fontWeight: "700", color: "#0f172a" }, children: sample.name })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Position" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { fontWeight: "700", color: activeColor }, children: sample.role })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Department" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#334155" }, children: sample.department })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Email" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#334155" }, children: sample.email })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Phone" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#334155" }, children: sample.phone })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", verticalAlign: "top", fontWeight: "500" }, children: "Address" }), jsx("td", { style: { verticalAlign: "top", color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#334155", lineHeight: 1.4 }, children: sample.address })] })
-                ]
-              })
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Position" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdValStrong, children: sample.role })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Department" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: sample.department })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Email" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: sample.email })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Phone" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: sample.phone })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Address" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: sample.address })] })
             ]
           })
         ]
@@ -4028,39 +4154,42 @@ function renderOlDualCards(sample, activeColor) {
       // Right: Issuer Box
       jsxs("div", {
         style: {
-          background: "#f8fafc",
+          background: "#ffffff",
           border: "1px solid #e2e8f0",
           borderRadius: "10px",
-          padding: "16px 18px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
+          padding: "16px 20px",
+          borderLeft: "5px solid #0f172a",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          position: "relative"
         },
         children: [
           jsx("div", {
             style: {
-              borderLeft: "3.5px solid #0f172a",
-              paddingLeft: "8px",
-              fontSize: "11.5px",
+              display: "inline-block",
+              fontSize: "10px",
               fontWeight: "800",
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              color: "#0f172a",
-              marginBottom: "12px"
+              padding: "3px 10px",
+              borderRadius: "6px",
+              background: "#f1f5f9",
+              color: "#0f172a"
             },
             children: "ISSUED BY (AEDENTEK GROUP)"
           }),
+          jsx("div", {
+            style: { fontSize: "18px", fontWeight: "800", color: "#0f172a", letterSpacing: "-0.01em", margin: "8px 0 2px", lineHeight: 1.2 },
+            children: "Aedentek CRM — Calder & Moss"
+          }),
+          jsx("div", { style: { height: "1px", background: "#e2e8f0", margin: "8px 0 10px" } }),
           jsxs("table", {
-            style: { width: "100%", borderCollapse: "collapse", fontSize: "12px" },
+            style: { width: "100%", borderCollapse: "collapse" },
             children: [
-              jsxs("tbody", {
-                children: [
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", width: "92px", fontWeight: "500" }, children: "Company" }), jsx("td", { style: { width: "14px", color: "#94a3b8" }, children: ":" }), jsx("td", { style: { fontWeight: "700", color: "#0f172a" }, children: "Aedentek CRM · Calder & Moss" })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Branch" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#334155" }, children: sample.branch })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Offer Ref" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { fontWeight: "700", color: activeColor, fontFamily: "monospace" }, children: sample.offerNumber || "OL-2026-0001" })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Issue Date" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#334155" }, children: "November 16, 2026" })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Joining Date" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#334155" }, children: sample.joiningDate })] }),
-                  jsxs("tr", { children: [jsx("td", { style: { color: "#64748b", padding: "3.5px 0", fontWeight: "500" }, children: "Valid Until" }), jsx("td", { style: { color: "#94a3b8" }, children: ":" }), jsx("td", { style: { color: "#e11d48", fontWeight: "600" }, children: sample.expiryDate })] })
-                ]
-              })
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Branch" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdValStrong, children: sample.branch })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Offer Ref" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: "#" + (sample.offerNumber || "OL-2026-0001") })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Issue Date" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: sample.issueDate || "November 16, 2026" })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Joining Date" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: sample.joiningDate })] }),
+              jsxs("tr", { children: [jsx("td", { style: tdLabel, children: "Valid Until" }), jsx("td", { style: tdColon, children: ":" }), jsx("td", { style: tdVal, children: sample.expiryDate })] })
             ]
           })
         ]
