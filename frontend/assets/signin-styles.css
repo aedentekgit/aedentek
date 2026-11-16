@@ -5893,3 +5893,465 @@ html body .ivb .ivb-table th{
     font-size: 12px !important;
   }
 }
+
+
+/* ========================================================================== */
+/* MOBILE APP DESIGN & TABLET RESPONSIVE ENGINE (MOBILE/TAB VIEW ONLY)       */
+/* STRICT ISOLATION: DO NOT TOUCH DESKTOP VIEW (> 1024px)                     */
+/* ========================================================================== */
+
+@media (max-width: 1024px) {
+  :root {
+    --app-max: 100% !important;
+  }
+  
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  .main {
+    padding-left: var(--gutter, 16px) !important;
+    padding-right: var(--gutter, 16px) !important;
+    box-sizing: border-box !important;
+  }
+  
+  .kpi-row, .kpis, .fi-kpis, .fi-kpis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .table-wrap, .table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--line) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  .toolbar {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* ======================================================================== */
+  /* TRUE NATIVE MOBILE APP DESIGN (PHONE SCREENS <= 768px)                  */
+  /* ======================================================================== */
+
+  /* 1. NATIVE MOBILE APP HEADER (.top) */
+  header.top,
+  .top {
+    position: sticky !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    z-index: 999 !important;
+    background: color-mix(in srgb, var(--card) 85%, transparent) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid var(--line) !important;
+    padding: 0 14px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03) !important;
+    border-radius: 0 !important;
+  }
+
+  .top__sidebar-toggle {
+    width: 40px !important;
+    height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    background: var(--well) !important;
+    border: 1px solid var(--line) !important;
+    color: var(--text) !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+  }
+
+  .top__page {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    color: var(--text) !important;
+    max-width: 170px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+  }
+
+  .top__bell {
+    width: 38px !important;
+    height: 38px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    background: var(--well) !important;
+    border: 1px solid var(--line) !important;
+    position: relative !important;
+  }
+
+  .me-btn {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .me-btn .av {
+    --s: 34px !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 2. MAIN CONTENT PADDING (ACCOMMODATE BOTTOM TAB BAR) */
+  .main {
+    padding: 0 12px calc(86px + env(safe-area-inset-bottom)) 12px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 3. NATIVE MOBILE APP BOTTOM NAVIGATION BAR (.tabbar) */
+  .tabbar {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(62px + env(safe-area-inset-bottom)) !important;
+    padding: 6px 8px max(8px, env(safe-area-inset-bottom)) !important;
+    background: color-mix(in srgb, var(--card) 88%, transparent) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-top: 1px solid var(--line) !important;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08) !important;
+    border-radius: 20px 20px 0 0 !important;
+    z-index: 10000 !important;
+    margin: 0 !important;
+  }
+
+  .tabbar__item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    color: var(--muted) !important;
+    text-decoration: none !important;
+    border-radius: 12px !important;
+    padding: 4px 0 !important;
+    min-height: 44px !important;
+    transition: all 0.15s ease !important;
+    border: none !important;
+    background: transparent !important;
+    cursor: pointer !important;
+  }
+
+  .tabbar__item .ico,
+  .tabbar__item svg {
+    width: 20px !important;
+    height: 20px !important;
+    transition: transform 0.15s ease !important;
+  }
+
+  .tabbar__item.is-active {
+    color: var(--primary) !important;
+    font-weight: 700 !important;
+  }
+
+  .tabbar__item.is-active .ico,
+  .tabbar__item.is-active svg {
+    transform: scale(1.1) !important;
+    color: var(--primary) !important;
+  }
+
+  .tabbar__pill {
+    background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+    border-radius: 12px !important;
+    position: absolute !important;
+    inset: 4px !important;
+    z-index: -1 !important;
+  }
+
+  /* 4. MOBILE SLIDE-OVER DRAWER (.side) */
+  .side {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: min(84vw, 320px) !important;
+    max-width: 320px !important;
+    height: 100dvh !important;
+    border-radius: 0 24px 24px 0 !important;
+    z-index: 99999 !important;
+    box-shadow: 12px 0 48px rgba(0, 0, 0, 0.4) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom)) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease !important;
+  }
+
+  .side[role="dialog"],
+  .app.mobile-drawer-open .side {
+    display: flex !important;
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .side-scrim,
+  .scrim.side-scrim {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(14, 20, 33, 0.6) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    z-index: 99998 !important;
+    display: block !important;
+  }
+
+  /* 5. MOBILE APP CARD & KPI STYLING */
+  .kpi-row, .kpis, .fi-kpis, .fi-kpis-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .kpi, .kpi-card {
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--line) !important;
+    background: var(--card) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 84px !important;
+  }
+
+  .kpi__value {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    margin: 4px 0 !important;
+  }
+
+  .kpi__label {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--muted) !important;
+  }
+
+  .kpi__foot {
+    font-size: 11px !important;
+    color: var(--muted) !important;
+  }
+
+  /* 6. MOBILE APP SWIPEABLE FILTER CAROUSELS */
+  .ol-toolbar, .fi-toolbar, .dl-toolbar, .toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    background: var(--card) !important;
+    border-radius: 16px !important;
+    margin-bottom: 14px !important;
+    border: 1px solid var(--line) !important;
+  }
+
+  .ol-toolbar__left,
+  .fi-toolbar > div:first-child,
+  .dl-toolbar__filters {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .ol-status-tabs,
+  .fi-status-tabs,
+  .dl-status-tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 6px !important;
+    padding: 2px 2px 6px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .ol-status-tabs::-webkit-scrollbar,
+  .fi-status-tabs::-webkit-scrollbar,
+  .dl-status-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .ol-status-tab,
+  .fi-status-tab {
+    flex-shrink: 0 !important;
+    padding: 7px 14px !important;
+    border-radius: 999px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    background: var(--card-2) !important;
+    border: 1px solid var(--line) !important;
+    color: var(--muted) !important;
+    white-space: nowrap !important;
+    min-height: 34px !important;
+  }
+
+  .ol-status-tab.is-active,
+  .fi-status-tab.is-active {
+    background: var(--primary) !important;
+    color: var(--on-primary) !important;
+    border-color: var(--primary) !important;
+  }
+
+  .ol-toolbar .search,
+  .fi-toolbar .search,
+  .toolbar input.input,
+  .search-input {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .ol-toolbar > button,
+  .fi-toolbar > button.btn--primary {
+    width: 100% !important;
+    height: 44px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border-radius: 12px !important;
+    justify-content: center !important;
+  }
+
+  /* 7. MOBILE BOTTOM SHEET FOR MODALS & DRAWERS */
+  .drawer,
+  .modal:not(.modal--center),
+  .ol-modal-dialog {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    border-radius: 24px 24px 0 0 !important;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.3) !important;
+    padding-bottom: max(14px, env(safe-area-inset-bottom)) !important;
+    animation: mobileSheetUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    z-index: 100001 !important;
+  }
+
+  @keyframes mobileSheetUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .mobile-sheet-handle,
+  .tl-dialog-head::before,
+  .drawer__head::before,
+  .modal__head::before {
+    content: "" !important;
+    display: block !important;
+    width: 38px !important;
+    height: 4px !important;
+    border-radius: 2px !important;
+    background: var(--line-2, #cbd5e1) !important;
+    margin: -4px auto 10px auto !important;
+  }
+
+  .drawer__foot,
+  .modal__foot,
+  .tl-dialog-foot {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 12px 16px !important;
+  }
+
+  .drawer__foot > .btn,
+  .modal__foot > .btn,
+  .tl-dialog-foot > .btn {
+    flex: 1 1 calc(50% - 4px) !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    justify-content: center !important;
+  }
+
+  /* 8. MOBILE DEALS KANBAN BOARD */
+  .dl-board, .deals-board {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 14px !important;
+    padding: 4px 6px 20px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .dl-col, .deals-col {
+    scroll-snap-align: center !important;
+    min-width: 85vw !important;
+    max-width: 85vw !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 9. MASTERS & TEMPLATES STUDIOS ON MOBILE */
+  .tmpl-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .tmpl-preview {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .tmpl-preview__stage {
+    padding: 12px 6px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .spec-sheet {
+    transform-origin: top left !important;
+    transform: scale(calc((100vw - 28px) / 794)) !important;
+    margin: 0 !important;
+    margin-bottom: calc(-1050px * (1 - ((100vw - 28px) / 794))) !important;
+  }
+}
+
+/* DESKTOP VIEW STRICT ISOLATION GUARD (> 1024px) */
+@media (min-width: 1025px) {
+  .mobile-app-bottom-bar,
+  .mobile-only {
+    display: none !important;
+  }
+}

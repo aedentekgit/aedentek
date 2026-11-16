@@ -1395,3 +1395,67 @@
   });
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 })();
+
+
+/* ========================================================================== */
+/* MOBILE APP RUNTIME ENGINE (PHONE & TABLET INTERACTIONS)                     */
+/* ========================================================================== */
+(function initMobileAppEngine() {
+  if (typeof window === 'undefined') return;
+
+  // 1. Delegate Top Header Hamburger Menu button to open mobile drawer
+  document.addEventListener('click', function (e) {
+    var toggle = e.target.closest('.top__sidebar-toggle');
+    if (toggle && window.innerWidth <= 768) {
+      e.preventDefault();
+      e.stopPropagation();
+      var moreBtn = document.querySelector('.tabbar button[aria-controls="sidebar"], .tabbar button');
+      if (moreBtn) {
+        moreBtn.click();
+      } else {
+        var app = document.querySelector('.app');
+        var side = document.querySelector('.side');
+        if (app && side) {
+          app.classList.toggle('mobile-drawer-open');
+        }
+      }
+    }
+  }, true);
+
+  // 2. Auto-close mobile drawer when any link inside .side is tapped
+  document.addEventListener('click', function (e) {
+    if (window.innerWidth <= 768) {
+      var link = e.target.closest('.side a, .side .nav__item');
+      if (link) {
+        var scrim = document.querySelector('.side-scrim, .scrim.side-scrim');
+        if (scrim) {
+          scrim.click();
+        } else {
+          var app = document.querySelector('.app');
+          if (app) app.classList.remove('mobile-drawer-open');
+        }
+      }
+    }
+  });
+
+  // 3. Inject mobile bottom sheet handles if missing
+  function injectSheetHandles() {
+    if (window.innerWidth > 768) return;
+    var sheets = document.querySelectorAll('.drawer:not([data-has-handle]), .ol-modal-dialog:not([data-has-handle])');
+    sheets.forEach(function (sheet) {
+      sheet.setAttribute('data-has-handle', 'true');
+      var head = sheet.querySelector('.drawer__head, .tl-dialog-head');
+      if (head && !head.querySelector('.mobile-sheet-handle')) {
+        var handle = document.createElement('div');
+        handle.className = 'mobile-sheet-handle';
+        handle.setAttribute('aria-hidden', 'true');
+        head.insertAdjacentElement('afterbegin', handle);
+      }
+    });
+  }
+
+  var sheetObserver = new MutationObserver(injectSheetHandles);
+  if (document.body) {
+    sheetObserver.observe(document.body, { childList: true, subtree: true });
+  }
+})();

@@ -20,9 +20,13 @@ const server = http.createServer((req, res) => {
   if (reqPath.startsWith('/tessly/assets/')) {
     reqPath = reqPath.replace('/tessly/assets/', '/assets/');
   }
-  const baseDir = fs.existsSync(path.join(process.cwd(), 'frontend/index.html'))
-    ? path.join(process.cwd(), 'frontend')
-    : process.cwd();
+  const baseDir = fs.existsSync(path.join(process.cwd(), 'dist/index.html'))
+    ? path.join(process.cwd(), 'dist')
+    : (fs.existsSync(path.join(process.cwd(), 'frontend/dist/index.html'))
+      ? path.join(process.cwd(), 'frontend/dist')
+      : (fs.existsSync(path.join(process.cwd(), 'frontend/index.html'))
+        ? path.join(process.cwd(), 'frontend')
+        : process.cwd()));
   let cleanPath = reqPath.startsWith('/') ? reqPath.slice(1) : reqPath;
   let filePath = path.join(baseDir, !cleanPath || cleanPath.startsWith('tessly') && !cleanPath.includes('.') ? 'index.html' : cleanPath);
   if (!fs.existsSync(filePath)) filePath = path.join(baseDir, 'index.html');
