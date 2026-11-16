@@ -5640,3 +5640,256 @@ html body .ivb .ivb-table th{
   html body .tmpl-preview__bar{flex:0 0 auto !important}
   html body .tmpl-preview__stage{flex:1 1 auto !important;min-height:0 !important;overflow-y:auto !important}
 }
+
+/* =====================================================================
+   RESPONSIVE DEALS BOARD TOOLBAR (Image 2)
+   Desktop, Tablet, and Mobile Adaptive Layout
+   ===================================================================== */
+.toolbar.dl-toolbar,
+.toolbar:has(.dl-owners) {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  margin-bottom: 16px !important;
+  width: 100% !important;
+}
+
+.toolbar.dl-toolbar .toolbar__search,
+.toolbar:has(.dl-owners) .toolbar__search {
+  flex: 1 1 240px !important;
+  min-width: 200px !important;
+  max-width: 380px !important;
+  margin: 0 !important;
+  position: relative !important;
+}
+
+.toolbar.dl-toolbar .toolbar__search .input,
+.toolbar:has(.dl-owners) .toolbar__search .input {
+  width: 100% !important;
+  height: 38px !important;
+  border-radius: var(--r-ctl, 11px) !important;
+  font-size: 13.5px !important;
+}
+
+.dl-toolbar__filters {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  min-width: 0 !important;
+}
+
+.dl-owners {
+  background: var(--well) !important;
+  border-radius: 999px !important;
+  gap: 2px !important;
+  padding: 3px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.dl-owner {
+  opacity: 0.65 !important;
+  border-radius: 50% !important;
+  padding: 1px !important;
+  border: none !important;
+  background: none !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: opacity 0.15s ease, transform 0.15s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.dl-owner:hover {
+  opacity: 1 !important;
+  transform: scale(1.05) !important;
+}
+
+.dl-owner.is-on {
+  opacity: 1 !important;
+  box-shadow: 0 0 0 2px var(--primary) !important;
+}
+
+.toolbar.dl-toolbar .select,
+.toolbar.dl-toolbar select.select,
+.toolbar:has(.dl-owners) .select,
+.toolbar:has(.dl-owners) select.select {
+  height: 38px !important;
+  min-height: 38px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  border-radius: var(--r-ctl, 11px) !important;
+  padding: 0 28px 0 12px !important;
+  background-color: var(--card) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--text) !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+}
+
+.toolbar.dl-toolbar .chip,
+.toolbar:has(.dl-owners) .chip {
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 14px !important;
+  border-radius: var(--r-ctl, 11px) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  border: 1px solid var(--line) !important;
+  background: var(--card) !important;
+  color: var(--text) !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: all 0.15s ease !important;
+}
+
+.toolbar.dl-toolbar .chip:hover,
+.toolbar:has(.dl-owners) .chip:hover {
+  border-color: var(--line-2) !important;
+  background: var(--card-2) !important;
+}
+
+.toolbar.dl-toolbar .chip.is-on,
+.toolbar:has(.dl-owners) .chip.is-on {
+  background: color-mix(in srgb, var(--primary) 12%, var(--card)) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-ink, var(--primary)) !important;
+}
+
+.toolbar.dl-toolbar .link,
+.toolbar:has(.dl-owners) .link {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--muted) !important;
+  padding: 4px 8px !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+}
+
+.toolbar.dl-toolbar .link:hover,
+.toolbar:has(.dl-owners) .link:hover {
+  color: var(--text) !important;
+  text-decoration: underline !important;
+}
+
+@media (max-width: 992px) {
+  .toolbar.dl-toolbar,
+  .toolbar:has(.dl-owners) {
+    gap: 10px !important;
+  }
+  .toolbar.dl-toolbar .toolbar__search,
+  .toolbar:has(.dl-owners) .toolbar__search {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .dl-toolbar__filters {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .toolbar.dl-toolbar,
+  .toolbar:has(.dl-owners) {
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+  .toolbar.dl-toolbar .toolbar__search,
+  .toolbar:has(.dl-owners) .toolbar__search {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .toolbar.dl-toolbar .toolbar__search .input,
+  .toolbar:has(.dl-owners) .toolbar__search .input {
+    height: 38px !important;
+    font-size: 13.5px !important;
+  }
+  .dl-toolbar__filters {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-block: 2px !important;
+    touch-action: pan-x !important;
+  }
+  .dl-toolbar__filters::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  .dl-owners {
+    padding: 2px !important;
+    gap: 2px !important;
+    flex-shrink: 0 !important;
+  }
+  .dl-owner {
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  .dl-owner .av {
+    --s: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 11px !important;
+  }
+  .toolbar.dl-toolbar .select,
+  .toolbar.dl-toolbar select.select,
+  .toolbar:has(.dl-owners) .select,
+  .toolbar:has(.dl-owners) select.select {
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 13px !important;
+    padding: 0 24px 0 10px !important;
+    flex-shrink: 0 !important;
+  }
+  .toolbar.dl-toolbar .chip,
+  .toolbar:has(.dl-owners) .chip {
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 12.5px !important;
+    padding: 0 10px !important;
+    flex-shrink: 0 !important;
+  }
+  .toolbar.dl-toolbar .link,
+  .toolbar:has(.dl-owners) .link {
+    font-size: 12.5px !important;
+    padding: 2px 6px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .dl-owner .av {
+    --s: 26px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 10px !important;
+  }
+  .toolbar.dl-toolbar .chip,
+  .toolbar:has(.dl-owners) .chip {
+    padding: 0 8px !important;
+    font-size: 12px !important;
+  }
+}
