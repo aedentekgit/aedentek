@@ -1,0 +1,258 @@
+{
+  "timestamp": "2026-11-16T10:52:27.786Z",
+  "totalTests": 50,
+  "passed": 50,
+  "failed": 0,
+  "results": [
+    {
+      "title": "Admin login endpoint returns 200 OK",
+      "status": "PASS",
+      "details": "Status: 200"
+    },
+    {
+      "title": "Admin login returns signed JWT",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Admin user has Admin role",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Manager login returns signed JWT with Manager role",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Staff login returns signed JWT with Staff role",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Token refresh endpoint returns 200 OK",
+      "status": "PASS",
+      "details": "Status: 200"
+    },
+    {
+      "title": "Refreshed token is valid and renewed",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Admin can access /api/settings (200 OK)",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Manager is blocked from /api/settings with 403 Forbidden",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Staff is blocked from /api/settings with 403 Forbidden",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/clients creates new client (201/200)",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Client ID returned",
+      "status": "PASS",
+      "details": "ID: 6afae05fcd347168f2044ae5"
+    },
+    {
+      "title": "GET /api/clients/:id retrieves created client",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Retrieved client name matches",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "PUT /api/clients/:id updates client (200)",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/clients/:id/websites adds domain with expireDate",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/clients/:id/social adds social media record",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/clients/:id/documents uploads document record",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "GET /api/clients/:id/lists/websites returns 200 OK",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Websites embedded array has added domain",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/clients/:id deletes client record",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/invoices creates invoice",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "PUT /api/invoices/:id updates status to paid",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/invoices/:id removes invoice",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/accounts/expenses creates expense",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/accounts/expenses/:id removes expense",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/accounts/emi creates EMI plan with custom EMI date & fees",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "PUT /api/accounts/emi/:id updates EMI date with recalculated schedule",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/accounts/emi/:id removes EMI plan",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/hr/branches creates branch",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "PUT /api/hr/branches/:id updates branch",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/hr/branches/:id removes branch",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/staff creates employee",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/staff/:id removes employee",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/gst-rates creates GST slab with auto CGST/SGST/IGST",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/gst-rates/:id removes GST slab",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/project-stages creates project stage",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/project-stages/:id removes project stage",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "POST /api/service-types creates service type",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "DELETE /api/service-types/:id removes service type",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Login flow navigates to authenticated workspace",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Clients directory loads properly",
+      "status": "PASS",
+      "details": "Header: Client Directory Master"
+    },
+    {
+      "title": "Clients directory renders live company rows",
+      "status": "PASS",
+      "details": "Rows: 3"
+    },
+    {
+      "title": "Client 360 loads Kavita Edutech profile",
+      "status": "PASS",
+      "details": "Title: Kavita Edutech"
+    },
+    {
+      "title": "Client 360 contains all 9 modular tabs",
+      "status": "PASS",
+      "details": "Tabs: General | Websites | Social | Login Credentials | Projects | Invoices | Payments | Monthly Billing | Contracts & Documents"
+    },
+    {
+      "title": "Finance invoices page renders table register",
+      "status": "PASS",
+      "details": "Invoices: 4"
+    },
+    {
+      "title": "HR Branches page renders table with default badge",
+      "status": "PASS",
+      "details": "Branches: 4"
+    },
+    {
+      "title": "Deals Board renders pipeline deal cards",
+      "status": "PASS",
+      "details": "Deal cards: 22"
+    },
+    {
+      "title": "Deals Board renders responsive search & filter toolbar",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "title": "Zero uncaught frontend runtime errors during entire walkthrough",
+      "status": "PASS",
+      "details": "Errors: "
+    }
+  ]
+}

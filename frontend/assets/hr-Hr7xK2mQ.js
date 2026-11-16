@@ -66,6 +66,7 @@ const jsxs = (type, props, ...children) => __hrRuntime.jsxs(type, __hrChildren(p
 
 const HR_MODULES = [
   { id: 'staff', label: 'Employees', href: '/hr/staff', icon: 'team' },
+  { id: 'offer-letters', label: 'Offer Letters', href: '/hr/offer-letters', icon: 'receipt' },
   { id: 'branches', label: 'Branches', href: '/hr/branches', icon: 'building' },
   { id: 'attendance', label: 'Attendance', href: '/hr/attendance', icon: 'clock' },
   { id: 'leave', label: 'Leave', href: '/hr/leave', icon: 'calendar' },
@@ -74,13 +75,18 @@ const HR_MODULES = [
   { id: 'salary', label: 'Salary', href: '/hr/salary', icon: 'card' },
   { id: 'advances', label: 'Advances', href: '/hr/advances', icon: 'receipt' },
   { id: 'adjustments', label: 'Adjustments', href: '/hr/adjustments', icon: 'layers' },
-  { id: 'payroll', label: 'Payroll', href: '/hr/payroll', icon: 'finance' }
+  { id: 'payroll', label: 'Payroll', href: '/hr/payroll', icon: 'finance' },
+  { id: 'offer-letter-templates', label: 'Offer Letter Templates', href: '/hr/offer-letter-templates', icon: 'library' }
 ];
 
 const HR_PAGES = {
   staff: {
     title: 'Employees',
     sub: 'Directory, payroll profile and portal access for everyone on the roster.'
+  },
+  'offer-letters': {
+    title: 'Offer Letters',
+    sub: 'Generate, preview and issue formal employment offer letters with automated compensation schedules.'
   },
   branches: {
     title: 'Branches',
@@ -117,6 +123,10 @@ const HR_PAGES = {
   payroll: {
     title: 'Payroll & Payslips',
     sub: 'Run, finalise and pay the monthly payroll.'
+  },
+  'offer-letter-templates': {
+    title: 'Offer Letter Templates',
+    sub: 'Customize employment offer templates, compensation breakdowns and contractual terms.'
   }
 };
 
@@ -2863,6 +2873,1011 @@ function PayrollPage() {
 }
 
 /* ------------------------------------------------------------------ *
+ * Offer Letter Components & Full Flow
+ * ------------------------------------------------------------------ */
+
+function OfferLetterDoc({ offer }) {
+  const o = offer || {};
+  const salary = o.salaryBreakdown || {};
+  const basic = salary.basic || 0;
+  const hra = salary.hra || 0;
+  const special = salary.specialAllowance || 0;
+  const monthlyGross = salary.monthlyGross || Math.round((o.ctc || 0) / 12);
+  const annualCtc = o.ctc || 0;
+  const termsList = Array.isArray(o.terms) && o.terms.length ? o.terms : [
+    'Probation: 3 months probation period from official start date.',
+    'Notice Period: 15 days during probation; 30 days post confirmation.',
+    'Working Hours: 09:30 to 18:30 IST, Monday to Friday.'
+  ];
+
+  return jsxs('div', {
+    className: 'ol-paper',
+    children: [
+      jsxs('div', {
+        className: 'ol-paper__head',
+        children: [
+          jsxs('div', {
+            className: 'ol-paper__brand',
+            children: [
+              jsx('b', { children: 'AEDENTEK CRM' }),
+              jsx('span', { children: 'Calder & Moss Surfaces · Human Resources' })
+            ]
+          }),
+          jsxs('div', {
+            className: 'ol-paper__meta',
+            children: [
+              jsxs('div', { children: ['Offer No: ', jsx('b', { children: o.offerNumber || 'OL-DRAFT' })] }),
+              jsxs('div', { children: ['Issue Date: ', jsx('b', { children: o.issueDate || new Date().toISOString().split('T')[0] })] }),
+              jsxs('div', { children: ['Status: ', jsx('span', { className: 'badge', children: o.status || 'Draft' })] })
+            ]
+          })
+        ]
+      }),
+      jsxs('div', {
+        className: 'ol-paper__to',
+        children: [
+          jsx('b', { children: o.candidateName || 'Candidate' }),
+          o.candidateEmail ? jsx('div', { children: o.candidateEmail }) : null,
+          o.candidatePhone ? jsx('div', { children: o.candidatePhone }) : null,
+          o.candidateAddress ? jsx('div', { children: o.candidateAddress }) : null
+        ]
+      }),
+      jsx('div', {
+        className: 'ol-paper__subject',
+        children: o.subject || `Formal Offer of Employment: ${o.position || 'Position'} at Aedentek CRM`
+      }),
+      jsx('div', {
+        className: 'ol-paper__body',
+        children: o.bodyText || `Dear ${o.candidateName || 'Candidate'},\n\nWe are pleased to offer you the position of ${o.position || 'Position'} in the ${o.department || 'Operations'} Department at ${o.branch || 'Mumbai'} branch.\n\nYour joining date is scheduled for ${o.joiningDate || 'TBD'}. Your total annual Cost to Company (CTC) will be ${fmtINR(annualCtc)}, as itemized in the compensation schedule below.`
+      }),
+      jsxs('div', {
+        style: { margin: '24px 0' },
+        children: [
+          jsx('h4', { style: { margin: '0 0 10px', fontSize: '14px', fontWeight: 700, color: '#0f172a' }, children: 'Annexure A — Compensation & Benefits Schedule' }),
+          jsxs('table', {
+            className: 'ol-paper__table',
+            children: [
+              jsx('thead', {
+                children: jsxs('tr', {
+                  children: [
+                    jsx('th', { children: 'Component' }),
+                    jsx('th', { style: { textAlign: 'right' }, children: 'Monthly (₹)' }),
+                    jsx('th', { style: { textAlign: 'right' }, children: 'Annual (₹)' })
+                  ]
+                })
+              }),
+              jsxs('tbody', {
+                children: [
+                  jsxs('tr', {
+                    children: [
+                      jsx('td', { children: 'Basic Salary' }),
+                      jsx('td', { style: { textAlign: 'right' }, children: fmtINR(basic) }),
+                      jsx('td', { style: { textAlign: 'right' }, children: fmtINR(basic * 12) })
+                    ]
+                  }),
+                  jsxs('tr', {
+                    children: [
+                      jsx('td', { children: 'House Rent Allowance (HRA)' }),
+                      jsx('td', { style: { textAlign: 'right' }, children: fmtINR(hra) }),
+                      jsx('td', { style: { textAlign: 'right' }, children: fmtINR(hra * 12) })
+                    ]
+                  }),
+                  jsxs('tr', {
+                    children: [
+                      jsx('td', { children: 'Special Allowance' }),
+                      jsx('td', { style: { textAlign: 'right' }, children: fmtINR(special) }),
+                      jsx('td', { style: { textAlign: 'right' }, children: fmtINR(special * 12) })
+                    ]
+                  }),
+                  jsxs('tr', {
+                    className: 'total-row',
+                    children: [
+                      jsx('td', { children: jsx('b', { children: 'Total Cost to Company (CTC)' }) }),
+                      jsx('td', { style: { textAlign: 'right' }, children: jsx('b', { children: fmtINR(monthlyGross) }) }),
+                      jsx('td', { style: { textAlign: 'right' }, children: jsx('b', { children: fmtINR(annualCtc) }) })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      }),
+      jsxs('div', {
+        className: 'ol-paper__terms',
+        children: [
+          jsx('h4', { children: 'Key Employment Terms & Policies' }),
+          jsx('ol', {
+            children: termsList.map((t, idx) => jsx('li', { key: idx, children: t }))
+          })
+        ]
+      }),
+      jsxs('div', {
+        className: 'ol-paper__signatures',
+        children: [
+          jsxs('div', {
+            className: 'ol-paper__sig-block',
+            children: [
+              jsx('div', { style: { fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }, children: 'For Aedentek CRM' }),
+              jsxs('div', {
+                className: 'ol-paper__sig-line',
+                children: [
+                  o.signatoryName || 'Ines Okafor',
+                  jsx('div', { style: { fontSize: '12px', fontWeight: 500, color: '#64748b' }, children: o.signatoryDesignation || 'Head of Specification & Human Resources' })
+                ]
+              })
+            ]
+          }),
+          jsxs('div', {
+            className: 'ol-paper__sig-block',
+            children: [
+              jsx('div', { style: { fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }, children: 'Candidate Acceptance' }),
+              jsxs('div', {
+                className: 'ol-paper__sig-line',
+                children: [
+                  'Signature: _______________________',
+                  jsxs('div', { style: { fontSize: '12px', fontWeight: 500, color: '#64748b', marginTop: '4px' }, children: [`Acceptance Deadline: `, jsx('b', { children: o.expiryDate || 'Within 7 days' })] })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+function OfferLettersPage() {
+  const branchList = useBranches();
+  const [query, setQuery] = useState('');
+  const [status, setStatus] = useState('All');
+  const [branch, setBranch] = useState('All Branches');
+  const [loading, setLoading] = useState(false);
+  const [offers, setOffers] = useState([]);
+  const [templates, setTemplates] = useState([]);
+  const [kpis, setKpis] = useState({ totalOffers: 0, sentCount: 0, acceptedCount: 0, totalCtcCommitted: 0 });
+  const [tick, setTick] = useState(0);
+
+  const reload = () => setTick((n) => n + 1);
+
+  // Fetch offer letters
+  useEffect(() => {
+    let alive = true;
+    setLoading(true);
+    const params = new URLSearchParams();
+    if (query.trim()) params.set('q', query.trim());
+    if (status !== 'All') params.set('status', status);
+    if (branch !== 'All Branches') params.set('branch', branch);
+
+    apiFetch(`/api/hr/offer-letters?${params.toString()}`).then((res) => {
+      if (!alive) return;
+      if (res.ok && res.data && res.data.success) {
+        setOffers(Array.isArray(res.data.data) ? res.data.data : []);
+        setKpis(res.data.kpis || { totalOffers: 0, sentCount: 0, acceptedCount: 0, totalCtcCommitted: 0 });
+      } else {
+        setOffers([]);
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      alive = false;
+    };
+  }, [query, status, branch, tick]);
+
+  // Fetch templates for form dropdown
+  useEffect(() => {
+    apiFetch('/api/hr/offer-letter-templates').then((res) => {
+      if (res.ok && res.data && res.data.success && Array.isArray(res.data.data)) {
+        setTemplates(res.data.data);
+      }
+    });
+  }, []);
+
+  const openPreview = (offer) => {
+    openDrawer(
+      jsxs(ModalDrawer, {
+        title: `Offer Letter · ${offer.offerNumber || ''}`,
+        sub: `${offer.candidateName} — ${offer.position} (${offer.branch})`,
+        foot: jsxs(Fragment, {
+          children: [
+            jsx('button', {
+              type: 'button',
+              className: 'btn btn--ghost',
+              onClick: closeDrawer,
+              children: 'Close'
+            }),
+            jsx('button', {
+              type: 'button',
+              className: 'btn btn--primary',
+              onClick: () => {
+                document.body.classList.add('hr-printing');
+                window.print();
+                document.body.classList.remove('hr-printing');
+              },
+              children: [jsx(Icon, { name: 'download' }), 'Print / Save PDF']
+            })
+          ]
+        }),
+        children: jsx(OfferLetterDoc, { offer })
+      })
+    );
+  };
+
+  const openDrawerForm = (existing = null) => {
+    const isEdit = Boolean(existing && existing._id);
+    let state = {
+      templateId: existing?.templateRef || (templates.find((t) => t.isDefault)?._id || (templates[0]?._id || '')),
+      candidateName: existing?.candidateName || '',
+      candidateEmail: existing?.candidateEmail || '',
+      candidatePhone: existing?.candidatePhone || '',
+      candidateAddress: existing?.candidateAddress || '',
+      position: existing?.position || '',
+      department: existing?.department || 'Operations',
+      branch: existing?.branch || (branchList.defaultBranch || 'Bandra'),
+      joiningDate: existing?.joiningDate || new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+      expiryDate: existing?.expiryDate || new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+      ctc: existing?.ctc !== undefined ? String(existing.ctc) : '720000',
+      status: existing?.status || 'Draft',
+      notes: existing?.notes || ''
+    };
+
+    const update = (key, val) => {
+      state[key] = val;
+      renderDrawer();
+    };
+
+    const submit = async () => {
+      if (!state.candidateName || !state.candidateEmail || !state.position || !state.joiningDate || !state.ctc) {
+        toast('Candidate Name, Email, Position, Joining Date and Annual CTC are required', { icon: 'x' });
+        return;
+      }
+
+      const payload = {
+        templateId: state.templateId,
+        candidateName: state.candidateName,
+        candidateEmail: state.candidateEmail,
+        candidatePhone: state.candidatePhone,
+        candidateAddress: state.candidateAddress,
+        position: state.position,
+        department: state.department,
+        branch: state.branch,
+        joiningDate: state.joiningDate,
+        expiryDate: state.expiryDate,
+        ctc: Number(state.ctc) || 0,
+        status: state.status,
+        notes: state.notes
+      };
+
+      const url = isEdit ? `/api/hr/offer-letters/${existing._id}` : '/api/hr/offer-letters';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const res = await apiFetch(url, { method, body: JSON.stringify(payload) });
+      if (res.ok && res.data && res.data.success) {
+        toast(res.data.message || (isEdit ? 'Offer letter updated' : 'Offer letter generated'), { icon: 'check' });
+        closeDrawer();
+        reload();
+      } else {
+        toast((res.data && res.data.message) || res.error || 'Failed to save offer letter', { icon: 'x' });
+      }
+    };
+
+    const renderDrawer = () => {
+      const ctcNum = Number(state.ctc) || 0;
+      const mGross = Math.round(ctcNum / 12);
+      const basic = Math.round(mGross * 0.5);
+      const hra = Math.round(mGross * 0.2);
+      const special = Math.max(0, mGross - basic - hra);
+
+      openDrawer(
+        jsxs(ModalDrawer, {
+          title: isEdit ? `Edit Offer · ${existing.offerNumber}` : 'Generate Offer Letter',
+          sub: 'Fill candidate details, position and annual CTC package to generate a formal appointment letter.',
+          foot: jsxs(Fragment, {
+            children: [
+              jsx('button', { type: 'button', className: 'btn btn--ghost', onClick: closeDrawer, children: 'Cancel' }),
+              jsx('button', {
+                type: 'button',
+                className: 'btn btn--primary',
+                onClick: submit,
+                children: [jsx(Icon, { name: isEdit ? 'check' : 'plus' }), isEdit ? 'Save Changes' : 'Create Offer Letter']
+              })
+            ]
+          }),
+          children: jsxs('div', {
+            className: 'form-grid',
+            children: [
+              // Template Selector
+              jsx(
+                HrField,
+                { label: 'Offer Letter Template', required: true },
+                jsx(
+                  'select',
+                  {
+                    className: 'select',
+                    value: state.templateId,
+                    onChange: (e) => update('templateId', e.target.value)
+                  },
+                  templates.map((tpl) =>
+                    jsx('option', { value: tpl._id, key: tpl._id, children: `${tpl.name} (${tpl.code})${tpl.isDefault ? ' — Default' : ''}` })
+                  )
+                )
+              ),
+              // Candidate Name
+              jsx(
+                HrField,
+                { label: 'Candidate Full Name', required: true },
+                jsx('input', {
+                  className: 'input',
+                  placeholder: 'e.g. Rahul Sharma',
+                  value: state.candidateName,
+                  onChange: (e) => update('candidateName', e.target.value)
+                })
+              ),
+              // Candidate Email
+              jsx(
+                HrField,
+                { label: 'Candidate Email', required: true },
+                jsx('input', {
+                  className: 'input',
+                  type: 'email',
+                  placeholder: 'candidate@example.com',
+                  value: state.candidateEmail,
+                  onChange: (e) => update('candidateEmail', e.target.value)
+                })
+              ),
+              // Candidate Phone
+              jsx(
+                HrField,
+                { label: 'Mobile / Phone' },
+                jsx('input', {
+                  className: 'input',
+                  placeholder: '+91 98765 43210',
+                  value: state.candidatePhone,
+                  onChange: (e) => update('candidatePhone', e.target.value)
+                })
+              ),
+              // Position / Designation
+              jsx(
+                HrField,
+                { label: 'Position / Designation', required: true },
+                jsx('input', {
+                  className: 'input',
+                  placeholder: 'e.g. Senior Project Architect',
+                  value: state.position,
+                  onChange: (e) => update('position', e.target.value)
+                })
+              ),
+              // Department
+              jsx(
+                HrField,
+                { label: 'Department', required: true },
+                jsx(
+                  'select',
+                  {
+                    className: 'select',
+                    value: state.department,
+                    onChange: (e) => update('department', e.target.value)
+                  },
+                  ['Operations', 'Design', 'Sales', 'Finance', 'Engineering', 'Human Resources'].map((d) =>
+                    jsx('option', { value: d, key: d, children: d })
+                  )
+                )
+              ),
+              // Branch
+              jsx(
+                HrField,
+                { label: 'Branch Location', required: true },
+                jsx(
+                  'select',
+                  {
+                    className: 'select',
+                    value: state.branch,
+                    onChange: (e) => update('branch', e.target.value)
+                  },
+                  [...(branchList || [])].map((b) =>
+                    jsx('option', { value: b, key: b, children: b })
+                  )
+                )
+              ),
+              // Joining Date
+              jsx(
+                HrField,
+                { label: 'Anticipated Joining Date', required: true },
+                jsx('input', {
+                  className: 'input',
+                  type: 'date',
+                  value: state.joiningDate,
+                  onChange: (e) => update('joiningDate', e.target.value)
+                })
+              ),
+              // Expiry Date
+              jsx(
+                HrField,
+                { label: 'Offer Acceptance Deadline' },
+                jsx('input', {
+                  className: 'input',
+                  type: 'date',
+                  value: state.expiryDate,
+                  onChange: (e) => update('expiryDate', e.target.value)
+                })
+              ),
+              // Annual CTC
+              jsx(
+                HrField,
+                { label: 'Annual Cost to Company (CTC in ₹)', required: true },
+                jsx('input', {
+                  className: 'input',
+                  type: 'number',
+                  placeholder: '720000',
+                  value: state.ctc,
+                  onChange: (e) => update('ctc', e.target.value)
+                })
+              ),
+              // Status
+              jsx(
+                HrField,
+                { label: 'Offer Status' },
+                jsx(
+                  'select',
+                  {
+                    className: 'select',
+                    value: state.status,
+                    onChange: (e) => update('status', e.target.value)
+                  },
+                  ['Draft', 'Sent', 'Accepted', 'Declined'].map((s) =>
+                    jsx('option', { value: s, key: s, children: s })
+                  )
+                )
+              ),
+              // Live CTC preview banner
+              jsxs('div', {
+                className: 'sd-stat-banner',
+                style: { gridColumn: '1 / -1' },
+                children: [
+                  jsxs('div', {
+                    className: 'sd-stat-block',
+                    children: [
+                      jsx('span', { className: 'kpi__label', children: 'Monthly Gross Package' }),
+                      jsx('b', { style: { fontSize: '18px', color: 'var(--primary)' }, children: fmtINR(mGross) }),
+                      jsx('small', { style: { color: 'var(--muted)' }, children: `Basic: ${fmtINR(basic)} · HRA: ${fmtINR(hra)} · Special: ${fmtINR(special)}` })
+                    ]
+                  }),
+                  jsxs('div', {
+                    className: 'sd-stat-block sd-stat-block--right',
+                    children: [
+                      jsx('span', { className: 'kpi__label', children: 'Annual CTC' }),
+                      jsx('b', { style: { fontSize: '18px' }, children: fmtINR(ctcNum) })
+                    ]
+                  })
+                ]
+              }),
+              // Address
+              jsx(
+                HrField,
+                { label: 'Candidate Residential Address', className: 'field--full' },
+                jsx('textarea', {
+                  className: 'input',
+                  rows: 2,
+                  placeholder: 'Enter candidate address...',
+                  value: state.candidateAddress,
+                  onChange: (e) => update('candidateAddress', e.target.value)
+                })
+              ),
+              // Notes
+              jsx(
+                HrField,
+                { label: 'Internal Notes', className: 'field--full' },
+                jsx('textarea', {
+                  className: 'input',
+                  rows: 2,
+                  placeholder: 'Confidential recruitment notes...',
+                  value: state.notes,
+                  onChange: (e) => update('notes', e.target.value)
+                })
+              )
+            ]
+          })
+        })
+      );
+    };
+
+    renderDrawer();
+  };
+
+  const removeOffer = async (offer, anchor) => {
+    const ok = await confirmModal(
+      {
+        title: `Delete offer ${offer.offerNumber}?`,
+        text: `Candidate: ${offer.candidateName} (${offer.position}). This action cannot be undone.`,
+        ok: 'Delete offer',
+        danger: true
+      },
+      anchor
+    );
+    if (!ok) return;
+
+    const res = await apiFetch(`/api/hr/offer-letters/${offer._id}`, { method: 'DELETE' });
+    if (res.ok && res.data && res.data.success) {
+      toast(res.data.message || 'Offer letter removed', { icon: 'trash' });
+      reload();
+    } else {
+      toast((res.data && res.data.message) || res.error || 'Failed to delete offer letter', { icon: 'x' });
+    }
+  };
+
+  return jsxs('div', {
+    className: 'hr-stack',
+    children: [
+      // KPI Row
+      jsx(KpiRow, {
+        items: [
+          { label: 'Total Offers', value: kpis.totalOffers || 0, tone: 'slate', icon: 'receipt' },
+          { label: 'Sent / In Review', value: kpis.sentCount || 0, tone: 'sky', icon: 'calendar' },
+          { label: 'Accepted', value: kpis.acceptedCount || 0, tone: 'good', icon: 'check' },
+          { label: 'CTC Committed', value: fmtINR(kpis.totalCtcCommitted || 0), tone: 'cobalt', icon: 'finance' }
+        ]
+      }),
+      // Register Card
+      jsx(Card, {
+        title: 'Employment Offer Letters',
+        sub: 'Issue, track and print formal candidate offer letters with structured salary schedules.',
+        children: jsxs('div', {
+          children: [
+            // Toolbar
+            jsxs('div', {
+              className: 'ol-toolbar',
+              children: [
+                jsxs('div', {
+                  className: 'ol-toolbar__left',
+                  children: [
+                    jsx(SearchInput, {
+                      value: query,
+                      placeholder: 'Search candidate, position or offer #...',
+                      onChange: setQuery
+                    }),
+                    jsxs('div', {
+                      className: 'ol-status-tabs',
+                      children: ['All', 'Draft', 'Sent', 'Accepted', 'Declined'].map((s) =>
+                        jsx('button', {
+                          type: 'button',
+                          className: `ol-status-tab${status === s ? ' is-active' : ''}`,
+                          onClick: () => setStatus(s),
+                          key: s,
+                          children: s
+                        })
+                      )
+                    }),
+                    jsx(
+                      'select',
+                      {
+                        className: 'select',
+                        style: { width: 'auto', minWidth: '150px' },
+                        value: branch,
+                        onChange: (e) => setBranch(e.target.value)
+                      },
+                      ['All Branches', ...(branchList || [])].map((b) =>
+                        jsx('option', { value: b, key: b, children: b })
+                      )
+                    )
+                  ]
+                }),
+                jsx('button', {
+                  type: 'button',
+                  className: 'btn btn--primary',
+                  onClick: () => openDrawerForm(),
+                  children: [jsx(Icon, { name: 'plus' }), 'New Offer Letter']
+                })
+              ]
+            }),
+            // Table
+            jsx(HrTable, {
+              head: ['Offer No', 'Candidate', 'Position & Dept', 'Branch', 'Joining Date', 'Annual CTC', 'Status', 'Actions'],
+              rows: offers,
+              emptyIcon: 'receipt',
+              emptyTitle: 'No offer letters found',
+              emptyText: 'Generate your first candidate offer letter using the button above.',
+              renderRow: (offer) => {
+                const mGross = offer.salaryBreakdown?.monthlyGross || Math.round((offer.ctc || 0) / 12);
+                return jsx('tr', {
+                  'data-row': '',
+                  key: offer._id,
+                  children: [
+                    jsx('td', { children: jsx('span', { className: 'badge badge--neutral', children: offer.offerNumber }) }),
+                    jsx('td', {
+                      children: jsxs('div', {
+                        children: [
+                          jsx('b', { children: offer.candidateName }),
+                          jsx('div', { style: { fontSize: '12px', color: 'var(--muted)' }, children: offer.candidateEmail })
+                        ]
+                      })
+                    }),
+                    jsx('td', {
+                      children: jsxs('div', {
+                        children: [
+                          jsx('b', { children: offer.position }),
+                          jsx('div', { style: { fontSize: '12px', color: 'var(--muted)' }, children: offer.department })
+                        ]
+                      })
+                    }),
+                    jsx('td', { children: jsx('span', { className: 'badge', children: offer.branch }) }),
+                    jsx('td', { children: offer.joiningDate || '—' }),
+                    jsx('td', {
+                      children: jsxs('div', {
+                        children: [
+                          jsx('b', { children: fmtINR(offer.ctc) }),
+                          jsx('div', { style: { fontSize: '12px', color: 'var(--muted)' }, children: `${fmtINR(mGross)} / mo` })
+                        ]
+                      })
+                    }),
+                    jsx('td', {
+                      children: jsx(StatusPill, {
+                        value: offer.status,
+                        tone: offer.status === 'Accepted' ? 'good' : (offer.status === 'Sent' ? 'sky' : (offer.status === 'Declined' ? 'bad' : 'slate'))
+                      })
+                    }),
+                    jsx('td', {
+                      className: 'hr-actions-cell',
+                      children: jsxs('div', {
+                        className: 'hr-row-actions',
+                        children: [
+                          jsx(ActionButton, {
+                            icon: 'printer',
+                            label: 'View & Print Offer Letter',
+                            variant: 'print',
+                            onClick: () => openPreview(offer)
+                          }),
+                          jsx(ActionButton, {
+                            icon: 'edit',
+                            label: 'Edit Offer Details',
+                            variant: 'edit',
+                            onClick: () => openDrawerForm(offer)
+                          }),
+                          jsx(ActionButton, {
+                            icon: 'trash',
+                            label: 'Delete Offer Letter',
+                            variant: 'delete',
+                            danger: true,
+                            onClick: (e) => removeOffer(offer, e.currentTarget)
+                          })
+                        ]
+                      })
+                    })
+                  ]
+                });
+              }
+            })
+          ]
+        })
+      })
+    ]
+  });
+}
+
+function OfferLetterTemplatesPage() {
+  const { rows: templates, loading, reload } = useCollection('/api/hr/offer-letter-templates');
+
+  const openTemplateDrawer = (existing = null) => {
+    const isEdit = Boolean(existing && existing._id);
+    let state = {
+      name: existing?.name || '',
+      code: existing?.code || '',
+      description: existing?.description || '',
+      headerTitle: existing?.headerTitle || 'EMPLOYMENT OFFER & APPOINTMENT LETTER',
+      subject: existing?.subject || 'Offer of Employment: {position} at {companyName}',
+      basicPercent: existing?.salaryStructure?.basicPercent !== undefined ? String(existing.salaryStructure.basicPercent) : '50',
+      hraPercent: existing?.salaryStructure?.hraPercent !== undefined ? String(existing.salaryStructure.hraPercent) : '20',
+      specialAllowancePercent: existing?.salaryStructure?.specialAllowancePercent !== undefined ? String(existing.salaryStructure.specialAllowancePercent) : '30',
+      bodyTemplate: existing?.bodyTemplate || 'Dear {candidateName},\n\nWe are pleased to offer you the position of {position} in {department} at {companyName} ({branch} branch).\n\nYour joining date is {joiningDate} with an annual CTC of {ctc}.',
+      termsText: Array.isArray(existing?.terms) ? existing.terms.join('\n') : 'Probation: 3 months from joining date.\nNotice Period: 30 days post-confirmation.\nWorking Hours: 09:30 to 18:30 IST, Monday to Friday.',
+      isDefault: existing ? Boolean(existing.isDefault) : false,
+      signatoryName: existing?.signatoryName || 'Ines Okafor',
+      signatoryDesignation: existing?.signatoryDesignation || 'Head of Specification & Human Resources'
+    };
+
+    const update = (k, v) => {
+      state[k] = v;
+      render();
+    };
+
+    const submit = async () => {
+      if (!state.name || !state.code) {
+        toast('Template Name and Code are required', { icon: 'x' });
+        return;
+      }
+
+      const terms = state.termsText.split('\n').map((t) => t.trim()).filter(Boolean);
+      const payload = {
+        name: state.name,
+        code: state.code.toUpperCase(),
+        description: state.description,
+        headerTitle: state.headerTitle,
+        subject: state.subject,
+        bodyTemplate: state.bodyTemplate,
+        terms,
+        salaryStructure: {
+          basicPercent: Number(state.basicPercent) || 50,
+          hraPercent: Number(state.hraPercent) || 20,
+          specialAllowancePercent: Number(state.specialAllowancePercent) || 30
+        },
+        isDefault: state.isDefault,
+        signatoryName: state.signatoryName,
+        signatoryDesignation: state.signatoryDesignation
+      };
+
+      const url = isEdit ? `/api/hr/offer-letter-templates/${existing._id}` : '/api/hr/offer-letter-templates';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const res = await apiFetch(url, { method, body: JSON.stringify(payload) });
+      if (res.ok && res.data && res.data.success) {
+        toast(res.data.message || (isEdit ? 'Template updated' : 'Template created'), { icon: 'check' });
+        closeDrawer();
+        reload();
+      } else {
+        toast((res.data && res.data.message) || res.error || 'Failed to save template', { icon: 'x' });
+      }
+    };
+
+    const render = () => {
+      openDrawer(
+        jsxs(ModalDrawer, {
+          title: isEdit ? `Edit Template · ${existing.name}` : 'New Offer Letter Template',
+          sub: 'Define default contract clauses, dynamic replacement tokens and salary allocation percentages.',
+          foot: jsxs(Fragment, {
+            children: [
+              jsx('button', { type: 'button', className: 'btn btn--ghost', onClick: closeDrawer, children: 'Cancel' }),
+              jsx('button', {
+                type: 'button',
+                className: 'btn btn--primary',
+                onClick: submit,
+                children: [jsx(Icon, { name: isEdit ? 'check' : 'plus' }), isEdit ? 'Save Template' : 'Create Template']
+              })
+            ]
+          }),
+          children: jsxs('div', {
+            className: 'form-grid',
+            children: [
+              // Template Name
+              jsx(
+                HrField,
+                { label: 'Template Name', required: true },
+                jsx('input', {
+                  className: 'input',
+                  placeholder: 'e.g. Standard Corporate Offer',
+                  value: state.name,
+                  onChange: (e) => update('name', e.target.value)
+                })
+              ),
+              // Template Code
+              jsx(
+                HrField,
+                { label: 'Template Code (Uppercase)', required: true },
+                jsx('input', {
+                  className: 'input',
+                  placeholder: 'e.g. OLT-CORP',
+                  value: state.code,
+                  onChange: (e) => update('code', e.target.value)
+                })
+              ),
+              // Description
+              jsx(
+                HrField,
+                { label: 'Description', className: 'field--full' },
+                jsx('input', {
+                  className: 'input',
+                  placeholder: 'Brief purpose or role target for this template...',
+                  value: state.description,
+                  onChange: (e) => update('description', e.target.value)
+                })
+              ),
+              // Salary percentages
+              jsx(
+                HrField,
+                { label: 'Basic Salary %' },
+                jsx('input', {
+                  className: 'input',
+                  type: 'number',
+                  value: state.basicPercent,
+                  onChange: (e) => update('basicPercent', e.target.value)
+                })
+              ),
+              jsx(
+                HrField,
+                { label: 'HRA %' },
+                jsx('input', {
+                  className: 'input',
+                  type: 'number',
+                  value: state.hraPercent,
+                  onChange: (e) => update('hraPercent', e.target.value)
+                })
+              ),
+              jsx(
+                HrField,
+                { label: 'Special Allowance %' },
+                jsx('input', {
+                  className: 'input',
+                  type: 'number',
+                  value: state.specialAllowancePercent,
+                  onChange: (e) => update('specialAllowancePercent', e.target.value)
+                })
+              ),
+              // Subject Line
+              jsx(
+                HrField,
+                { label: 'Email / Document Subject Line', className: 'field--full' },
+                jsx('input', {
+                  className: 'input',
+                  value: state.subject,
+                  onChange: (e) => update('subject', e.target.value)
+                })
+              ),
+              // Body Template
+              jsx(
+                HrField,
+                { label: 'Appointment Letter Body Template', className: 'field--full' },
+                jsx('textarea', {
+                  className: 'input',
+                  rows: 5,
+                  value: state.bodyTemplate,
+                  onChange: (e) => update('bodyTemplate', e.target.value)
+                })
+              ),
+              // Token guidance note
+              jsx('div', {
+                style: { gridColumn: '1 / -1', fontSize: '11px', color: 'var(--muted)', background: 'var(--well)', padding: '8px 12px', borderRadius: '8px' },
+                children: 'Available tokens: {candidateName}, {position}, {department}, {branch}, {joiningDate}, {ctc}, {expiryDate}, {companyName}'
+              }),
+              // Terms & Conditions
+              jsx(
+                HrField,
+                { label: 'Key Contractual Terms (One per line)', className: 'field--full' },
+                jsx('textarea', {
+                  className: 'input',
+                  rows: 4,
+                  value: state.termsText,
+                  onChange: (e) => update('termsText', e.target.value)
+                })
+              ),
+              // Default Toggle
+              jsx(
+                HrField,
+                { label: 'System Default' },
+                jsx(CheckboxToggle, {
+                  on: state.isDefault,
+                  label: 'Set as Default Template',
+                  onChange: () => update('isDefault', !state.isDefault)
+                })
+              )
+            ]
+          })
+        })
+      );
+    };
+
+    render();
+  };
+
+  const setDefault = async (tpl) => {
+    const res = await apiFetch(`/api/hr/offer-letter-templates/${tpl._id}/default`, { method: 'PUT' });
+    if (res.ok && res.data && res.data.success) {
+      toast(res.data.message || 'Template set as default', { icon: 'check' });
+      reload();
+    }
+  };
+
+  const removeTemplate = async (tpl, anchor) => {
+    const ok = await confirmModal(
+      {
+        title: `Delete template ${tpl.name}?`,
+        text: 'This template will be permanently removed. Existing offer letters will preserve their text.',
+        ok: 'Delete template',
+        danger: true
+      },
+      anchor
+    );
+    if (!ok) return;
+
+    const res = await apiFetch(`/api/hr/offer-letter-templates/${tpl._id}`, { method: 'DELETE' });
+    if (res.ok && res.data && res.data.success) {
+      toast(res.data.message || 'Template deleted', { icon: 'trash' });
+      reload();
+    } else {
+      toast((res.data && res.data.message) || res.error || 'Failed to delete template', { icon: 'x' });
+    }
+  };
+
+  const defaultTpl = templates.find((t) => t.isDefault);
+
+  return jsxs('div', {
+    className: 'hr-stack',
+    children: [
+      jsx(KpiRow, {
+        items: [
+          { label: 'Total Templates', value: templates.length, tone: 'slate', icon: 'library' },
+          { label: 'Active Templates', value: templates.filter((t) => t.status === 'Active').length, tone: 'good', icon: 'check' },
+          { label: 'System Default', value: defaultTpl ? defaultTpl.name : 'None', tone: 'sky', icon: 'tag' }
+        ]
+      }),
+      jsx(Card, {
+        title: 'Offer Letter Templates Gallery',
+        sub: 'Manage standardized corporate appointment letter templates, compensation ratios and contractual terms.',
+        actions: jsx('button', {
+          type: 'button',
+          className: 'btn btn--primary',
+          onClick: () => openTemplateDrawer(),
+          children: [jsx(Icon, { name: 'plus' }), 'New Template']
+        }),
+        children: jsxs('div', {
+          className: 'ol-tpl-grid',
+          children: templates.map((tpl) =>
+            jsxs('div', {
+              className: `ol-tpl-card${tpl.isDefault ? ' is-default' : ''}`,
+              key: tpl._id,
+              children: [
+                jsxs('div', {
+                  className: 'ol-tpl-card__head',
+                  children: [
+                    jsxs('div', {
+                      children: [
+                        jsx('div', { className: 'ol-tpl-card__title', children: tpl.name }),
+                        jsx('span', { className: 'ol-tpl-card__code', children: tpl.code })
+                      ]
+                    }),
+                    tpl.isDefault ? jsx('span', { className: 'badge badge--primary', children: 'Default' }) : null
+                  ]
+                }),
+                jsx('div', { className: 'ol-tpl-card__desc', children: tpl.description || 'Standard employment agreement template.' }),
+                jsxs('div', {
+                  className: 'ol-tpl-card__ratios',
+                  children: [
+                    jsx('span', { children: `Basic: ${tpl.salaryStructure?.basicPercent || 50}%` }),
+                    jsx('span', { children: `HRA: ${tpl.salaryStructure?.hraPercent || 20}%` }),
+                    jsx('span', { children: `Special: ${tpl.salaryStructure?.specialAllowancePercent || 30}%` })
+                  ]
+                }),
+                jsxs('div', {
+                  className: 'ol-tpl-card__actions',
+                  children: [
+                    !tpl.isDefault
+                      ? jsx('button', {
+                          type: 'button',
+                          className: 'btn btn--xs btn--ghost',
+                          onClick: () => setDefault(tpl),
+                          children: 'Set Default'
+                        })
+                      : jsx('span', { style: { fontSize: '11px', color: 'var(--primary)', fontWeight: 600 }, children: 'Active Default' }),
+                    jsxs('div', {
+                      className: 'hr-row-actions',
+                      children: [
+                        jsx(ActionButton, {
+                          icon: 'edit',
+                          label: 'Edit Template',
+                          variant: 'edit',
+                          onClick: () => openTemplateDrawer(tpl)
+                        }),
+                        !tpl.isDefault
+                          ? jsx(ActionButton, {
+                              icon: 'trash',
+                              label: 'Delete Template',
+                              variant: 'delete',
+                              danger: true,
+                              onClick: (e) => removeTemplate(tpl, e.currentTarget)
+                            })
+                          : null
+                      ].filter(Boolean)
+                    })
+                  ]
+                })
+              ]
+            })
+          )
+        })
+      })
+    ]
+  });
+}
+
+/* ------------------------------------------------------------------ *
  * Page shell
  * ------------------------------------------------------------------ */
 
@@ -2877,6 +3892,8 @@ function HrPage({ route }) {
 
   let content = null;
   if (sub === 'staff') content = jsx(StaffEmployeesPage, {});
+  else if (sub === 'offer-letters') content = jsx(OfferLettersPage, {});
+  else if (sub === 'offer-letter-templates') content = jsx(OfferLetterTemplatesPage, {});
   else if (sub === 'attendance') content = jsx(AttendancePage, {});
   else if (sub === 'leave') content = jsx(LeavePage, {});
   else if (sub === 'payroll') content = jsx(PayrollPage, {});
@@ -2888,7 +3905,7 @@ function HrPage({ route }) {
       jsx(PageHeader, {
         crumbs: [
           { label: 'Workspace' },
-          (sub === 'branches' || sub === 'leave-types' || sub === 'shifts')
+          (sub === 'branches' || sub === 'leave-types' || sub === 'shifts' || sub === 'offer-letter-templates')
             ? { label: 'Masters', href: '/clients/service-types' }
             : { label: 'Human Resources', href: '/hr/staff' },
           { label: meta.title }

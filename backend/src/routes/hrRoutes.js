@@ -29,6 +29,15 @@ import {
 import {
   getAllBranches, getBranchOptions, getBranchById, createBranch, updateBranch, deleteBranch, setDefaultBranch
 } from '../controllers/hrBranchController.js';
+import {
+  getAllTemplates as getAllOfferTemplates, getTemplateById as getOfferTemplateById,
+  createTemplate as createOfferTemplate, updateTemplate as updateOfferTemplate,
+  setDefaultTemplate as setDefaultOfferTemplate, deleteTemplate as deleteOfferTemplate
+} from '../controllers/offerLetterTemplateController.js';
+import {
+  getAllOfferLetters, getOfferLetterById, createOfferLetter,
+  updateOfferLetter, deleteOfferLetter
+} from '../controllers/offerLetterController.js';
 import { requireRole, ROLES } from '../middleware/rbac.js';
 
 const router = express.Router();
@@ -109,5 +118,20 @@ router.post('/hr/payroll/run', requireRole([ROLES.ADMIN]), runPayroll);
 router.post('/hr/payroll/:id/finalize', requireRole([ROLES.ADMIN]), finalizePayrollRun);
 router.post('/hr/payroll/:id/pay', requireRole([ROLES.ADMIN]), markPayrollRunPaid);
 router.delete('/hr/payroll/:id', requireRole([ROLES.ADMIN]), deletePayrollRun);
+
+// --- Offer Letter Templates (Masters) — Admin & Manager -------------------
+router.get('/hr/offer-letter-templates', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllOfferTemplates);
+router.get('/hr/offer-letter-templates/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getOfferTemplateById);
+router.post('/hr/offer-letter-templates', requireRole([ROLES.ADMIN]), createOfferTemplate);
+router.put('/hr/offer-letter-templates/:id/default', requireRole([ROLES.ADMIN]), setDefaultOfferTemplate);
+router.put('/hr/offer-letter-templates/:id', requireRole([ROLES.ADMIN]), updateOfferTemplate);
+router.delete('/hr/offer-letter-templates/:id', requireRole([ROLES.ADMIN]), deleteOfferTemplate);
+
+// --- Offer Letters — Admin & Manager -------------------------------------
+router.get('/hr/offer-letters', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllOfferLetters);
+router.get('/hr/offer-letters/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getOfferLetterById);
+router.post('/hr/offer-letters', requireRole([ROLES.ADMIN, ROLES.MANAGER]), createOfferLetter);
+router.put('/hr/offer-letters/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), updateOfferLetter);
+router.delete('/hr/offer-letters/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), deleteOfferLetter);
 
 export default router;

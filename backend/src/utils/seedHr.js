@@ -4,6 +4,8 @@ import LeaveType from '../models/LeaveType.js';
 import Staff from '../models/Staff.js';
 import StaffAttendance from '../models/StaffAttendance.js';
 import PayrollAdjustment from '../models/PayrollAdjustment.js';
+import OfferLetterTemplate from '../models/OfferLetterTemplate.js';
+import OfferLetter from '../models/OfferLetter.js';
 import { toPeriodKey } from './hrEngine.js';
 
 export const SEED_SHIFTS = [
@@ -240,6 +242,197 @@ export const seedHrData = async () => {
       }
       if (rows.length) await PayrollAdjustment.insertMany(rows);
       console.log(`[Seed] Seeded ${rows.length} payroll adjustments.`);
+    }
+
+    // Seed Offer Letter Templates if none exist
+    if ((await OfferLetterTemplate.countDocuments()) === 0) {
+      await OfferLetterTemplate.insertMany([
+        {
+          name: 'Standard Corporate Offer',
+          code: 'OLT-CORP',
+          description: 'Comprehensive employment agreement for corporate, managerial, and sales professionals.',
+          subject: 'Offer of Employment: {position} at {companyName}',
+          headerTitle: 'CONFIDENTIAL EMPLOYMENT OFFER & APPOINTMENT LETTER',
+          bodyTemplate: `Dear {candidateName},
+
+We are pleased to extend an offer of employment for the position of {position} within the {department} Department at {companyName} ({branch} branch). Our evaluation panel was highly impressed by your qualifications, industry experience, and professional achievements.
+
+Your scheduled commencement date is {joiningDate}. You will receive a total Cost to Company (CTC) of {ctc} per annum, structured into standard statutory components and allowances as outlined in Annexure A.
+
+Please review the attached terms and signify your formal acceptance by signing and returning this letter on or before {expiryDate}.`,
+          terms: [
+            'Probation: You will be subject to a three (3) month probation period from your official start date.',
+            'Notice Period: 15 calendar days during probation; 30 calendar days following successful confirmation.',
+            'Working Hours: 09:30 to 18:30 IST, Monday to Friday, with adherence to hybrid workspace policies.',
+            'Confidentiality & IP: Strict compliance with enterprise nondisclosure, client data privacy, and IP assignment.',
+            'Statutory Requirements: Offer is contingent upon verification of previous credentials, KYC, and medical fitness.'
+          ],
+          salaryStructure: { basicPercent: 50, hraPercent: 20, specialAllowancePercent: 30 },
+          isDefault: true,
+          status: 'Active',
+          signatoryName: 'Ines Okafor',
+          signatoryDesignation: 'Head of Specification & Human Resources'
+        },
+        {
+          name: 'Executive Leadership Offer',
+          code: 'OLT-EXEC',
+          description: 'Executive contract tailored for department heads, directors, and strategic practice leaders.',
+          subject: 'Executive Appointment: {position} — {companyName}',
+          headerTitle: 'EXECUTIVE EMPLOYMENT AGREEMENT & APPOINTMENT LETTER',
+          bodyTemplate: `Dear {candidateName},
+
+On behalf of the Board and Leadership Team at {companyName}, we are delighted to appoint you as {position} heading the {department} division ({branch} branch). We believe your strategic vision will spearhead our organizational transformation.
+
+Your official joining date is set for {joiningDate}. Your annual Cost to Company (CTC) package is established at {ctc}, comprising fixed compensation and leadership allowances.
+
+Kindly confirm your acceptance of this leadership appointment by countersigning this agreement on or before {expiryDate}.`,
+          terms: [
+            'Confirmation: Direct appointment without initial probationary period subject to executive review.',
+            'Notice Period: 60 calendar days bilateral notice or salary in lieu thereof.',
+            'Governance & Non-Compete: Strict adherence to non-solicitation of clients and staff for 12 months post-separation.',
+            'Discretionary Bonus: Annual performance incentive aligned with organizational EBITDA benchmarks.'
+          ],
+          salaryStructure: { basicPercent: 45, hraPercent: 25, specialAllowancePercent: 30 },
+          isDefault: false,
+          status: 'Active',
+          signatoryName: 'Ines Okafor',
+          signatoryDesignation: 'Managing Director & Head of People'
+        },
+        {
+          name: 'Technical & Engineering Offer',
+          code: 'OLT-TECH',
+          description: 'Specialized offer template for software engineers, architects, and technical analysts.',
+          subject: 'Engineering Offer: {position} at {companyName}',
+          headerTitle: 'TECHNICAL EMPLOYMENT APPOINTMENT LETTER',
+          bodyTemplate: `Dear {candidateName},
+
+We are thrilled to offer you the role of {position} in our {department} Engineering Team at {companyName} ({branch} branch). Your technical excellence and problem-solving abilities align perfectly with our engineering culture.
+
+Your anticipated start date is {joiningDate} with an annual CTC of {ctc}.
+
+Please confirm acceptance by signing and submitting your confirmation on or before {expiryDate}.`,
+          terms: [
+            'Probation: Three (3) months with bi-weekly milestone checkpoints.',
+            'IP Assignment: Full assignment of patents, source code, frameworks, and digital assets developed during tenure.',
+            'Device Policy: Company-issued workstation must adhere to enterprise cybersecurity standards.'
+          ],
+          salaryStructure: { basicPercent: 50, hraPercent: 20, specialAllowancePercent: 30 },
+          isDefault: false,
+          status: 'Active',
+          signatoryName: 'Ines Okafor',
+          signatoryDesignation: 'Head of Specification & Human Resources'
+        }
+      ]);
+      console.log('[Seed] Seeded 3 default offer letter templates.');
+    }
+
+    // Seed Sample Offer Letters if none exist
+    if ((await OfferLetter.countDocuments()) === 0) {
+      const defaultTemplate = await OfferLetterTemplate.findOne({ isDefault: true });
+      await OfferLetter.insertMany([
+        {
+          offerNumber: 'OL-2026-0001',
+          candidateName: 'Aditya Singhania',
+          candidateEmail: 'aditya.singhania@example.com',
+          candidatePhone: '+91 98210 55432',
+          candidateAddress: 'Flat 402, Sea Green Apts, Worli, Mumbai',
+          position: 'Senior Ceramic Designer',
+          department: 'Design',
+          branch: 'Bandra',
+          templateRef: defaultTemplate ? defaultTemplate._id : null,
+          templateName: 'Standard Corporate Offer',
+          joiningDate: '2026-12-01',
+          expiryDate: '2026-11-25',
+          issueDate: '2026-11-15',
+          ctc: 960000,
+          salaryBreakdown: {
+            basic: 40000,
+            hra: 16000,
+            specialAllowance: 24000,
+            monthlyGross: 80000,
+            annualGross: 960000
+          },
+          terms: [
+            'Probation: 3 months probation period from joining date.',
+            'Notice Period: 30 days notice period post-confirmation.',
+            'Working Hours: 09:30 to 18:30 IST, Monday to Friday.'
+          ],
+          subject: 'Offer of Employment: Senior Ceramic Designer at Aedentek CRM',
+          bodyText: 'Dear Aditya Singhania,\n\nWe are pleased to offer you the position of Senior Ceramic Designer in Design at Bandra branch with annual CTC of ₹9,60,000.',
+          signatoryName: 'Ines Okafor',
+          signatoryDesignation: 'Head of Specification & Human Resources',
+          status: 'Accepted',
+          notes: 'Signed offer copy received and verified.'
+        },
+        {
+          offerNumber: 'OL-2026-0002',
+          candidateName: 'Meera Nambiar',
+          candidateEmail: 'meera.nambiar@example.com',
+          candidatePhone: '+91 98450 12345',
+          candidateAddress: '12th Cross, Indiranagar, Bengaluru',
+          position: 'Lead Solution Architect',
+          department: 'Engineering',
+          branch: 'Andheri',
+          templateRef: defaultTemplate ? defaultTemplate._id : null,
+          templateName: 'Technical & Engineering Offer',
+          joiningDate: '2026-12-15',
+          expiryDate: '2026-11-28',
+          issueDate: '2026-11-16',
+          ctc: 1800000,
+          salaryBreakdown: {
+            basic: 75000,
+            hra: 30000,
+            specialAllowance: 45000,
+            monthlyGross: 150000,
+            annualGross: 1800000
+          },
+          terms: [
+            'Probation: 3 months with bi-weekly milestone checkpoints.',
+            'IP Assignment: Full assignment of digital assets developed during tenure.',
+            'Notice Period: 60 days bilateral notice.'
+          ],
+          subject: 'Engineering Offer: Lead Solution Architect at Aedentek CRM',
+          bodyText: 'Dear Meera Nambiar,\n\nWe are pleased to extend an offer for Lead Solution Architect at ₹18,00,000 CTC.',
+          signatoryName: 'Ines Okafor',
+          signatoryDesignation: 'Head of Specification & Human Resources',
+          status: 'Sent',
+          notes: 'Awaiting signature from candidate.'
+        },
+        {
+          offerNumber: 'OL-2026-0003',
+          candidateName: 'Kunal Deshmukh',
+          candidateEmail: 'kunal.deshmukh@example.com',
+          candidatePhone: '+91 98700 98765',
+          candidateAddress: 'A-203, Palm Grove, Thane West',
+          position: 'Accounts Executive',
+          department: 'Finance',
+          branch: 'Bandra',
+          templateRef: defaultTemplate ? defaultTemplate._id : null,
+          templateName: 'Standard Corporate Offer',
+          joiningDate: '2027-01-05',
+          expiryDate: '2026-12-10',
+          issueDate: '2026-11-16',
+          ctc: 540000,
+          salaryBreakdown: {
+            basic: 22500,
+            hra: 9000,
+            specialAllowance: 13500,
+            monthlyGross: 45000,
+            annualGross: 540000
+          },
+          terms: [
+            'Probation: 3 months probation period.',
+            'Notice Period: 30 days notice period.'
+          ],
+          subject: 'Offer of Employment: Accounts Executive at Aedentek CRM',
+          bodyText: 'Dear Kunal Deshmukh,\n\nWe are pleased to extend an offer for Accounts Executive at ₹5,40,000 CTC.',
+          signatoryName: 'Ines Okafor',
+          signatoryDesignation: 'Head of Specification & Human Resources',
+          status: 'Draft',
+          notes: 'Pending final CTC approval from Finance Head.'
+        }
+      ]);
+      console.log('[Seed] Seeded 3 initial offer letters.');
     }
   } catch (error) {
     console.error('[Seed] Error seeding HR data:', error.message);
