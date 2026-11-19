@@ -1,0 +1,1360 @@
+{
+  "targetUrl": "http://localhost:1234",
+  "timestamp": "2026-11-19T08:39:49.976Z",
+  "total": 135,
+  "passed": 135,
+  "failed": 0,
+  "uncaughtErrors": [],
+  "details": [
+    {
+      "role": "Admin",
+      "path": "/today",
+      "name": "Dashboard / Overview",
+      "module": "Workspace",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Good morning, Admin\""
+    },
+    {
+      "role": "Admin",
+      "path": "/clients/companies",
+      "name": "Clients Directory",
+      "module": "Clients",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Client Directory Master\""
+    },
+    {
+      "role": "Admin",
+      "path": "/clients/new",
+      "name": "New Client Onboarding",
+      "module": "Clients",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Add New ClientClient & Agreeme\""
+    },
+    {
+      "role": "Admin",
+      "path": "/deals/board",
+      "name": "Deals Kanban Board",
+      "module": "Deals",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Deal board\""
+    },
+    {
+      "role": "Admin",
+      "path": "/deals/forecast",
+      "name": "Deals Forecast Sheet",
+      "module": "Deals",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Q4 forecast\""
+    },
+    {
+      "role": "Admin",
+      "path": "/projects",
+      "name": "Projects Register",
+      "module": "Projects",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Projects\""
+    },
+    {
+      "role": "Admin",
+      "path": "/inbox",
+      "name": "Inbox Messages",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"\""
+    },
+    {
+      "role": "Admin",
+      "path": "/calendar",
+      "name": "Calendar Schedule",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Calendar\""
+    },
+    {
+      "role": "Admin",
+      "path": "/outreach/sequences",
+      "name": "Outreach Campaigns",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Sequences\""
+    },
+    {
+      "role": "Admin",
+      "path": "/finance/invoices",
+      "name": "Tax Invoices Register",
+      "module": "Finance",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Tax Invoices\""
+    },
+    {
+      "role": "Admin",
+      "path": "/finance/propagations",
+      "name": "Commercial Proposals",
+      "module": "Finance",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Commercial Propagations\""
+    },
+    {
+      "role": "Admin",
+      "path": "/finance/settings",
+      "name": "Tax & Banking Settings",
+      "module": "Finance",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Tax, Banking & Invoice Setting\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/dashboard",
+      "name": "Accounts Overview",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Accounts Overview\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/sales",
+      "name": "Accounts Sales Register",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Inward & Invoicing\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/inward-expenses",
+      "name": "Stock Inwards & Expenses",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Inward & Expenses\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/expenses",
+      "name": "Operating Expenses",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Expenses\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/emi",
+      "name": "Instalments & EMI Plans",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"EMI\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/credit-notes",
+      "name": "Credit Notes",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Credit Notes\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/assets",
+      "name": "Fixed Assets",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Asset Records\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/adjustment-entry",
+      "name": "Adjustment Vouchers",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Adjustment Entry\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/reports",
+      "name": "Financial Reports",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Financial Reports\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/staff",
+      "name": "Employee Directory",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Employees\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/staff/new",
+      "name": "Add Employee Wizard",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Add employee\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/offer-letters",
+      "name": "Offer Letters Register",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Offer Letters\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/attendance",
+      "name": "Daily Attendance",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Biometric Attendance\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/leave",
+      "name": "Leave Management",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Leave Requests\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/salary",
+      "name": "Salary Structures",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Salary Structures\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/advances",
+      "name": "Salary Advances",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Salary Advances\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/adjustments",
+      "name": "Payroll Adjustments",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Payroll Adjustments\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/payroll",
+      "name": "Monthly Payroll Runs",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Payroll & Payslips\""
+    },
+    {
+      "role": "Admin",
+      "path": "/clients/service-types",
+      "name": "Service Types",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Service Type Master\""
+    },
+    {
+      "role": "Admin",
+      "path": "/clients/project-stages",
+      "name": "Project Stages",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Project Stage Master\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/expense-categories",
+      "name": "Expense Categories",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Expense Categories\""
+    },
+    {
+      "role": "Admin",
+      "path": "/accounts/asset-categories",
+      "name": "Asset Categories",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Asset Categories\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/leave-types",
+      "name": "Leave Types",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Leave Types\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/branches",
+      "name": "Branches Master",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Branches\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/shifts",
+      "name": "Shifts Master",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Shifts\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/roles",
+      "name": "Roles & Access Master",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Roles & Access\""
+    },
+    {
+      "role": "Admin",
+      "path": "/hr/offer-letter-templates",
+      "name": "Offer Letter Templates Studio",
+      "module": "Masters",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Offer Letter Templates\""
+    },
+    {
+      "role": "Admin",
+      "path": "/team",
+      "name": "Team Directory",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Team\""
+    },
+    {
+      "role": "Admin",
+      "path": "/library",
+      "name": "Playbooks & Library",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Playbooks\""
+    },
+    {
+      "role": "Admin",
+      "path": "/profile",
+      "name": "User Profile",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Profile\""
+    },
+    {
+      "role": "Admin",
+      "path": "/settings",
+      "name": "Platform Settings",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Settings & Platform Configurat\""
+    },
+    {
+      "role": "Admin",
+      "path": "/settings/theme",
+      "name": "Theme Settings",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Settings & Platform Configurat\""
+    },
+    {
+      "role": "Admin",
+      "path": "/support",
+      "name": "Help & Support",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"How can we help?\""
+    },
+    {
+      "role": "Manager",
+      "path": "/today",
+      "name": "Dashboard / Overview",
+      "module": "Workspace",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Good morning, Branch\""
+    },
+    {
+      "role": "Manager",
+      "path": "/clients/companies",
+      "name": "Clients Directory",
+      "module": "Clients",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Client Directory Master\""
+    },
+    {
+      "role": "Manager",
+      "path": "/clients/new",
+      "name": "New Client Onboarding",
+      "module": "Clients",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Add New ClientClient & Agreeme\""
+    },
+    {
+      "role": "Manager",
+      "path": "/deals/board",
+      "name": "Deals Kanban Board",
+      "module": "Deals",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Deal board\""
+    },
+    {
+      "role": "Manager",
+      "path": "/deals/forecast",
+      "name": "Deals Forecast Sheet",
+      "module": "Deals",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Q4 forecast\""
+    },
+    {
+      "role": "Manager",
+      "path": "/projects",
+      "name": "Projects Register",
+      "module": "Projects",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Projects\""
+    },
+    {
+      "role": "Manager",
+      "path": "/inbox",
+      "name": "Inbox Messages",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"\""
+    },
+    {
+      "role": "Manager",
+      "path": "/calendar",
+      "name": "Calendar Schedule",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Calendar\""
+    },
+    {
+      "role": "Manager",
+      "path": "/outreach/sequences",
+      "name": "Outreach Campaigns",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Sequences\""
+    },
+    {
+      "role": "Manager",
+      "path": "/finance/invoices",
+      "name": "Tax Invoices Register",
+      "module": "Finance",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Tax Invoices\""
+    },
+    {
+      "role": "Manager",
+      "path": "/finance/propagations",
+      "name": "Commercial Proposals",
+      "module": "Finance",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Commercial Propagations\""
+    },
+    {
+      "role": "Manager",
+      "path": "/finance/settings",
+      "name": "Tax & Banking Settings",
+      "module": "Finance",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/dashboard",
+      "name": "Accounts Overview",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Accounts Overview\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/sales",
+      "name": "Accounts Sales Register",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Inward & Invoicing\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/inward-expenses",
+      "name": "Stock Inwards & Expenses",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Inward & Expenses\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/expenses",
+      "name": "Operating Expenses",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Expenses\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/emi",
+      "name": "Instalments & EMI Plans",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"EMI\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/credit-notes",
+      "name": "Credit Notes",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Credit Notes\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/assets",
+      "name": "Fixed Assets",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Asset Records\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/adjustment-entry",
+      "name": "Adjustment Vouchers",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Adjustment Entry\""
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/reports",
+      "name": "Financial Reports",
+      "module": "Accounts",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Financial Reports\""
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/staff",
+      "name": "Employee Directory",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Employees\""
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/staff/new",
+      "name": "Add Employee Wizard",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Add employee\""
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/offer-letters",
+      "name": "Offer Letters Register",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Offer Letters\""
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/attendance",
+      "name": "Daily Attendance",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Biometric Attendance\""
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/leave",
+      "name": "Leave Management",
+      "module": "HR",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Leave Requests\""
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/salary",
+      "name": "Salary Structures",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/advances",
+      "name": "Salary Advances",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/adjustments",
+      "name": "Payroll Adjustments",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/payroll",
+      "name": "Monthly Payroll Runs",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/clients/service-types",
+      "name": "Service Types",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/clients/project-stages",
+      "name": "Project Stages",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/expense-categories",
+      "name": "Expense Categories",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/accounts/asset-categories",
+      "name": "Asset Categories",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/leave-types",
+      "name": "Leave Types",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/branches",
+      "name": "Branches Master",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/shifts",
+      "name": "Shifts Master",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/roles",
+      "name": "Roles & Access Master",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/hr/offer-letter-templates",
+      "name": "Offer Letter Templates Studio",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/team",
+      "name": "Team Directory",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Team\""
+    },
+    {
+      "role": "Manager",
+      "path": "/library",
+      "name": "Playbooks & Library",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Playbooks\""
+    },
+    {
+      "role": "Manager",
+      "path": "/profile",
+      "name": "User Profile",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Profile\""
+    },
+    {
+      "role": "Manager",
+      "path": "/settings",
+      "name": "Platform Settings",
+      "module": "Studio",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/settings/theme",
+      "name": "Theme Settings",
+      "module": "Studio",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Manager",
+      "path": "/support",
+      "name": "Help & Support",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"How can we help?\""
+    },
+    {
+      "role": "Staff",
+      "path": "/today",
+      "name": "Dashboard / Overview",
+      "module": "Workspace",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Good morning, Frontline\""
+    },
+    {
+      "role": "Staff",
+      "path": "/clients/companies",
+      "name": "Clients Directory",
+      "module": "Clients",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Client Directory Master\""
+    },
+    {
+      "role": "Staff",
+      "path": "/clients/new",
+      "name": "New Client Onboarding",
+      "module": "Clients",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Add New ClientClient & Agreeme\""
+    },
+    {
+      "role": "Staff",
+      "path": "/deals/board",
+      "name": "Deals Kanban Board",
+      "module": "Deals",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Deal board\""
+    },
+    {
+      "role": "Staff",
+      "path": "/deals/forecast",
+      "name": "Deals Forecast Sheet",
+      "module": "Deals",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Q4 forecast\""
+    },
+    {
+      "role": "Staff",
+      "path": "/projects",
+      "name": "Projects Register",
+      "module": "Projects",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Projects\""
+    },
+    {
+      "role": "Staff",
+      "path": "/inbox",
+      "name": "Inbox Messages",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"\""
+    },
+    {
+      "role": "Staff",
+      "path": "/calendar",
+      "name": "Calendar Schedule",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Calendar\""
+    },
+    {
+      "role": "Staff",
+      "path": "/outreach/sequences",
+      "name": "Outreach Campaigns",
+      "module": "Reach",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Sequences\""
+    },
+    {
+      "role": "Staff",
+      "path": "/finance/invoices",
+      "name": "Tax Invoices Register",
+      "module": "Finance",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/finance/propagations",
+      "name": "Commercial Proposals",
+      "module": "Finance",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/finance/settings",
+      "name": "Tax & Banking Settings",
+      "module": "Finance",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/dashboard",
+      "name": "Accounts Overview",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/sales",
+      "name": "Accounts Sales Register",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/inward-expenses",
+      "name": "Stock Inwards & Expenses",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/expenses",
+      "name": "Operating Expenses",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/emi",
+      "name": "Instalments & EMI Plans",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/credit-notes",
+      "name": "Credit Notes",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/assets",
+      "name": "Fixed Assets",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/adjustment-entry",
+      "name": "Adjustment Vouchers",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/reports",
+      "name": "Financial Reports",
+      "module": "Accounts",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/staff",
+      "name": "Employee Directory",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/staff/new",
+      "name": "Add Employee Wizard",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/offer-letters",
+      "name": "Offer Letters Register",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/attendance",
+      "name": "Daily Attendance",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/leave",
+      "name": "Leave Management",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/salary",
+      "name": "Salary Structures",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/advances",
+      "name": "Salary Advances",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/adjustments",
+      "name": "Payroll Adjustments",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/payroll",
+      "name": "Monthly Payroll Runs",
+      "module": "HR",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/clients/service-types",
+      "name": "Service Types",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/clients/project-stages",
+      "name": "Project Stages",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/expense-categories",
+      "name": "Expense Categories",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/accounts/asset-categories",
+      "name": "Asset Categories",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/leave-types",
+      "name": "Leave Types",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/branches",
+      "name": "Branches Master",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/shifts",
+      "name": "Shifts Master",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/roles",
+      "name": "Roles & Access Master",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/hr/offer-letter-templates",
+      "name": "Offer Letter Templates Studio",
+      "module": "Masters",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/team",
+      "name": "Team Directory",
+      "module": "Studio",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/library",
+      "name": "Playbooks & Library",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Playbooks\""
+    },
+    {
+      "role": "Staff",
+      "path": "/profile",
+      "name": "User Profile",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"Profile\""
+    },
+    {
+      "role": "Staff",
+      "path": "/settings",
+      "name": "Platform Settings",
+      "module": "Studio",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/settings/theme",
+      "name": "Theme Settings",
+      "module": "Studio",
+      "expected": "RESTRICTED (403)",
+      "actual": "RESTRICTED (403)",
+      "status": "PASS",
+      "note": "403 Access Restricted correctly enforced"
+    },
+    {
+      "role": "Staff",
+      "path": "/support",
+      "name": "Help & Support",
+      "module": "Studio",
+      "expected": "ALLOWED",
+      "actual": "ALLOWED",
+      "status": "PASS",
+      "note": "Allowed & loaded: \"How can we help?\""
+    }
+  ]
+}

@@ -57,7 +57,7 @@ var EXACT_PERMISSION_ROUTES = new Set([
   "hr/staff", "hr/employees", "hr/offer-letters", "hr/attendance", "hr/leave",
   "hr/salary", "hr/advances", "hr/adjustments", "hr/payroll",
   "hr/branches", "masters/branches", "hr/shifts", "masters/shifts",
-  "hr/leave-types", "hr/roles",
+  "hr/leave-types", "hr/roles", "hr/offer-letter-templates",
   "clients/service-types", "clients/project-stages",
   "accounts/expense-categories", "accounts/asset-categories"
 ]);
