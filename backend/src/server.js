@@ -18,12 +18,14 @@ import projectStageRoutes from './routes/projectStageRoutes.js';
 import { paginateResponses } from './middleware/paginate.js';
 import { authenticateUser } from './middleware/rbac.js';
 import authRoutes from './routes/authRoutes.js';
+import roleRoutes from './routes/roleRoutes.js';
 import hrRoutes from './routes/hrRoutes.js';
 import accountsRoutes from './routes/accountsRoutes.js';
 import { seedFinanceData } from './utils/seedFinance.js';
 import { seedHrData } from './utils/seedHr.js';
 import { seedAccountsData } from './utils/seedAccounts.js';
 import { seedUserData } from './utils/seedUsers.js';
+import { seedRoles } from './controllers/roleController.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 // Load environment variables
@@ -157,7 +159,7 @@ if (HAS_SPA) {
 }
 
 // Minimal upload endpoint: store base64 file, return a /uploads/<name> URL
-app.post('/api/uploads', (req, res) => {
+app.post('/api/uploads', authenticateUser, (req, res) => {
   const { filename, data, contentType } = req.body || {};
   if (!filename || !data) return res.status(400).json({ success: false, message: 'filename and base64 data are required' });
   const safeName = String(filename).replace(/[^a-zA-Z0-9.\-_]/g, '_').slice(-80);
@@ -186,6 +188,7 @@ if (HAS_SPA) {
 app.use('/api', authenticateUser);
 app.use('/api', paginateResponses);
 app.use('/api/auth', authRoutes);
+app.use('/api/roles', roleRoutes);
 app.use('/api/settings-profiles', settingsProfileRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/gst-rates', gstTaxRateRoutes);
@@ -208,6 +211,7 @@ export const startServer = async () => {
     await seedFinanceData();
     await seedHrData();
     await seedAccountsData();
+    await seedRoles();
     await seedUserData();
     const server = app.listen(PORT, () => {
       console.log(`[Server] Aedentek CRM Backend running on http://localhost:${PORT}`);

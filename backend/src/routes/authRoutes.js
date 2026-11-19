@@ -1,24 +1,25 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import { ROLES, RBAC_PERMISSIONS, generateToken, normalizeRole, JWT_SECRET } from '../middleware/rbac.js';
+import mongoose from 'mongoose';
+import User, { generateAuthKey } from '../models/User.js';
+import { ROLES, RBAC_PERMISSIONS, ROLE_ALLOWED_PAGES, generateToken, normalizeRole, resolveRolePolicy, JWT_SECRET } from '../middleware/rbac.js';
 
 const router = express.Router();
 
 /**
  * POST /api/auth/login
- * Validates credentials against MongoDB with bcrypt, returns signed JWT
+ * Validates username/email + password against MongoDB, returns signed JWT auth key
  */
 router.post('/login', async (req, res) => {
   try {
-    const { email, username, password } = req.body || {};
-    const identifier = (email || username || '').trim();
+    const { email, username, identifier: rawIdent, password } = req.body || {};
+    const identifier = String(rawIdent || email || username || '').trim();
 
     if (!identifier || !password) {
       return res.status(400).json({
         success: false,
         error: 'Bad Request',
-        message: 'Email/username and password are required.'
+        message: 'Username/email and password are required.'
       });
     }
 
@@ -33,7 +34,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({
         success: false,
         error: 'Unauthorized',
-        message: 'Invalid email/username or password.'
+        message: 'Invalid username/email or password.'
       });
     }
 
@@ -41,6 +42,7 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({
         success: false,
         error: 'Forbidden',
+        code: 'ACCOUNT_DEACTIVATED',
         message: 'Account has been deactivated. Please contact administrator.'
       });
     }
@@ -50,15 +52,19 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({
         success: false,
         error: 'Unauthorized',
-        message: 'Invalid email/username or password.'
+        message: 'Invalid username/email or password.'
       });
     }
 
-    // Update last login timestamp
+    // Ensure authKey exists and update last login timestamp
+    if (!user.authKey) {
+      user.authKey = generateAuthKey();
+    }
     user.lastLogin = new Date();
     await user.save();
 
     const role = normalizeRole(user.role || user.accessLevel);
+    const policy = await resolveRolePolicy(role);
     const token = generateToken(user);
 
     // Set HTTP-only session cookie
@@ -73,14 +79,17 @@ router.post('/login', async (req, res) => {
       success: true,
       message: 'Authentication successful.',
       token: token,
+      authKey: token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
         name: user.name || user.username,
-        role: role,
-        accessLevel: role,
-        permissions: RBAC_PERMISSIONS[role] || RBAC_PERMISSIONS[ROLES.STAFF]
+        role: policy.role,
+        accessLevel: policy.role,
+        isCustomRole: Boolean(policy.isCustom),
+        allowedPages: policy.allowedPages,
+        permissions: policy.permissions
       }
     });
   } catch (error) {
@@ -113,14 +122,17 @@ router.post('/logout', (req, res) => {
 router.post('/refresh', async (req, res) => {
   try {
     const authHeader = req.headers['authorization'];
+    const authKeyHeader = req.headers['x-auth-key'];
     let rawToken = null;
     if (authHeader && authHeader.startsWith('Bearer ')) {
       rawToken = authHeader.slice(7).trim();
+    } else if (authKeyHeader && String(authKeyHeader).trim()) {
+      rawToken = String(authKeyHeader).trim();
     } else if (req.headers?.cookie) {
       const match = req.headers.cookie.match(/(?:^|;\s*)tessly_jwt=([^;]+)/);
       if (match) rawToken = decodeURIComponent(match[1]);
-    } else if (req.body?.token) {
-      rawToken = req.body.token;
+    } else if (req.body?.token || req.body?.authKey) {
+      rawToken = req.body.token || req.body.authKey;
     }
 
     if (!rawToken) {
@@ -145,11 +157,21 @@ router.post('/refresh', async (req, res) => {
       });
     }
 
-    // Verify user is active if in database
-    if (decoded.id && decoded.id !== 'u1') {
+    // Verify user is active and authKey has not been revoked in database
+    let dbUser = null;
+    if (decoded.id && mongoose.Types.ObjectId.isValid(String(decoded.id))) {
       try {
-        const user = await User.findById(decoded.id);
-        if (user && user.active === false) {
+        dbUser = await User.findById(decoded.id);
+        if (!dbUser && decoded.ak) {
+          res.clearCookie('tessly_jwt');
+          return res.status(401).json({
+            success: false,
+            error: 'Unauthorized',
+            code: 'USER_NOT_FOUND',
+            message: 'User account no longer exists. Please sign in again.'
+          });
+        }
+        if (dbUser && dbUser.active === false) {
           res.clearCookie('tessly_jwt');
           return res.status(403).json({
             success: false,
@@ -158,17 +180,28 @@ router.post('/refresh', async (req, res) => {
             message: 'Account has been deactivated. Please contact administrator.'
           });
         }
+        if (dbUser && decoded.ak && dbUser.authKey && decoded.ak !== dbUser.authKey) {
+          res.clearCookie('tessly_jwt');
+          return res.status(401).json({
+            success: false,
+            error: 'Unauthorized',
+            code: 'AUTH_KEY_REVOKED',
+            message: 'Authentication key has been revoked. Please sign in again.'
+          });
+        }
       } catch (err) {}
     }
 
-    const role = normalizeRole(decoded.role || decoded.accessLevel);
+    const role = normalizeRole((dbUser && (dbUser.role || dbUser.accessLevel)) || decoded.role || decoded.accessLevel);
+    const policy = await resolveRolePolicy(role);
     const renewedUser = {
-      _id: decoded.id || 'u1',
-      username: decoded.username || 'user',
-      name: decoded.name || 'User',
-      email: decoded.email || '',
-      role: role,
-      accessLevel: role
+      _id: (dbUser && dbUser._id) || decoded.id || 'u1',
+      username: (dbUser && dbUser.username) || decoded.username || 'user',
+      name: (dbUser && dbUser.name) || decoded.name || 'User',
+      email: (dbUser && dbUser.email) || decoded.email || '',
+      role: policy.role,
+      accessLevel: policy.role,
+      authKey: (dbUser && dbUser.authKey) || decoded.ak
     };
 
     const newToken = generateToken(renewedUser);
@@ -184,15 +217,18 @@ router.post('/refresh', async (req, res) => {
       success: true,
       message: 'Token refreshed successfully.',
       token: newToken,
+      authKey: newToken,
       expiresIn: 24 * 60 * 60 * 1000,
       user: {
         id: renewedUser._id,
         username: renewedUser.username,
         email: renewedUser.email,
         name: renewedUser.name,
-        role: role,
-        accessLevel: role,
-        permissions: RBAC_PERMISSIONS[role] || RBAC_PERMISSIONS[ROLES.STAFF]
+        role: policy.role,
+        accessLevel: policy.role,
+        isCustomRole: Boolean(policy.isCustom),
+        allowedPages: policy.allowedPages,
+        permissions: policy.permissions
       }
     });
   } catch (error) {
@@ -206,41 +242,54 @@ router.post('/refresh', async (req, res) => {
 });
 
 /**
- * GET /api/auth/me
- * Returns current authenticated user and permissions
+ * GET /api/auth/me & GET /api/auth/verify
+ * Validates current auth key / JWT and returns authoritative user, role, allowed pages, and permissions
  */
-router.get('/me', (req, res) => {
+const handleSessionInfo = (req, res) => {
   const user = req.user || {
     id: 'u1',
+    username: 'admin',
     name: 'Authenticated User',
     role: ROLES.ADMIN,
     accessLevel: ROLES.ADMIN,
+    allowedPages: ROLE_ALLOWED_PAGES[ROLES.ADMIN],
     permissions: RBAC_PERMISSIONS[ROLES.ADMIN]
   };
+  const role = normalizeRole(user.role || user.accessLevel);
 
   res.status(200).json({
     success: true,
+    valid: true,
+    authenticated: true,
+    authKeyValid: !!user.tokenValidated,
     user: {
       id: user.id || user._id,
+      username: user.username || '',
       name: user.name,
       email: user.email || '',
-      role: user.role,
-      accessLevel: user.accessLevel || user.role,
+      role: role,
+      accessLevel: role,
       tokenValidated: !!user.tokenValidated,
-      permissions: user.permissions || RBAC_PERMISSIONS[user.role]
+      authKeyValid: !!user.tokenValidated,
+      allowedPages: user.allowedPages || ROLE_ALLOWED_PAGES[role] || ROLE_ALLOWED_PAGES[ROLES.STAFF],
+      permissions: user.permissions || RBAC_PERMISSIONS[role]
     }
   });
-});
+};
+
+router.get('/me', handleSessionInfo);
+router.get('/verify', handleSessionInfo);
 
 /**
  * GET /api/auth/roles
- * Returns full RBAC roles and permissions matrix
+ * Returns full RBAC roles, allowed pages, and permissions matrix
  */
 router.get('/roles', (req, res) => {
   res.status(200).json({
     success: true,
     roles: Object.values(ROLES),
     matrix: RBAC_PERMISSIONS,
+    allowedPages: ROLE_ALLOWED_PAGES,
     descriptions: {
       [ROLES.ADMIN]: 'Super-administrator with full access to all modules, masters, financial records, salary, payroll and platform settings.',
       [ROLES.MANAGER]: 'Operational manager with access to workspace, deals, clients, basic HR (attendance/leaves/shifts), accounts and reports.',

@@ -15,7 +15,7 @@
     "id": "C-03",
     "label": "Description stored",
     "ok": true,
-    "detail": "QA-EXP-1794201005786 October office rent"
+    "detail": "QA-EXP-1795008004853 October office rent"
   },
   {
     "id": "C-04",
@@ -75,7 +75,7 @@
     "id": "C-13",
     "label": "Title and description are trimmed",
     "ok": true,
-    "detail": "QA-EXP-1794201005786 Trim|padded"
+    "detail": "QA-EXP-1795008004853 Trim|padded"
   },
   {
     "id": "V-01",

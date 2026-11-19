@@ -52,7 +52,7 @@ async function runTokenRefreshAndAutoLogoutSuite() {
     await page.goto(`${BASE_URL}/login`, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.lg-card');
 
-    await page.type('input[type="email"]', 'ines@caldermoss.co');
+    await page.type('input[name="email"]', 'ines@caldermoss.co');
     await page.type('input[autocomplete="current-password"]', 'marble88');
     await page.click('.lg-submit');
     await page.waitForSelector('.side', { timeout: 10000 });
@@ -166,7 +166,7 @@ async function runTokenRefreshAndAutoLogoutSuite() {
       hasSide: !!document.querySelector('.side')
     }));
 
-    assert('Automatic logout redirects to /login', autoLogoutState.url.includes('/login'), autoLogoutState.url);
+    assert('Automatic logout redirects to /login or /signin', autoLogoutState.url.includes('/login') || autoLogoutState.url.includes('/signin'), autoLogoutState.url);
     assert('State signedIn reset to false', autoLogoutState.signedIn === false);
     assert('Storage tessly:jwt purged', autoLogoutState.jwt === null);
     assert('Storage tessly:token purged', autoLogoutState.token === null);
@@ -178,7 +178,7 @@ async function runTokenRefreshAndAutoLogoutSuite() {
 
     // 8. Re-authenticate and perform Manual Sign-Out
     console.log('\n--- 8. MANUAL SIGN OUT WORKFLOW ---');
-    await page.type('input[type="email"]', 'ines@caldermoss.co');
+    await page.type('input[name="email"]', 'ines@caldermoss.co');
     await page.type('input[autocomplete="current-password"]', 'marble88');
     await page.click('.lg-submit');
     await page.waitForSelector('.side', { timeout: 10000 });
@@ -194,7 +194,7 @@ async function runTokenRefreshAndAutoLogoutSuite() {
       hasLoginCard: !!document.querySelector('.lg-card')
     }));
 
-    assert('Manual sign out redirects to /login', manualSignoutState.url.includes('/login'));
+    assert('Manual sign out redirects to /login or /signin', manualSignoutState.url.includes('/login') || manualSignoutState.url.includes('/signin'));
     assert('Manual sign out sets signedIn to false', manualSignoutState.signedIn === false);
     assert('Manual sign out clears tokens', manualSignoutState.jwt === null);
 

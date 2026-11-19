@@ -172,14 +172,19 @@ async function runAuthTests() {
     assert.strictEqual(settingsAdminRes.status, 200, 'Admin must be granted access (200 OK)');
     console.log('✓ Admin JWT successfully accessed /api/settings');
 
-    // Test 10: JWT-enforced endpoint protection: Staff blocked from /settings
-    console.log('\nTest 10: Staff JWT attempting to access protected route /api/settings');
+    // Test 10: Staff JWT gets only shared settings sections; credential sections are blocked
+    console.log('\nTest 10: Staff JWT reading /api/settings (shared sections only) and /api/settings/smtp');
     const settingsStaffRes = await request('/api/settings', 'GET', null, {
       'Authorization': `Bearer ${staffToken}`
     });
-    assert.strictEqual(settingsStaffRes.status, 403, 'Staff must be blocked with 403 Forbidden');
-    assert.strictEqual(settingsStaffRes.data.code, 'RBAC_ACCESS_RESTRICTED', 'Must return RBAC_ACCESS_RESTRICTED');
-    console.log('✓ Staff JWT strictly blocked with 403 Forbidden from /api/settings');
+    assert.strictEqual(settingsStaffRes.status, 200, 'Staff may read shared settings sections');
+    assert.ok(!('smtp' in (settingsStaffRes.data.data || {})), 'Staff must not receive SMTP credentials');
+    const smtpStaffRes = await request('/api/settings/smtp', 'GET', null, {
+      'Authorization': `Bearer ${staffToken}`
+    });
+    assert.strictEqual(smtpStaffRes.status, 403, 'Staff must be blocked from credential sections with 403');
+    assert.strictEqual(smtpStaffRes.data.code, 'RBAC_ACCESS_RESTRICTED', 'Must return RBAC_ACCESS_RESTRICTED');
+    console.log('✓ Staff JWT receives shared settings only and is blocked from /api/settings/smtp');
 
     // Test 11: JWT-enforced endpoint protection: Manager blocked from /hr/payroll
     console.log('\nTest 11: Manager JWT attempting to access /api/hr/payroll');

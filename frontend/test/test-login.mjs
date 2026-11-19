@@ -74,6 +74,22 @@ async function runLoginTests() {
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900 });
 
+  // The static test server has no backend, and the app no longer signs users in offline.
+  // Mock the login API with a signed-in Admin response so the UI transition can be tested.
+  await page.setRequestInterception(true);
+  page.on('request', (req) => {
+    if (req.url().includes('/api/auth/login') && req.method() === 'POST' && req.url().includes(':8091/')) {
+      const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
+      const token = `${b64({ alg: 'HS256', typ: 'JWT' })}.${b64({ id: 'u1', role: 'Admin', accessLevel: 'Admin', email: 'ines@caldermoss.co', exp: Math.floor(Date.now() / 1000) + 3600 })}.test-signature`;
+      return req.respond({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true, token, user: { id: 'u1', name: 'Ines Okafor', email: 'ines@caldermoss.co', role: 'Admin', accessLevel: 'Admin' } }),
+      });
+    }
+    return req.continue();
+  });
+
   const errors = [];
   page.on('console', (msg) => {
     if (msg.type() === 'error' && !msg.text().includes('ERR_INTERNET_DISCONNECTED')) {

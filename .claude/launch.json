@@ -1,7 +1,42 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "backend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "backend:dev"], "port": 5001 },
-    { "name": "frontend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "frontend"], "port": 1234 }
+    {
+      "name": "backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "backend:dev"
+      ],
+      "port": 5001
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "frontend"
+      ],
+      "port": 1234
+    },
+    {
+      "name": "backend-audit",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "MONGODB_URI=mongodb://127.0.0.1:27099/crm_fresh",
+        "node",
+        "backend/src/server.js"
+      ],
+      "port": 5001
+    },
+    {
+      "name": "backend-e2e",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd backend && MONGODB_URI=mongodb://127.0.0.1:27017/aedentek_crm_e2e PORT=5002 PUBLIC_DIR=\"/Users/aedenteka/Downloads/Projects/CRM/Aedentek CRM/Aedentek CRM/frontend\" CLIENT_ORIGIN=http://localhost:5002 exec node src/server.js"
+      ],
+      "port": 5002
+    }
   ]
 }

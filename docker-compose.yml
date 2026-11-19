@@ -9,6 +9,14 @@ name: aedentek-crm
 #   - "dev" reuses the STAGING DB + STAGING upload folder (dev alias)
 # Mongo is the shared host mongo container (host.docker.internal:27017).
 # Each service only ever talks to its own DB name -> no cross-contamination.
+#
+# Secrets live ONLY on the VPS, never in git:
+#   .env.live     -> JWT_SECRET, MONGODB_URI (aedentek_crm_live)
+#   .env.staging  -> JWT_SECRET, MONGODB_URI (aedentek_crm_staging)
+# Templates: deploy/env.live.example, deploy/env.staging.example
+#
+# Ports are bound to 127.0.0.1 so the app is reachable only through
+# host nginx (HTTPS), never directly on http://<VPS-IP>:5063.
 # =====================================================================
 
 x-common: &common
@@ -25,36 +33,40 @@ x-common: &common
         cpus: "1.0"
 
 services:
-  # ---------------- LIVE (crm.aedentek.com) ----------------
+  # ---------------- LIVE (crm.aedentek.in) ----------------
   live:
     <<: *common
     container_name: aedentek-crm-live
     image: aedentekgithub/aedentek-crm:latest
     ports:
-      - "5063:5000"
+      - "127.0.0.1:5063:5000"
+    env_file:
+      - .env.live
     environment:
       - PORT=5000
       - NODE_ENV=production
       - PUBLIC_DIR=/app/public
       - UPLOAD_DIR=/app/uploads
+      # Demo accounts are not (re)created in production
+      - SEED_DEMO_USERS=false
       # URL the frontend expects for API/asset calls in production
       - VITE_API_BASE=
-      - MONGODB_URI=mongodb://admin:Aedentek%40123%23@host.docker.internal:27017/aedentek_crm_live?authSource=admin
     volumes:
       - ./uploads/live:/app/uploads
 
-  # ---------------- STAGING (staging.crm.aedentek.com; also used by dev) ----------------
+  # ---------------- STAGING (staging.crm.aedentek.in; also used by dev) ----------------
   staging:
     <<: *common
     container_name: aedentek-crm-staging
     image: aedentekgithub/aedentek-crm:staging
     ports:
-      - "5064:5000"
+      - "127.0.0.1:5064:5000"
+    env_file:
+      - .env.staging
     environment:
       - PORT=5000
       - NODE_ENV=staging
       - PUBLIC_DIR=/app/public
       - UPLOAD_DIR=/app/uploads
-      - MONGODB_URI=mongodb://admin:Aedentek%40123%23@host.docker.internal:27017/aedentek_crm_staging?authSource=admin
     volumes:
       - ./uploads/staging:/app/uploads

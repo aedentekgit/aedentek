@@ -1071,7 +1071,6 @@ function Client360CommandCenter({ id }) {
   const [newHosting, setNewHosting] = useState('AWS Cloud');
   const [newSslExpiry, setNewSslExpiry] = useState('');
   const [newCredType, setNewCredType] = useState('AWS Cloud');
-  const [newCredLabel, setNewCredLabel] = useState('');
   const [newCredUrl, setNewCredUrl] = useState('');
   const [newCredUser, setNewCredUser] = useState('');
   const [newCredPass, setNewCredPass] = useState('');
@@ -1210,13 +1209,12 @@ function Client360CommandCenter({ id }) {
   // Handle Add Credential
   const handleAddCredential = async (e) => {
     e.preventDefault();
-    if (!newCredLabel.trim() || !newCredUser.trim()) return;
+    if (!newCredUser.trim()) return;
     const editingCred = !!editCredId;
     const res = await apiFetch(editingCred ? `${API_BASE}/${id}/credentials/${editCredId}` : `${API_BASE}/${id}/credentials`, {
       method: editingCred ? 'PUT' : 'POST',
       body: JSON.stringify({
         type: newCredType,
-        label: newCredLabel.trim(),
         loginUrl: newCredUrl.trim(),
         username: newCredUser.trim(),
         password: newCredPass.trim(),
@@ -1227,7 +1225,6 @@ function Client360CommandCenter({ id }) {
       toast(editingCred ? 'Credential updated' : 'Login credential saved', { icon: 'lock' });
       setShowAddCredModal(false);
       setEditCredId(null);
-      setNewCredLabel('');
       setNewCredUser('');
       setNewCredPass('');
       loadClientDetails();
@@ -2205,7 +2202,7 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
           title: 'Login Credentials',
           sub: 'Login credentials (service, URL, username and password) for the client\'s cloud infrastructure, databases and deployment repos.',
           tools: jsx('button', {
-            type: 'button', onClick: () => { setEditCredId(null); setNewCredType((serviceTypes[0] || {}).name || ''); setNewCredLabel(''); setNewCredUrl(''); setNewCredUser(''); setNewCredPass(''); setNewCredNotes(''); setShowAddCredModal(true); },
+            type: 'button', onClick: () => { setEditCredId(null); setNewCredType((serviceTypes[0] || {}).name || ''); setNewCredUrl(''); setNewCredUser(''); setNewCredPass(''); setNewCredNotes(''); setShowAddCredModal(true); },
             className: 'btn btn--sm btn--primary',
             children: jsxs('span', {
               style: { display: 'flex', alignItems: 'center', gap: 6 },
@@ -2223,7 +2220,6 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                         children: [
                           jsx('th', { className: 'col-sno', children: 'S NO' }),
 jsx('th', { children: 'Service Type' }),
-                          jsx('th', { children: 'Login Label' }),
                           jsx('th', { children: 'Login URL' }),
                           jsx('th', { children: 'Username' }),
                           jsx('th', { children: 'Password' }),
@@ -2233,7 +2229,7 @@ jsx('th', { children: 'Service Type' }),
                       })
                     }),
                     jsx('tbody', {
-                      children: __rowsP(lists.credentials, 8, 'lock', 'No login credentials added', 'Add the service logins, usernames and passwords for this client.', (c, __i) => {
+                      children: __rowsP(lists.credentials, 7, 'lock', 'No login credentials added', 'Add the service logins, usernames and passwords for this client.', (c, __i) => {
                         const isRevealed = revealedPasswords[c.id];
                         return jsxs(
                           'tr',
@@ -2245,9 +2241,6 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                                   className: 'badge-tier badge-tier--enterprise',
                                   children: c.type || 'Cloud'
                                 })
-                              }),
-                              jsx('td', {
-                                children: jsx('b', { style: { fontSize: 'var(--fs-sm)' }, children: c.label })
                               }),
                               jsx('td', {
                                 children: jsxs('div', {
@@ -2316,7 +2309,7 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                                     type: 'button',
                                     className: 'ibtn ibtn--sm ibtn--bare',
                                     title: 'Edit Login',
-                                    onClick: () => { setEditCredId(c.id); setNewCredType(c.type || 'AWS Cloud'); setNewCredLabel(c.label || ''); setNewCredUrl(c.loginUrl || ''); setNewCredUser(c.username || ''); setNewCredPass(''); setNewCredNotes(c.notes || ''); setShowAddCredModal(true); },
+                                    onClick: () => { setEditCredId(c.id); setNewCredType(c.type || 'AWS Cloud'); setNewCredUrl(c.loginUrl || ''); setNewCredUser(c.username || ''); setNewCredPass(''); setNewCredNotes(c.notes || ''); setShowAddCredModal(true); },
                                     children: jsx(Icon, { name: 'edit' })
                                   }),
                                   jsx('button', {
@@ -2907,7 +2900,7 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                     className: 'form-grid',
                     children: [
                       jsxs('label', {
-                        className: 'field',
+                        className: 'field span-2',
                         children: [
                           jsx('span', { children: 'Service Type' }),
                           jsxs('select', {
@@ -2919,13 +2912,6 @@ jsx('td', { className: 'col-sno', children: jsx('span', { className: `sno-pill $
                               ...serviceTypes.map((t) => jsx('option', { value: t.name, children: t.name }, t._id))
                             ]
                           })
-                        ]
-                      }),
-                      jsxs('label', {
-                        className: 'field',
-                        children: [
-                          jsx('span', { children: 'Login Label *' }),
-                          jsx('input', { className: 'input', required: true, value: newCredLabel, onChange: (e) => setNewCredLabel(e.target.value), placeholder: 'Production DB Replica' })
                         ]
                       }),
                       jsxs('label', {

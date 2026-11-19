@@ -740,20 +740,20 @@
     return false;
   }
 
-  const CHIP_SKIP = /(^|\s)(side__close|side__theme|side__collapse|top__bell|top__sidebar-toggle|me-btn|nav__chev|nav__item|ibtn--close|switch|tabbar__|side-goal|form-save-row|tl-cancel|lb-card__open|lb-cont|lb-mark|ca-\S*)(\s|$)/;
+  const CHIP_SKIP = /(^|\s)(side__close|side__theme|side__collapse|top__bell|top__sidebar-toggle|me-btn|nav__chev|nav__item|ibtn--close|switch|tabbar__|side-goal|form-save-row|tl-cancel|lb-card__open|lb-cont|lb-mark|dl-owner|dl-chip|dl-clear|dl-col__add|ol-print-btn|ca-\S*)(\s|$)/;
   function globalActKind(el) {
-    if (el.classList.contains('lb-card__open') || el.classList.contains('lb-cont')) return null;
+    if (el.classList.contains('lb-card__open') || el.classList.contains('lb-cont') || el.classList.contains('dl-owner')) return null;
     if (isCalendarElement(el)) return null;
     const rawText = (el.textContent || '').trim();
     if (/^(cancel|close|dismiss|back|abort|discard|reset)$/i.test(rawText)) return null;
     const s = ((el.getAttribute('title') || '') + ' ' + (el.getAttribute('aria-label') || '') + ' ' + (el.className || '') + ' ' + rawText).toLowerCase()
       .slice(0, 80);
-    if (/set as default|make default|set default/.test(s)) return 'star';
-    if (/(delete|remove|trash|archive|revoke|cancel\s+invoice)/.test(s)) return 'delete';
-    if (/edit|update|modify|pencil|rename/.test(s)) return 'edit';
-    if (/download|pdf|export|print/.test(s)) return 'download';
-    if (/send|share|mail|dispatch|resend|remind/.test(s)) return 'send';
-    if (/view|preview|details|eye|arrow-up-right|show|see|360|open/.test(s)) return 'view';
+    if (/\b(set as default|make default|set default)\b/.test(s)) return 'star';
+    if (/\b(delete|remove|trash|archive|revoke|cancel\s+invoice)\b/.test(s)) return 'delete';
+    if (/\b(edit|update|modify|pencil|rename)\b/.test(s)) return 'edit';
+    if (/\b(download|pdf|export|print)\b/.test(s)) return 'download';
+    if (/\b(send|share|mail|dispatch|resend|remind)\b/.test(s)) return 'send';
+    if (/\b(view|preview|details|eye|arrow-up-right|show|see|360|open)\b/.test(s)) return 'view';
     return null; // not a recognised action icon -> leave untouched
   }
   function enhanceActionButtons() {
@@ -1365,6 +1365,10 @@
 // Synchronize live with backend /api/settings
   async function syncTheme() {
     try {
+      // Settings require a signed-in session; skip on the login screen (avoids a 401).
+      var tok = null;
+      try { tok = sessionStorage.getItem('tessly:jwt') || localStorage.getItem('tessly:jwt'); } catch (e) {}
+      if (!tok) return;
       var res = await fetch('/api/settings');
       if (!res.ok) return;
       var data = await res.json();
@@ -1376,6 +1380,7 @@
     }
   }
 
+  window.__tlSyncTheme = syncTheme;
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', syncTheme);
   } else {

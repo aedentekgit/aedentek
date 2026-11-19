@@ -107,16 +107,26 @@ async function runTests() {
       assert(res.data.success === true, 'Expected success: true');
     });
 
-    await test('GET /api/settings blocks Manager access with 403 Forbidden', async () => {
+    await test('GET /api/settings gives Manager only shared sections (no credentials)', async () => {
       const res = await request('GET', '/api/settings', { headers: { 'X-User-Role': 'Manager' } });
-      assert(res.status === 403, `Expected 403, got ${res.status}`);
-      assert(res.data.code === 'RBAC_ACCESS_RESTRICTED', 'Expected RBAC_ACCESS_RESTRICTED code');
+      assert(res.status === 200, `Expected 200, got ${res.status}`);
+      const keys = Object.keys(res.data.data || {}).sort().join(',');
+      assert(keys === 'bankDetails,gstSettings,invoiceSender,theme', `Unexpected sections: ${keys}`);
+      for (const secret of ['smtp', 'msg91', 'firebase', 'razorpay', 'security', 'otp']) {
+        assert(!(secret in res.data.data), `Manager must not receive ${secret}`);
+      }
     });
 
-    await test('GET /api/settings blocks Staff access with 403 Forbidden', async () => {
-      const res = await request('GET', '/api/settings', { headers: { 'X-User-Role': 'Staff' } });
-      assert(res.status === 403, `Expected 403, got ${res.status}`);
-      assert(res.data.error === 'Forbidden', 'Expected Forbidden error');
+    await test('Staff blocked from credential sections and settings writes (403)', async () => {
+      const smtp = await request('GET', '/api/settings/smtp', { headers: { 'X-User-Role': 'Staff' } });
+      assert(smtp.status === 403, `Expected 403 for smtp, got ${smtp.status}`);
+      assert(smtp.data.error === 'Forbidden', 'Expected Forbidden error');
+      const put = await request('PUT', '/api/settings/theme', { headers: { 'X-User-Role': 'Staff' }, body: { primaryColor: '#000000' } });
+      assert(put.status === 403, `Expected 403 for theme write, got ${put.status}`);
+      const reset = await request('POST', '/api/settings/reset', { headers: { 'X-User-Role': 'Manager' } });
+      assert(reset.status === 403, `Expected 403 for reset, got ${reset.status}`);
+      const theme = await request('GET', '/api/settings/theme', { headers: { 'X-User-Role': 'Staff' } });
+      assert(theme.status === 200, `Expected 200 for shared theme section, got ${theme.status}`);
     });
 
     // 3. Accounts protection: Admin & Manager allowed, Staff forbidden

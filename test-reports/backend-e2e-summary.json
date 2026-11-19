@@ -1,0 +1,177 @@
+[
+  {
+    "file": "accounts-attachments.test.mjs",
+    "status": "PASS",
+    "ms": 1031,
+    "ticks": 13,
+    "exit": 0
+  },
+  {
+    "file": "accounts.test.mjs",
+    "status": "PASS",
+    "ms": 1207,
+    "ticks": 154,
+    "exit": 0
+  },
+  {
+    "file": "api.test.mjs",
+    "status": "PASS",
+    "ms": 781,
+    "ticks": 13,
+    "exit": 0
+  },
+  {
+    "file": "auth-hardening.test.mjs",
+    "status": "PASS",
+    "ms": 794,
+    "ticks": 42,
+    "exit": 0
+  },
+  {
+    "file": "auth.test.mjs",
+    "status": "PASS",
+    "ms": 841,
+    "ticks": 15,
+    "exit": 0
+  },
+  {
+    "file": "branch.test.mjs",
+    "status": "PASS",
+    "ms": 827,
+    "ticks": 34,
+    "exit": 0
+  },
+  {
+    "file": "client-documents.test.mjs",
+    "status": "PASS",
+    "ms": 893,
+    "ticks": 6,
+    "exit": 0
+  },
+  {
+    "file": "client-modules.test.mjs",
+    "status": "PASS",
+    "ms": 871,
+    "ticks": 42,
+    "exit": 0
+  },
+  {
+    "file": "client.test.mjs",
+    "status": "PASS",
+    "ms": 862,
+    "ticks": 18,
+    "exit": 0
+  },
+  {
+    "file": "crud-sweep.test.mjs",
+    "status": "PASS",
+    "ms": 1179,
+    "ticks": 249,
+    "exit": 0
+  },
+  {
+    "file": "dashboard-range.test.mjs",
+    "status": "PASS",
+    "ms": 957,
+    "ticks": 15,
+    "exit": 0
+  },
+  {
+    "file": "emi-date.test.mjs",
+    "status": "PASS",
+    "ms": 797,
+    "ticks": 39,
+    "exit": 0
+  },
+  {
+    "file": "emi-fees.test.mjs",
+    "status": "PASS",
+    "ms": 791,
+    "ticks": 61,
+    "exit": 0
+  },
+  {
+    "file": "emi.test.mjs",
+    "status": "PASS",
+    "ms": 836,
+    "ticks": 73,
+    "exit": 0
+  },
+  {
+    "file": "employee-rbac-auth-key.test.mjs",
+    "status": "PASS",
+    "ms": 1806,
+    "ticks": 29,
+    "exit": 0
+  },
+  {
+    "file": "enhancements.test.mjs",
+    "status": "PASS",
+    "ms": 1041,
+    "ticks": 39,
+    "exit": 0
+  },
+  {
+    "file": "expense-crud.test.mjs",
+    "status": "PASS",
+    "ms": 1034,
+    "ticks": 65,
+    "exit": 0
+  },
+  {
+    "file": "finance.test.mjs",
+    "status": "PASS",
+    "ms": 1036,
+    "ticks": 11,
+    "exit": 0
+  },
+  {
+    "file": "hr.test.mjs",
+    "status": "PASS",
+    "ms": 1010,
+    "ticks": 134,
+    "exit": 0
+  },
+  {
+    "file": "invoice-builder.test.mjs",
+    "status": "PASS",
+    "ms": 848,
+    "ticks": 28,
+    "exit": 0
+  },
+  {
+    "file": "invoice-crud.test.mjs",
+    "status": "PASS",
+    "ms": 926,
+    "ticks": 43,
+    "exit": 0
+  },
+  {
+    "file": "invoice-discount.test.mjs",
+    "status": "PASS",
+    "ms": 921,
+    "ticks": 41,
+    "exit": 0
+  },
+  {
+    "file": "inward-expense.test.mjs",
+    "status": "PASS",
+    "ms": 937,
+    "ticks": 42,
+    "exit": 0
+  },
+  {
+    "file": "rbac.test.mjs",
+    "status": "PASS",
+    "ms": 895,
+    "ticks": 29,
+    "exit": 0
+  },
+  {
+    "file": "settings-profiles.test.mjs",
+    "status": "PASS",
+    "ms": 883,
+    "ticks": 48,
+    "exit": 0
+  }
+]

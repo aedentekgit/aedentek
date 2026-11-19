@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-15T12:24:30.330Z",
+  "timestamp": "2026-11-17T06:42:17.323Z",
   "environment": {
     "url": "http://localhost:8089/tessly/",
     "browser": "Google Chrome",
@@ -175,7 +175,7 @@
       {
         "name": "Smooth GSAP & CSS keyframe animation rules loaded and bound",
         "passed": true,
-        "details": "keyframes: 21, transition rules: 126"
+        "details": "keyframes: 21, transition rules: 129"
       }
     ],
     "responsiveDesign": [

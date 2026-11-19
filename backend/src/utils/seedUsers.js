@@ -12,6 +12,15 @@ export const SEED_USERS = [
     active: true
   },
   {
+    username: 'admin@gmail.com',
+    email: 'admin@gmail.com',
+    name: 'Admin',
+    role: 'Admin',
+    accessLevel: 'Admin',
+    password: hashBcrypt('admin123'),
+    active: true
+  },
+  {
     username: 'ines.okafor',
     email: 'ines@caldermoss.co',
     name: 'Ines Okafor',
@@ -86,6 +95,14 @@ export const SEED_USERS = [
 ];
 
 export const seedUserData = async () => {
+  // Demo accounts have publicly known passwords (this file). Production sets
+  // SEED_DEMO_USERS=false so they are never created or modified there.
+  const seedFlag = String(process.env.SEED_DEMO_USERS ?? '').toLowerCase();
+  const seedEnabled = seedFlag ? seedFlag !== 'false' && seedFlag !== '0' : process.env.NODE_ENV !== 'production';
+  if (!seedEnabled) {
+    console.log('[Seed] Demo user seeding disabled');
+    return;
+  }
   try {
     for (const u of SEED_USERS) {
       const existing = await User.findOne({

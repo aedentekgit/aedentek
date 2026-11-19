@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "node tests/auth.test.mjs && node tests/rbac.test.mjs && node tests/api.test.mjs && node tests/finance.test.mjs && node tests/client.test.mjs && node tests/hr.test.mjs && node tests/accounts.test.mjs && node tests/branch.test.mjs && node tests/emi.test.mjs && node tests/inward-expense.test.mjs && node tests/dashboard-range.test.mjs && node tests/emi-fees.test.mjs",
+    "test": "node tests/auth.test.mjs && node tests/rbac.test.mjs && node tests/auth-hardening.test.mjs && node tests/api.test.mjs && node tests/finance.test.mjs && node tests/client.test.mjs && node tests/hr.test.mjs && node tests/accounts.test.mjs && node tests/branch.test.mjs && node tests/emi.test.mjs && node tests/inward-expense.test.mjs && node tests/dashboard-range.test.mjs && node tests/emi-fees.test.mjs",
     "test:auth": "node tests/auth.test.mjs",
     "test:rbac": "node tests/rbac.test.mjs",
     "test:inward-expense": "node tests/inward-expense.test.mjs",
@@ -20,7 +20,8 @@
     "test:accounts": "node tests/accounts.test.mjs",
     "test:client-modules": "node tests/client-modules.test.mjs",
     "test:enhancements": "node tests/enhancements.test.mjs",
-    "test:client-documents": "node tests/client-documents.test.mjs"
+    "test:client-documents": "node tests/client-documents.test.mjs",
+    "test:auth-hardening": "node tests/auth-hardening.test.mjs"
   },
   "keywords": [
     "nodejs",

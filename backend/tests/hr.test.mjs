@@ -196,7 +196,7 @@ async function runTests() {
 
     const user = await User.findOne({ staffRef: staffId });
     check(!!user, 'creating an employee with createLogin provisions a portal account');
-    check(user && user.password.startsWith('scrypt$'), 'the portal password is hashed, not stored in clear text');
+    check(user && (user.password.startsWith('$2') || user.password.startsWith('scrypt$')), 'the portal password is hashed, not stored in clear text');
     check(user && user.staffRef && user.accessLevel === 'Staff', 'the portal account stores staffRef and the mapped access level');
 
     const updated = await request('PUT', `/api/staff/${staffId}`, { basic: 40000, role: 'Senior Staff' });

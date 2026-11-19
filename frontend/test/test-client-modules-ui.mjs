@@ -154,7 +154,8 @@ const api = async (method, url, body) => {
     await test('LOG-02', 'Login credentials', 'table shows login columns', async () => {
       await openTab('Login Credentials');
       const t = await bodyText();
-      ok(/Login Credentials/.test(t) && /LOGIN LABEL/i.test(t) && /LOGIN URL/i.test(t) && /USERNAME/i.test(t) && /PASSWORD/i.test(t), 'headers missing');
+      ok(/Login Credentials/.test(t) && /SERVICE TYPE/i.test(t) && /LOGIN URL/i.test(t) && /USERNAME/i.test(t) && /PASSWORD/i.test(t), 'headers missing');
+      ok(!/LOGIN LABEL/i.test(t), 'Login Label header should be removed');
       ok(!/Encrypted Server Vault/.test(t), 'old vault title still present');
       await shot('03-login-credentials');
     });
@@ -173,20 +174,19 @@ const api = async (method, url, body) => {
         sel.dispatchEvent(new Event('change', { bubbles: true }));
       }, svcA);
       const fill = async (ph, v) => { const h = await page.$(`.scrim input[placeholder="${ph}"]`); await h.click({ clickCount: 3 }); await h.type(v); };
-      await fill('Production DB Replica', `${TAG} Azure Portal`);
-      await fill('admin', 'azure-admin');
+      await fill('admin', `${TAG}-azure-admin`);
       await page.type('.scrim input[type="password"]', 'S3cret!pw');
       await page.click('.scrim button[type="submit"]'); await sleep(900);
       const t = await bodyText();
-      ok(t.includes(`${TAG} Azure Portal`) && t.includes(svcA), 'new login row missing');
+      ok(t.includes(`${TAG}-azure-admin`) && t.includes(svcA), 'new login row missing');
     });
     await test('LOG-05', 'Login credentials', 'edit and delete a login', async () => {
-      await page.evaluate((l) => [...document.querySelectorAll('tbody tr')].find((r) => r.textContent.includes(l)).querySelector('button[title="Edit Login"]').click(), `${TAG} Azure Portal`);
+      await page.evaluate((u) => [...document.querySelectorAll('tbody tr')].find((r) => r.textContent.includes(u)).querySelector('button[title="Edit Login"]').click(), `${TAG}-azure-admin`);
       await sleep(300);
-      const h = await page.$('.scrim input[placeholder="admin"]'); await h.click({ clickCount: 3 }); await h.type('azure-root');
+      const h = await page.$('.scrim input[placeholder="admin"]'); await h.click({ clickCount: 3 }); await h.type(`${TAG}-azure-root`);
       await page.click('.scrim button[type="submit"]'); await sleep(900);
-      ok((await bodyText()).includes('azure-root'), 'edit not reflected');
-      await page.evaluate((l) => [...document.querySelectorAll('tbody tr')].find((r) => r.textContent.includes(l)).querySelector('button[title="Delete Login"]').click(), `${TAG} Azure Portal`);
+      ok((await bodyText()).includes(`${TAG}-azure-root`), 'edit not reflected');
+      await page.evaluate((u) => [...document.querySelectorAll('tbody tr')].find((r) => r.textContent.includes(u)).querySelector('button[title="Delete Login"]').click(), `${TAG}-azure-root`);
       await confirmDialog();
       ok(!(await bodyText()).includes(`${TAG} Azure Portal`), 'login not deleted');
     });

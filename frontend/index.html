@@ -66,11 +66,27 @@
           history.replaceState(null, '', cleanRoute);
         } catch (e) {}
       }
+
+      // Opening the base URL or an unauthenticated route always redirects straight to /login.
+      // Auth tokens live in sessionStorage only so every new tab/window starts on the login page.
+      try {
+        ['tessly:authKey', 'tessly:jwt', 'tessly:token', 'tessly:tokenExp', 'tessly:role', 'tessly:me'].forEach(function (k) {
+          localStorage.removeItem(k);
+        });
+        var sTok = sessionStorage.getItem('tessly:authKey') || sessionStorage.getItem('tessly:jwt') || sessionStorage.getItem('tessly:token');
+        var sExp = parseInt(sessionStorage.getItem('tessly:tokenExp') || '0', 10) || 0;
+        var hasSess = !!(sTok && sExp > Date.now());
+        var curP = (location.pathname || '/').replace(/\/+$/, '') || '/';
+        if (curP === '/' || curP === '/index.html' || (!hasSess && curP !== '/login' && curP !== '/signin')) {
+          history.replaceState(null, '', '/login');
+        }
+      } catch (e) {}
     })(document.documentElement);
   </script>
   <script type="module" crossorigin src="/assets/index-DG0_cRQu.js"></script>
   <script type="module" src="/assets/global-themed-controls.js"></script>
   <script src="/assets/date-range.js"></script>
+  <script src="/assets/sidebar-scroll-hint.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/ui-D4_WaMI9.js">
   <link rel="stylesheet" crossorigin href="/assets/index-B3aW9d7K.css">
   <link rel="stylesheet" crossorigin href="/assets/signin-styles.css">

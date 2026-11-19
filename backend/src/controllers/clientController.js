@@ -1071,12 +1071,12 @@ export const deleteWebsite = async (req, res, next) => {
 export const addCredential = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { type = 'Cloud Console', label, loginUrl, username, password, notes } = req.body;
+    const { type = 'Cloud Console', label = '', loginUrl, username, password, notes } = req.body;
 
-    if (!label || !username || !password) {
+    if (!username || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Label, Username, and Password are required'
+        message: 'Username and Password are required'
       });
     }
 
@@ -1098,7 +1098,7 @@ export const addCredential = async (req, res, next) => {
       id: `cred-${Date.now()}`,
       clientId: client.clientId,
       type,
-      label,
+      label: label || '',
       loginUrl: loginUrl || '',
       username,
       password,
@@ -1109,7 +1109,7 @@ export const addCredential = async (req, res, next) => {
     client.timeline.unshift({
       id: `act-${Date.now()}`,
       title: 'Secret Provisioned in Vault',
-      description: `Encrypted credential for ${label} (${type}) added`,
+      description: `Encrypted credential for ${label || username} (${type}) added`,
       timestamp: new Date().toISOString().replace('T', ' ').slice(0, 16),
       operator: req.body.operator || 'Security Admin',
       icon: 'lock'
@@ -1119,7 +1119,7 @@ export const addCredential = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: `Credential '${label}' vaulted successfully`,
+      message: `Credential '${label || username}' vaulted successfully`,
       data: client
     });
   } catch (error) {
@@ -1213,7 +1213,7 @@ export const updateCredential = async (req, res, next) => {
       const st = await ServiceType.findOne({ name: b.type }).collation({ locale: 'en', strength: 2 });
       if (st && st.status !== 'Active') return res.status(400).json({ success: false, message: `Service type '${b.type}' is inactive` });
     }
-    ['label', 'username'].forEach((k) => {
+    ['username'].forEach((k) => {
       if (k in b && !String(b[k] || '').trim()) { b.__bad = k; }
     });
     if (b.__bad) return res.status(400).json({ success: false, message: `${b.__bad} cannot be empty` });

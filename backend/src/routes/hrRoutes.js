@@ -77,7 +77,7 @@ router.post('/hr/leave/:id/reject', requireRole([ROLES.ADMIN, ROLES.MANAGER]), r
 router.delete('/hr/leave/:id', requireRole([ROLES.ADMIN, ROLES.MANAGER]), deleteLeaveRequest);
 
 // --- Leave types (Masters) — Admin only ----------------------------------
-router.get('/hr/leave-types', requireRole([ROLES.ADMIN]), getAllLeaveTypes);
+router.get('/hr/leave-types', requireRole([ROLES.ADMIN, ROLES.MANAGER]), getAllLeaveTypes); // read-only for the Leave page dropdown
 router.get('/hr/leave-types/:id', requireRole([ROLES.ADMIN]), getLeaveTypeById);
 router.post('/hr/leave-types', requireRole([ROLES.ADMIN]), createLeaveType);
 router.put('/hr/leave-types/:id', requireRole([ROLES.ADMIN]), updateLeaveType);

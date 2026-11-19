@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
 import Staff from '../models/Staff.js';
 import SalaryStructure from '../models/SalaryStructure.js';
-import User from '../models/User.js';
+import User, { generateAuthKey } from '../models/User.js';
 import SalaryAdvance from '../models/SalaryAdvance.js';
 import PayrollRun from '../models/PayrollRun.js';
-import { hashPassword } from '../utils/password.js';
+import { hashBcrypt } from '../utils/password.js';
 import { safeContains } from '../utils/hrCrud.js';
+import { normalizeRole, resolveRolePolicy, ROLES } from '../middleware/rbac.js';
+
+const escapeRegex = (s) => String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** Branch code prefix used in staff codes, e.g. "Bandra" -> "BA". */
 const branchPrefix = (branch) =>
@@ -75,26 +78,61 @@ const syncSalaryStructure = async (staff) => {
 };
 
 /**
- * Create or update the portal login account for an employee.
- * Business rule 1.2 — passwords are hashed, the role is mapped, staffRef is stored.
+ * Create, update, or deactivate the portal login account for an employee.
+ * Business rule 1.2 — passwords are bcrypt hashed, role & accessLevel are mapped,
+ * staffRef & email are stored, and disabling login or rotating passwords revokes old auth keys.
  */
-const syncUserAccount = async (staff, password) => {
-  if (!staff.createLogin || !staff.username || !password) return null;
-  const hashed = hashPassword(password);
+const syncUserAccount = async (staff, rawPassword = null) => {
+  const username = String(staff.username || '').trim().toLowerCase();
+  const email = String(staff.email || '').trim().toLowerCase();
+  const normalizedRole = normalizeRole(staff.accessLevel || 'Staff');
+  const shouldBeActive = Boolean(
+    staff.createLogin && username && staff.status !== 'Inactive' && staff.status !== 'Terminated'
+  );
+
+  let existing = await User.findOne({ staffRef: staff._id });
+  if (!existing && username) {
+    existing = await User.findOne({ username: new RegExp(`^${escapeRegex(username)}$`, 'i') });
+  }
+
+  if (!shouldBeActive) {
+    if (existing) {
+      existing.active = false;
+      existing.authKey = generateAuthKey(); // immediately revoke existing auth keys
+      await existing.save();
+    }
+    return existing || null;
+  }
+
   const payload = {
-    accessLevel: staff.accessLevel || 'Staff',
+    username,
+    email,
+    role: normalizedRole,
+    accessLevel: normalizedRole,
     staffRef: staff._id,
     staffId: staff.staffCode,
     name: staff.name,
     active: true
   };
-  const existing = await User.findOne({ username: staff.username });
+
   if (existing) {
-    Object.assign(existing, payload, { password: hashed });
+    Object.assign(existing, payload);
+    if (rawPassword && String(rawPassword).trim()) {
+      existing.password = hashBcrypt(String(rawPassword));
+      existing.authKey = generateAuthKey(); // rotate auth key on password reset
+    } else if (!existing.authKey) {
+      existing.authKey = generateAuthKey();
+    }
     await existing.save();
     return existing;
   }
-  return User.create({ ...payload, username: staff.username, password: hashed });
+
+  if (!rawPassword || !String(rawPassword).trim()) return null;
+  return User.create({
+    ...payload,
+    password: hashBcrypt(String(rawPassword)),
+    authKey: generateAuthKey()
+  });
 };
 
 // ---------------------------------------------------------------------------
@@ -207,28 +245,64 @@ export const createStaff = async (req, res, next) => {
         });
       }
     }
+    const rawPassword = body.password ? String(body.password) : '';
+    const normalizedAccess = normalizeRole(body.accessLevel || 'Staff');
+    const cleanUsername = String(body.username || '').trim().toLowerCase();
+    const cleanEmail = String(body.email || '').trim().toLowerCase();
+
     if (body.createLogin) {
-      if (!body.username || !body.password) {
+      const targetPolicy = await resolveRolePolicy(normalizedAccess);
+      const isAdminTierRole =
+        normalizedAccess === ROLES.ADMIN ||
+        targetPolicy.baseRole === ROLES.ADMIN ||
+        (Array.isArray(targetPolicy.allowedPages) &&
+          (targetPolicy.allowedPages.includes('/hr/roles') || targetPolicy.allowedPages.includes('/settings')));
+      if (isAdminTierRole && req.user && req.user.role !== ROLES.ADMIN) {
+        return res.status(403).json({
+          success: false,
+          message: 'Only Administrators can assign Admin-tier login access'
+        });
+      }
+      if (!cleanUsername || !rawPassword) {
         return res.status(400).json({
           success: false,
           message: 'Username and password are required when creating a login account'
         });
       }
-      if (String(body.password).length < 6) {
+      if (cleanUsername.length < 3 || /\s/.test(cleanUsername)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Username must be at least 3 characters without spaces'
+        });
+      }
+      if (rawPassword.length < 6) {
         return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
       }
-      const taken = await User.findOne({ username: body.username });
+      const taken = await User.findOne({ username: new RegExp(`^${escapeRegex(cleanUsername)}$`, 'i') });
       if (taken) {
-        return res.status(400).json({ success: false, message: `Username ${body.username} is already taken` });
+        return res.status(400).json({ success: false, message: `Username ${cleanUsername} is already taken` });
+      }
+      if (cleanEmail) {
+        const emailTaken = await User.findOne({ email: new RegExp(`^${escapeRegex(cleanEmail)}$`, 'i') });
+        if (emailTaken) {
+          return res.status(400).json({ success: false, message: `Email ${cleanEmail} is already assigned to another login account` });
+        }
       }
     }
 
     const staffCode = body.staffCode || (await nextStaffCode(body.branch));
     const employeeCode = body.employeeCode || (await nextEmployeeCode());
 
-    const staff = await Staff.create({ ...body, staffCode, employeeCode });
+    const staffPayload = { ...body, staffCode, employeeCode, password: '' };
+    if (body.createLogin) {
+      staffPayload.username = cleanUsername;
+      staffPayload.accessLevel = normalizedAccess;
+      if (cleanEmail) staffPayload.email = cleanEmail;
+    }
+
+    const staff = await Staff.create(staffPayload);
     await syncSalaryStructure(staff);
-    await syncUserAccount(staff, body.password);
+    await syncUserAccount(staff, rawPassword);
     staff.password = '';
 
     return res.status(201).json({
@@ -274,8 +348,59 @@ export const updateStaff = async (req, res, next) => {
         });
       }
     }
-    if (body.createLogin && body.password && String(body.password).length < 6) {
-      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    const rawPassword = body.password ? String(body.password) : '';
+    const effectiveCreateLogin = body.createLogin !== undefined ? Boolean(body.createLogin) : Boolean(staff.createLogin);
+    const effectiveUsername = String(body.username !== undefined ? body.username : (staff.username || '')).trim().toLowerCase();
+    const effectiveEmail = String(body.email !== undefined ? body.email : (staff.email || '')).trim().toLowerCase();
+    const effectiveAccess = normalizeRole(body.accessLevel !== undefined ? body.accessLevel : (staff.accessLevel || 'Staff'));
+
+    if (effectiveCreateLogin) {
+      const targetPolicy = await resolveRolePolicy(effectiveAccess);
+      const prevPolicy = await resolveRolePolicy(normalizeRole(staff.accessLevel || 'Staff'));
+      const isAdminTier = (roleName, pol) =>
+        roleName === ROLES.ADMIN ||
+        pol.baseRole === ROLES.ADMIN ||
+        (Array.isArray(pol.allowedPages) &&
+          (pol.allowedPages.includes('/hr/roles') || pol.allowedPages.includes('/settings')));
+      if ((isAdminTier(effectiveAccess, targetPolicy) || isAdminTier(normalizeRole(staff.accessLevel), prevPolicy)) && req.user && req.user.role !== ROLES.ADMIN) {
+        return res.status(403).json({
+          success: false,
+          message: 'Only Administrators can assign or modify Admin-tier login access'
+        });
+      }
+      if (!effectiveUsername || effectiveUsername.length < 3 || /\s/.test(effectiveUsername)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Username must be at least 3 characters without spaces when login is enabled'
+        });
+      }
+      if (rawPassword && rawPassword.length < 6) {
+        return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+      }
+      const linkedUser = await User.findOne({ staffRef: staff._id });
+      if (!linkedUser && !rawPassword) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password is required when enabling a login account'
+        });
+      }
+      const userFilter = linkedUser ? { _id: { $ne: linkedUser._id } } : {};
+      const taken = await User.findOne({
+        ...userFilter,
+        username: new RegExp(`^${escapeRegex(effectiveUsername)}$`, 'i')
+      });
+      if (taken) {
+        return res.status(400).json({ success: false, message: `Username ${effectiveUsername} is already taken` });
+      }
+      if (effectiveEmail) {
+        const emailTaken = await User.findOne({
+          ...userFilter,
+          email: new RegExp(`^${escapeRegex(effectiveEmail)}$`, 'i')
+        });
+        if (emailTaken) {
+          return res.status(400).json({ success: false, message: `Email ${effectiveEmail} is already assigned to another login account` });
+        }
+      }
     }
 
     const allowed = [
@@ -290,13 +415,14 @@ export const updateStaff = async (req, res, next) => {
     for (const field of allowed) {
       if (body[field] !== undefined) staff[field] = body[field];
     }
+    if (body.username !== undefined) staff.username = effectiveUsername;
+    if (body.accessLevel !== undefined) staff.accessLevel = effectiveAccess;
     if (body.documents !== undefined) staff.documents = body.documents;
+    staff.password = '';
 
     await staff.save();
     await syncSalaryStructure(staff);
-    if (staff.createLogin) {
-      await syncUserAccount(staff, body.password || 'UNCHANGED');
-    }
+    await syncUserAccount(staff, rawPassword || null);
     staff.password = '';
 
     return res.status(200).json({

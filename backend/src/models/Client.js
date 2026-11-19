@@ -40,7 +40,7 @@ const credentialSubSchema = new mongoose.Schema({
   id: { type: String, default: () => `cred-${Date.now()}-${Math.random().toString(36).substr(2, 4)}` },
   clientId: { type: String },
   type: { type: String, default: 'Cloud Console' }, // AWS Cloud | GitHub | Vercel | MySQL | cPanel | API Key
-  label: { type: String, required: true },
+  label: { type: String, default: '' },
   loginUrl: { type: String },
   username: { type: String, required: true },
   password: { type: String, required: true },

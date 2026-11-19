@@ -220,8 +220,9 @@
   .toolbar:has(.dl-owners) select.select {
     height: 36px !important;
     min-height: 36px !important;
-    font-size: 13px !important;
-    padding: 0 24px 0 10px !important;
+    font-size: 12.5px !important;
+    padding: 0 22px 0 8px !important;
+    max-width: 96px !important;
     flex-shrink: 0 !important;
   }
   .toolbar.dl-toolbar .chip,
@@ -251,5 +252,491 @@
   .toolbar:has(.dl-owners) .chip {
     padding: 0 8px !important;
     font-size: 12px !important;
+  }
+}
+
+/* =====================================================================
+   DEAL BOARD UI/UX STRUCTURAL OVERHAUL
+   - 4-card Pipeline KPI Strip
+   - Balanced Toolbar with visible placeholder & right-aligned filters
+   - Stage-accented Kanban columns with contained vertical scrolling
+   - Container-query responsive Deal Cards
+   ===================================================================== */
+.dl-wrap {
+  display: grid;
+  gap: 14px;
+  min-inline-size: 0;
+}
+
+/* 1. Pipeline KPI Summary Strip */
+.dl-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.dl-kpi {
+  --kpi-accent: var(--primary);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--kpi-accent);
+  border-radius: var(--r-card, 16px);
+  padding: 14px 16px 13px;
+  display: grid;
+  gap: 4px;
+  min-inline-size: 0;
+  box-shadow: 0 1px 2px rgba(20, 28, 45, 0.04);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.dl-kpi:hover {
+  border-color: var(--line-2);
+  border-top-color: var(--kpi-accent);
+  box-shadow: 0 4px 14px rgba(20, 28, 45, 0.06);
+}
+
+.dl-kpi--primary { --kpi-accent: var(--primary, #7627c4); }
+.dl-kpi--cobalt  { --kpi-accent: var(--cobalt, #3b6ff5); }
+.dl-kpi--good    { --kpi-accent: var(--good, #16a34a); }
+.dl-kpi--amber   { --kpi-accent: var(--amber, #d97706); }
+
+.dl-kpi__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dl-kpi__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dl-kpi__pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--well);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.dl-kpi__pill--good {
+  background: color-mix(in srgb, var(--good, #16a34a) 13%, var(--card));
+  color: var(--good, #16a34a);
+}
+
+.dl-kpi__val {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-kpi__sub {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: clip;
+  text-overflow: ellipsis;
+}
+
+/* 2. Balanced Deals Toolbar + Visible Placeholder */
+html body .page .toolbar.dl-toolbar,
+.toolbar.dl-toolbar {
+  margin-bottom: 0 !important;
+  justify-content: space-between !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html body .page .toolbar.dl-toolbar .toolbar__search input::placeholder,
+.toolbar.dl-toolbar .toolbar__search input::placeholder {
+  color: var(--muted) !important;
+  opacity: 0.85 !important;
+}
+
+html body .page .toolbar.dl-toolbar .dl-toolbar__filters,
+.toolbar.dl-toolbar .dl-toolbar__filters {
+  margin-inline-start: auto;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.toolbar.dl-toolbar .dl-owners {
+  background: var(--card) !important;
+  border: 1px solid var(--line) !important;
+  padding: 3px 4px !important;
+  gap: 3px !important;
+}
+
+.toolbar.dl-toolbar .dl-owner {
+  opacity: 0.82 !important;
+}
+
+.toolbar.dl-toolbar .dl-owner.is-on {
+  opacity: 1 !important;
+  box-shadow: 0 0 0 2px var(--primary) !important;
+}
+
+/* 3. Kanban Board Grid & Standard Scrollbars */
+.dl-board {
+  --scrollbar-thumb: color-mix(in srgb, var(--muted) 45%, transparent);
+  --scrollbar-track: transparent;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(208px, 1fr));
+  gap: 12px;
+  align-items: start;
+  overflow-x: auto;
+  padding-block-end: 8px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* 4. Stage Columns with Top Accent & Contained Vertical Scroll */
+.dl-col {
+  --col-accent: var(--slate, #64748b);
+  --scrollbar-thumb: color-mix(in srgb, var(--muted) 40%, transparent);
+  --scrollbar-track: transparent;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--col-accent);
+  border-radius: var(--r-card, 16px);
+  padding: 12px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-inline-size: 0;
+  min-block-size: 320px;
+  scroll-snap-align: start;
+  transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.dl-col--qualify   { --col-accent: var(--slate, #64748b); }
+.dl-col--sample    { --col-accent: var(--sky, #0ea5e9); }
+.dl-col--proposal  { --col-accent: var(--amber, #f59e0b); }
+.dl-col--negotiate { --col-accent: var(--cobalt, #3b6ff5); }
+.dl-col--won {
+  --col-accent: var(--good, #16a34a);
+  background: color-mix(in srgb, var(--good, #16a34a) 4%, var(--card-2));
+}
+.dl-col--lost {
+  --col-accent: var(--bad, #ef4444);
+  opacity: 0.9;
+}
+
+.dl-col__head {
+  display: grid;
+  gap: 6px;
+  padding: 2px 6px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dl-col__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.dl-col__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--col-accent);
+  flex-shrink: 0;
+}
+
+.dl-col__label {
+  min-inline-size: 0;
+  overflow: clip;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dl-col__count {
+  margin-inline-start: auto;
+  min-inline-size: 22px;
+  block-size: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.dl-col__sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dl-col__total {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-col__prob {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--col-accent) 12%, var(--card));
+  color: var(--col-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-col__body {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-block-size: 120px;
+  max-block-size: calc(100dvh - 385px);
+  overflow-y: auto;
+  padding-inline-end: 2px;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.dl-col__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  inline-size: 100%;
+  block-size: 34px;
+  border-radius: 10px;
+  border: 1px dashed var(--line-2);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.dl-col__add:hover {
+  background: var(--card);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.dl-col__add-plus {
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* 5. Container-Query Responsive Deal Cards */
+.dl-card {
+  container: dl-card / inline-size;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 12px 12px 10px 15px;
+  display: grid;
+  gap: 5px;
+  position: relative;
+  overflow: clip;
+  box-shadow: 0 1px 2px rgba(20, 28, 45, 0.04);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dl-card:before {
+  content: "";
+  background: var(--tone);
+  border-radius: 0 4px 4px 0;
+  width: 3.5px;
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+}
+
+.dl-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 42%, var(--line-2));
+  box-shadow: 0 6px 16px rgba(20, 28, 45, 0.08);
+  transform: translateY(-1px);
+}
+
+.dl-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dl-card__line {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--tone, var(--muted)) 12%, var(--well));
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.dl-card__grip {
+  width: 14px;
+  height: 14px;
+  color: var(--faint);
+  opacity: 0.65;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.dl-card:hover .dl-card__grip {
+  opacity: 1;
+}
+
+.dl-card__title {
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: clip;
+}
+
+.dl-card__co {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: clip;
+  text-overflow: ellipsis;
+}
+
+.dl-card__foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin-top: 6px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+}
+
+.dl-card__foot > b {
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-card__date {
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-end: auto;
+  font-weight: 600;
+}
+
+@container dl-card (inline-size < 210px) {
+  .dl-card__foot {
+    justify-content: space-between;
+  }
+  .dl-card__foot .avs {
+    margin-inline-start: auto;
+  }
+}
+
+/* Legacy scrollbar fallback for browsers without scrollbar-color */
+@supports not (scrollbar-color: auto) {
+  .dl-board,
+  .dl-col__body {
+    scrollbar-width: auto;
+  }
+  .dl-board::-webkit-scrollbar,
+  .dl-col__body::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .dl-board::-webkit-scrollbar-thumb,
+  .dl-col__body::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 999px;
+  }
+  .dl-board::-webkit-scrollbar-track,
+  .dl-col__body::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+@media (max-width: 1100px) {
+  .dl-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  html body .page .toolbar.dl-toolbar .dl-toolbar__filters,
+  .toolbar.dl-toolbar .dl-toolbar__filters {
+    margin-inline-start: 0 !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+  }
+  html body .page .toolbar.dl-toolbar .toolbar__search,
+  .toolbar.dl-toolbar .toolbar__search {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .dl-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .dl-kpi {
+    padding: 11px 12px;
+  }
+  .dl-kpi__val {
+    font-size: 18px;
+  }
+  .dl-col__body {
+    max-block-size: none;
+  }
+  .toolbar.dl-toolbar .dl-owners {
+    padding: 2px !important;
+    gap: 2px !important;
+  }
+  .toolbar.dl-toolbar .dl-toolbar__filters {
+    gap: 6px !important;
   }
 }
